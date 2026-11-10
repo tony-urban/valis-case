@@ -10,10 +10,11 @@ Answers the CEO's two questions from the raw bundle, each with sources cited to 
 ```
 python3 ask/ask.py                      # both answers: printed, and written to ask/out/q1.md and ask/out/q2.md
 python3 ask/ask.py --q q1               # one question
-python3 ask/ask.py --data path/to/dir   # a fresh folder of the same shape
+python3 ask/ask.py --data path/to/dir   # a fresh folder of the same shape: prints only, ask/out/ is not touched
+python3 ask/ask.py --data path/to/dir --out some/dir   # same, and also writes q1.md and q2.md there
 ```
 
-Python 3 standard library only. No network, no LLM or API call, nothing to install. Same command on macOS, Linux and Windows. `data/` is read, never written.
+Python 3.8 or later, standard library only (checked by parsing the file as 3.8 syntax and by running on 3.11 and 3.13; not run on 3.8 or 3.9 here). No network, no LLM or API call, nothing to install. Same command on macOS, Linux and Windows. `data/` is read, never written.
 
 ## Files
 
@@ -41,7 +42,8 @@ Python 3 standard library only. No network, no LLM or API call, nothing to insta
 | `Bundle` | parsing, the export date, dating a unit, threads |
 | `confidence` | the one confidence rule |
 | `q1` | rows and sum, duplicates, "final" statements, contract check, boundary and currency |
-| `q2` | evidence timeline, status labels, owners, stale against superseding, dates, triggers, open actions |
+| `classify` | status label of one unit: question, negation and hedge guards |
+| `q2` | evidence timeline, who may change the state, owners, later unclassified messages, stale against superseding, dates, triggers, open actions |
 | `main` | options, output files, the last-resort guard |
 
 ## Fresh file behaviour
@@ -52,15 +54,25 @@ Checked on temp copies of `data/` (details in the hand-off report and `JUDGMENTS
 - Add a SaaS row or shift lines: new row listed, all citations move with the file.
 - Remove the duplicate pair: "No candidate found".
 - Put a non-USD amount inside the SaaS category: the row is shown, excluded from the sum, and the as-listed claim drops to LOW.
-- Change the requisition status, or add a later message that lifts the freeze: the current state and the stale comparison change.
+- Add a later message from the decision maker or enforcer that lifts the freeze: the current state follows it.
+- Add a later lift worded without any status word, from the decision maker: state reads NOT CERTAIN, the message is printed verbatim, current state LOW.
+- Add "we are NOT lifting the freeze" from the decision maker: read as frozen, set by that message.
+- Add "I think the freeze should be lifted" from someone who does not own the decision: state unchanged, the message is listed as not applied.
+- Change the roster status or date: the roster never changes the state. A newer roster that contradicts the decision is reported as not reconciling, current state LOW.
+- Add a later message about the duplicate pair: status becomes "suspected, later message found, read it", in the headline too.
 - Remove the P&L, the roster, the Slack export or the notes: a plain "Cannot answer, needed: ..." or a degraded answer that says what is missing. Exit code 0, no traceback.
 
 ## Limits (read before trusting it on a new bundle)
 
 - It answers these two questions only. It is not a general question answerer.
-- Status and role detection is keyword and pattern matching from `config.json`. It does not understand negation or sarcasm. Every classified source is printed with the matched word and a verbatim quote so a reader can check it. A new way of saying "frozen" or "I own this" needs a new term in the config.
+- Status and role detection is keyword and pattern matching from `config.json`, with four guards for Q2:
+  - Only a message from the named decision maker or enforcer, or a decision record in the meeting notes, can change the state. Everyone else is listed and never applied. The roster is the baseline and cannot change the state either.
+  - A status word in a question, after a negation (within three words, same clause) or in a hedged sentence is not taken at face value. A negated lift reads as the freeze continuing. Anything else becomes UNCLEAR.
+  - Any later message on the topic that the tool cannot classify is printed verbatim, the state line reads NOT CERTAIN, and current-state confidence drops to LOW.
+  - A later statement from a non-owner that points the other way is shown in the answer and costs a flag.
+- These guards make the tool cautious, not clever. Sarcasm, a decision owner changing, or a reversal worded without any status word will land in "could not classify" at best. A new way of saying "frozen" or "I own this" needs a new term in the config.
+- Q1 duplicate status has three values only: "suspected, unconfirmed" (the latest message says it is not confirmed), "suspected, later message found, read it" (any later message mentions the pair: quoted, never interpreted), "suspected, detected by rule only" (no message at all).
+- Amounts written as `$11,000` or `11,000` are read as plain USD and the answer says so. Any other format is excluded, and the headline starts with PARTIAL.
 - A "thread" is same channel and same day. A reply on a later day is not linked.
 - If the Slack export header with the export date is missing, messages cannot be dated and are listed as undated.
-- A claimed confirmation of a duplicate is reported and quoted, not interpreted.
 - It cannot see payments. No invoice, contract or FX rate is in the bundle, so "actually spent" stays LOW until one is added.
-- Output files always go to `ask/out/`, whichever `--data` folder is read.
