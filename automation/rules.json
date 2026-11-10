@@ -1,0 +1,125 @@
+{
+  "_readme": "Single config for automation/. The only place where file names, column names, category names, evidence keywords and assumptions live. Edit here, never in the .py files.",
+  "tickets": {
+    "file": "support_tickets_q1_2026.csv",
+    "columns": {
+      "id": "Ticket_ID",
+      "date": "Date",
+      "category": "Category",
+      "assignee": "Assigned_To",
+      "minutes": "Handle_Minutes",
+      "status": "Status"
+    },
+    "closed_status": "Closed"
+  },
+  "target_category": "Thumbnail re-upload",
+  "known_categories": {
+    "Thumbnail re-upload": "Reply with the self-serve thumbnail replacement link",
+    "Tax form (W-9/W-8)": "Human: chase or check the tax form",
+    "Payout question": "Human: answer from the payout records",
+    "Login issue": "Human: reset or unblock the login",
+    "Account access": "Human: verify identity, restore access",
+    "Content takedown": "Human: review the takedown request"
+  },
+  "assumptions": {
+    "deflection_low": 0.5,
+    "deflection_high": 0.9,
+    "hours_per_work_day": 8,
+    "weeks_in_period": 13,
+    "months_in_period": 3
+  },
+  "candidates": [
+    {
+      "id": "recon",
+      "area": "Finance",
+      "workflow": "Month-end brand-deal revenue reconciliation (three-way match)",
+      "files": "^(slack_export|org_chart|meeting_notes/(finance|leadership))",
+      "find": "brand-deal|three-way match|month-end reconciliation|three are: the CRM",
+      "quantity": "(?:~|about )?(\\d+|two|three|four|five) (?:full )?days",
+      "quantity_unit": "days_per_month",
+      "needed": [
+        "CRM deal export, one row per closed deal: deal ID, brand, close date, deal amount, currency",
+        "Invoicing sheet, one row per invoice: invoice ID, deal ID, invoice date, billed amount, currency",
+        "Payout tracker, one row per creator payout: payout ID, deal ID, creator ID, payout date, payout amount, split percent",
+        "A time log of the close, one row per day worked: date, task, hours (to turn the self-reported days into a measured before figure)",
+        "The written list of manual steps that the finance review assigns as an action item"
+      ],
+      "why_not": "Strongest claim, but self-reported with no time log, and the CRM export, invoicing sheet and payout tracker are not in the bundle. Building it here would mean inventing the data it reconciles."
+    },
+    {
+      "id": "support_all",
+      "area": "Support",
+      "workflow": "Creator support queue, all categories together",
+      "all_tickets": true,
+      "files": "^slack_export",
+      "find": "hrs/week|feels like \\d+|felt-volume|full-time person",
+      "quantity": "(\\d+) hrs/week",
+      "quantity_unit": "hours_per_week",
+      "why_not": "This is the measurement behind the category rows, not a single workflow."
+    },
+    {
+      "id": "thumbnail",
+      "area": "Ops and support (also touches Content post team)",
+      "workflow": "Thumbnail re-upload requests",
+      "category": "Thumbnail re-upload",
+      "files": "^slack_export",
+      "find": "thumbnail|every swap|low dollar value per ticket",
+      "quantity": "request #(\\d+) this week",
+      "quantity_unit": "tickets_per_week",
+      "share_claim": "half my tickets",
+      "per_ticket_claim": "few minutes"
+    },
+    {
+      "id": "tax",
+      "area": "Ops and support",
+      "workflow": "Tax form (W-9/W-8) chasing",
+      "category": "Tax form (W-9/W-8)",
+      "files": "^slack_export",
+      "find": "tax form|W-8|W-9",
+      "needed": [
+        "Form status per creator (requested, returned, valid) and creator contact data, to drive an automatic chaser"
+      ],
+      "why_not": "The log carries no form status or creator contact data to drive a chaser, the work needs a compliance check per form, and the reply in the same thread points to cheap off-the-shelf services and defers it to Q3 planning. The router can be pointed at it with --category."
+    },
+    {
+      "id": "saas",
+      "area": "Finance",
+      "workflow": "SaaS line checks at close (duplicate lines, currency, contract versus posted)",
+      "files": "^(slack_export|meeting_notes/finance)",
+      "find": "double-count|entered twice|normalize to USD|against what's posted",
+      "needed": [
+        "Any statement of time spent, plus vendor invoices and contracts"
+      ],
+      "why_not": "No time figure anywhere in the bundle."
+    },
+    {
+      "id": "post",
+      "area": "Content",
+      "workflow": "Post-production bottleneck",
+      "files": "^slack_export",
+      "find": "bottleneck",
+      "needed": [
+        "Any volume or effort data for post-production: jobs per week, hours per job, queue length"
+      ],
+      "why_not": "Called the bottleneck, with no volume or effort data in the bundle."
+    }
+  ],
+  "context": {
+    "period_line": {
+      "files": "^slack_export",
+      "find": "^> Range:"
+    }
+  },
+  "pick_reasons": [
+    {
+      "text": "The ops lead asks for exactly this automation by name.",
+      "files": "^slack_export",
+      "find": "self-serve thumbnail"
+    },
+    {
+      "text": "Each request is the same manual re-export and re-upload (cited). That it needs no money or compliance decision, so a rule can route it safely, is our judgment and not a sourced fact.",
+      "files": "^slack_export",
+      "find": "every swap is a manual"
+    }
+  ]
+}
