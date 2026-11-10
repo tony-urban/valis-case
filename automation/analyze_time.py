@@ -9,12 +9,13 @@ file names, columns, categories, keywords and assumptions are in rules.json.
 Usage: python3 automation/analyze_time.py [--data DIR] [--category NAME] [--out DIR]
 (run.py calls this first, then routes the queue.) Standard library only.
 """
-import argparse
-import json
-import re
 import sys
-from datetime import date
-from pathlib import Path
+sys.dont_write_bytecode = True  # keep the repo free of __pycache__
+import argparse  # noqa: E402
+import json  # noqa: E402
+import re  # noqa: E402
+from datetime import date  # noqa: E402
+from pathlib import Path  # noqa: E402
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent
@@ -63,6 +64,7 @@ def load_tickets(data, rules):
     importer.import_csv(path, cfg["file"], units, flags)
     wrong_width = {n for _, n, msg in flags if "fields, header has" in msg}
     known, seen, tickets = rules["known_categories"], set(), []
+    cap = rules["assumptions"]["max_plausible_minutes"]
     for u in units:
         if u["kind"] != "row":
             continue
@@ -72,10 +74,11 @@ def load_tickets(data, rules):
              "minutes": None, "week": None, "problems": [], "flags": []}
         if u["line"] in wrong_width:
             t["problems"].append("row has a different number of fields than the header")
+        repeat = bool(t["id"]) and t["id"] in seen
         if not t["id"]:
             t["problems"].append(f"blank {col['id']}")
-        elif t["id"] in seen:
-            t["problems"].append(f"duplicate {col['id']}")
+        elif repeat:
+            t["problems"].append(f"repeated {col['id']}: first occurrence counts, minutes on this row ({t['raw_minutes']!r}) not counted")
         seen.add(t["id"])
         if not t["category"]:
             t["problems"].append(f"blank {col['category']}")
@@ -86,8 +89,12 @@ def load_tickets(data, rules):
             t["week"] = f"{iso[0]}-W{iso[1]:02d}"
         else:
             t["problems"].append(f"blank or invalid {col['date']}: {t['date']!r}")
-        if importer.NUM.match(t["raw_minutes"]) and float(t["raw_minutes"]) > 0:
-            t["minutes"] = float(t["raw_minutes"])
+        if importer.NUM.match(t["raw_minutes"]) and float(t["raw_minutes"]) > cap:
+            t["problems"].append(f"implausible {col['minutes']}: {t['raw_minutes']} is above the upper bound of {cap} "
+                                 "(ASSUMPTION in rules.json), not counted")
+        elif importer.NUM.match(t["raw_minutes"]) and float(t["raw_minutes"]) > 0:
+            if not repeat:
+                t["minutes"] = float(t["raw_minutes"])
         elif not t["raw_minutes"]:
             t["problems"].append(f"blank {col['minutes']}")
         else:
@@ -151,11 +158,11 @@ def find(text_units, spec):
 
 
 def quantities(found, spec):
-    """Numbers stated in the matched text, for example '3' from '~3 days'."""
+    """Numbers stated in the matched text, for example '3' from '~3 days'. One per (line, value)."""
     out = []
     for u in found:
-        for m in re.findall(spec.get("quantity", "$^"), u["text"], re.I):
-            out.append((float(NUMBER_WORDS.get(m.lower(), m)), u))
+        for v in sorted({float(NUMBER_WORDS.get(m.lower(), m)) for m in re.findall(spec.get("quantity", "$^"), u["text"], re.I)}):
+            out.append((v, u))
     return out
 
 
@@ -220,6 +227,15 @@ def row_by(rows, **kv):
     return next((r for r in rows if r.get(key) == val or r["spec"].get(key) == val), None)
 
 
+def provenance(row):
+    """Who said it: distinct source lines carrying the number, split by kind, plus the note from rules.json."""
+    units = {(u["file"], u["line"]): u for _, u in row["claims"]}.values()
+    msgs = [u for u in units if u["kind"] == "message"]
+    return (f"{len(units)} source lines (cited below): {len(msgs)} Slack messages, distinct authors: "
+            f"{len({u['author'] for u in msgs})}. Meeting-note lines: {len(units) - len(msgs)}. "
+            f"{row['spec'].get('provenance', 'Count the people behind them before trusting the number.')}")
+
+
 def span(vals, unit):
     return f"{num(vals[0])} {unit}" if vals[0] == vals[-1] else f"{num(vals[0])} to {num(vals[-1])} {unit}"
 
@@ -257,7 +273,7 @@ def render(tickets, text_units, rules, data_label):
     if top_claim:
         s = top_claim["spec"]
         w(f"1. **Largest claimed time sink: {s['area']}, {s['workflow']}.** ASSERTED at "
-          f"{span(top_claim['claim_values'], 'days a month')} in {len(top_claim['claims'])} statements (cited below). "
+          f"{span(top_claim['claim_values'], 'days a month')} in {provenance(top_claim)} "
           f"Converted: {span(top_claim['claim_values'], 'days')} x {a['months_in_period']} months x "
           f"{a['hours_per_work_day']} hours a day (ASSUMPTION) = {span(top_claim['claim_hours'], 'hours a quarter')}. "
           "There is no time log and its input files are not in the bundle, so it cannot be measured or run here.")
@@ -388,7 +404,7 @@ def render(tickets, text_units, rules, data_label):
     bad = [t for t in tickets if t["problems"]]
     if bad:
         w(f"- {len(bad)} rows could not be fully read and went to the exception queue (listed in `before_after.md`). "
-          "Rows without readable minutes add nothing to the minute totals above. Exception rows with readable minutes are still counted.")
+          "Rows with unreadable or implausible minutes, and repeats of a ticket ID, add nothing to the minute totals above. Other exception rows with readable minutes are still counted.")
     w("")
     w("## Rows behind each measured total")
     w("")
@@ -397,7 +413,7 @@ def render(tickets, text_units, rules, data_label):
         w("")
         w(f"**{r['category']}**: {num(r['stats']['minutes'])} minutes, {r['stats']['n']} tickets")
         w("")
-        w(", ".join(f"`{tfile}:L{t['line']}` = {num(t['minutes']) if t['minutes'] is not None else 'unreadable'}"
+        w(", ".join(f"`{tfile}:L{t['line']}` = {num(t['minutes']) if t['minutes'] is not None else 'not counted'}"
                     for t in sorted(r["tickets"], key=lambda t: t["line"])))
     w("")
     w(f"**All categories**: {num(allq['minutes'])} minutes, {allq['n']} tickets (sum of the category totals above).")

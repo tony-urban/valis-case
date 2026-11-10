@@ -31,6 +31,8 @@ Times are UTC (equal to Europe/London on the day), taken from `date -u +%H:%M`. 
 | 16:30 | Stated subtotal differs from the sum of rows in a fresh file. | Print "DOES NOT match", use the sum of the cited rows as baseline, add a could-not-verify item. | R5: report that they do not reconcile, do not pick silently. | `pnl_q1_2026.csv:L24` |
 | 16:30 | Importing the shared parser wrote `pipeline/__pycache__`, which is outside this stream's folder. | Bytecode writing is switched off in the script and the cache folder it had created was removed. | Each worker writes only inside its own folder. | `repo:pipeline/03_scope.md` section 0 |
 | 16:30 | Worksheet text backticks. | Only citations are backticked in the worksheet. Commands and column names are plain text there. | The tester extracts every backticked token as a citation. | `repo:pipeline/03_scope.md` WS4 |
+| 16:50 | Tester defect M2: a message dated after the flag that names the pair (for example one saying the rows are two contracts) left the headline at "unconfirmed". | The flag is the earliest thread that raises the pair. Any message naming the pair and dated after the last flag in that thread is quoted verbatim at the top of section 1 and in section 6. Line 1 and section 9 then read "suspected, later message found, read it", and the worksheet says the number may be out of date. With no later message the wording stays exactly "suspected, unconfirmed". | The script cannot judge whether a later message confirms or clears, so it stops asserting and hands the message to a person. Ordering is by month, day and time, never weekday (C1). | `repo:pipeline/06_test.md` M2, `slack_export.md:L146 [#finance | Maya Fortin | Mon Jun 2, 10:38 AM]`, `slack_export.md:L152 [#finance | Maya Fortin | Mon Jun 2, 10:47 AM]` |
+| 16:50 | Minimum Python version. | Stated as 3.8 in the README. Audit found no match statement, run-time union, removeprefix, zip(strict=) or Path.write_text(newline=). The source parses under the 3.8 grammar. | Reviewers use stock macOS Python 3.9. Not run on 3.8 or 3.9 here, only parsed. | `repo:pipeline/06_test.md` |
 
 ## Dead ends
 
@@ -40,6 +42,7 @@ Times are UTC (equal to Europe/London on the day), taken from `date -u +%H:%M`. 
 | 16:30 | Putting the Slack citations for the flag in the inputs table. | The pipe characters split the table cell. Moved to a line under the table. |
 | 16:30 | A "not found" row in the inputs table when no message flags the pair. | It is not an input. The row is omitted and section 6 says the candidate rests on the rule alone. |
 | 16:30 | `Path.write_text(newline=...)` for identical bytes on every OS. | Needs Python 3.10. Replaced by `open(..., newline="\n")` so the stock macOS Python 3.9 works. Not tested on 3.9, only on 3.13. |
+| 16:50 | M2 first attempt: "later" meant any message naming the pair after the latest message that carries a suspicion term. | The test message ("two separate contracts, not a duplicate") itself contains a suspicion term, so it became the latest flag and nothing was later. The flag is now fixed to the earliest thread. |
 
 ## Parser gaps (importer not edited)
 

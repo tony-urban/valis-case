@@ -8,7 +8,9 @@
 Options: `--data <dir>` (default `data/`), `--out <dir>` (default `automation/out/`),
 `--category "<name>"` (override the target category from `rules.json`).
 
-Python 3 standard library only. No network, no installs. `data/` is only read.
+Python 3.8 or later (stock macOS `python3` is 3.9), standard library only. No network, no installs.
+`data/` is only read. The scripts switch bytecode off, so no `__pycache__` is left behind.
+With `--check`, `--max-target-minutes N` adds a ceiling on the target category's logged minutes (for a pilot export).
 
 ## What it does
 
@@ -19,7 +21,8 @@ Python 3 standard library only. No network, no installs. `data/` is only read.
    `SELF_SERVE` (target category), `HUMAN` (other known category), `EXCEPTION` (unknown
    category, blank or unreadable field).
 3. `run.py` writes `out/before_after.md`: the before number (measured), what the run executed,
-   and the modelled saving with its assumption shown as a low and a high case.
+   the statement that the run alone saves 0 minutes, and a scenario (not a result) with a 0%,
+   a low and a high case.
 
 ## Files
 
@@ -43,8 +46,11 @@ the other deliverables.
 
 ## Limits, stated plainly
 
-- The run routes tickets. It does not swap thumbnails: the CMS is not in the bundle. So the
-  saving is modelled as routed minutes times a deflection share, which is our assumption.
+- The run routes tickets. It does not swap thumbnails: the CMS is not in the bundle and the
+  self-serve replacement does not exist yet. The run alone saves 0 minutes. The scenario is
+  routed minutes times a deflection share that has no source in the bundle.
+- Minutes above `max_plausible_minutes` in `rules.json` (ASSUMPTION) and repeats of a ticket ID
+  go to the exception queue and are not counted.
 - The finance reconciliation is the larger claimed time sink. It was not built because the
   claim is self-reported and its three input files are not in the bundle.
 - A file that is not UTF-8, has no header or lacks a configured column stops the run with a

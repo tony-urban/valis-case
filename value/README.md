@@ -33,6 +33,7 @@ Citations are computed from the parsed files at run time, in the format of `pipe
 
 - No pair meets the rule: the worksheet says "No candidate found" and prints no number.
 - A different pair, or different amounts: new number, new citations.
+- A message that names the pair and is dated after the last flag: the status on line 1 becomes "suspected, later message found, read it", section 1 opens with the message quoted verbatim, and the worksheet says the number may be out of date. The script does not decide whether the message confirms or clears the duplicate. With no such message the status stays "suspected, unconfirmed".
 - Similar labels with different amounts: listed for a person to check, never counted.
 - An amount that is not a plain number (for example a euro figure): left out of every sum and listed under could not verify. Nothing is converted.
 - P&L missing, empty or without the expected columns: one plain line saying what is needed, exit code 0, no traceback.
@@ -42,6 +43,7 @@ Citations are computed from the parsed files at run time, in the format of `pipe
 - The rule finds lookalike rows. It cannot tell a double entry from a double payment from two real contracts. Section 5 of the worksheet values each.
 - Label similarity is word based. A repeat entered under an unrelated name would be missed. Two different products that share a first word and a price would be flagged.
 - Only the configured category is scanned.
+- Any later message that names the label triggers the "later message" status, even if it is about something else. That is deliberate: a person reads it. Messages are ordered by month, day and time within one year (ruling C1).
 - Evidence search depends on the terms in `config.json`. A thread that discusses the pair in other words is not found, and the worksheet then says the candidate rests on the rule alone.
 - A quoted message that contains a backtick has it replaced by an apostrophe, so that only citations are backticked in the worksheet.
-- Needs Python 3.7 or later. Tested on Linux with Python 3.13 only.
+- Minimum Python 3.8, standard library only. The source parses under the 3.8 grammar and uses no call newer than 3.8. Run on Linux with Python 3.13 only, so 3.8 and 3.9 are checked by syntax and audit, not by a run.

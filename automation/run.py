@@ -8,16 +8,17 @@ Step 2  every ticket row gets exactly one action, written to out/routed_queue.cs
           EXCEPTION   unknown category, blank or unreadable field: a person looks at the row
 Step 3  out/before_after.md: before (measured), what this run executed, what is modelled.
 
-Usage: python3 automation/run.py [--data DIR] [--category NAME] [--out DIR] [--check]
---check also runs the acceptance test and exits 1 on any FAIL. Standard library only.
+Usage: python3 automation/run.py [--data DIR] [--category NAME] [--out DIR] [--check [--max-target-minutes N]]
+--check also runs the acceptance test and exits 1 on any FAIL. Python 3.8 or later, standard library only.
 """
-import csv
-import re
 import sys
-from pathlib import Path
+sys.dont_write_bytecode = True  # keep the repo free of __pycache__
+import csv  # noqa: E402
+import re  # noqa: E402
+from pathlib import Path  # noqa: E402
 
-import analyze_time as at
-from analyze_time import num, hrs, importer
+import analyze_time as at  # noqa: E402
+from analyze_time import num, hrs, importer  # noqa: E402
 
 ACTIONS = ("SELF_SERVE", "HUMAN", "EXCEPTION")
 QUEUE_COLUMNS = ["ticket_id", "source", "category", "handle_minutes", "action", "reason", "flags"]
@@ -68,16 +69,19 @@ def render(tickets, rules, data_label):
     w("## Headline")
     w("")
     w(f"- **Before (MEASURED): {num(before)} minutes ({hrs(before)} hours) of handling logged on {len(in_target)} {target} tickets in the period.**")
-    w(f"- **After (MODELLED): {num(after['high'])} to {num(after['low'])} minutes**, if {a['deflection_low']:.0%} to "
-      f"{a['deflection_high']:.0%} (ASSUMPTION) of routed tickets are resolved by the self-serve reply.")
-    w(f"- **What the run itself did (EXECUTED): routed {len(by['SELF_SERVE'])} of {len(tickets)} tickets to self-serve, "
-      f"left {len(by['HUMAN'])} with a person, and caught {len(by['EXCEPTION'])} exceptions.**")
-    w("- The saving is not measured. Routing alone removes no handling minutes: the saving only appears once creators can "
-      "replace the file themselves, and that tool is not in the bundle.")
+    w(f"- **What the run did (EXECUTED): validated and routed all {len(tickets)} rows. {len(by['SELF_SERVE'])} went to the self-serve path, "
+      f"{len(by['HUMAN'])} stayed with a person, and it caught {len(by['EXCEPTION'])} exceptions.**")
+    w("- **Minutes saved by this run alone: 0. Routing does not remove handling time.**")
+    w("- There is no before and after pair in this bundle that is both fully measured and fully executed. The category is already a column "
+      "in the export, so the run does not save categorisation work, and no triage or assignment time is logged. We do not invent one.")
+    w(f"- Scenario, not a result: after would be {num(after['high'])} to {num(after['low'])} minutes if {a['deflection_low']:.0%} to "
+      f"{a['deflection_high']:.0%} (ASSUMPTION) of routed tickets were resolved by a self-serve replacement. At 0% after equals before "
+      f"({num(before)}). The self-serve replacement the reply points to does not exist yet: it is the thing a builder needs to build "
+      "(see `BUILDER_SPEC.md`).")
     w("")
     w("## Before (MEASURED)")
     w("")
-    w(f"{num(before)} minutes = sum of `{col['minutes']}` over the {len(timed)} rows with readable minutes among the {len(in_target)} listed at the end of this file. "
+    w(f"{num(before)} minutes = sum of `{col['minutes']}` over the {len(timed)} counted rows among the {len(in_target)} listed at the end of this file. "
       f"That is {num(round(before / a['weeks_in_period'], 1))} minutes a week over {a['weeks_in_period']} weeks (ASSUMPTION: weeks in the period).")
     w("")
     w("## After, part 1: what this run executed (EXECUTED)")
@@ -90,7 +94,8 @@ def render(tickets, rules, data_label):
         w(f"| {act} | {len(by[act])} | {num(minutes(by[act]))} |")
     w(f"| Total | {len(tickets)} | {num(minutes(tickets))} |")
     w("")
-    w(f"Tickets that still need a person to pick them up: {len(tickets)} before, {len(by['HUMAN']) + len(by['EXCEPTION'])} after routing.")
+    w("This is a routing decision per row and nothing more. Every routed ticket still took the logged minutes, and a self-serve "
+      "ticket can come back to a person.")
     if by["EXCEPTION"]:
         w("")
         w("Exceptions caught (nothing dropped, nothing guessed):")
@@ -102,23 +107,26 @@ def render(tickets, rules, data_label):
         w("Flagged but still routed, because the category and minutes are readable: "
           + ", ".join(f"{at.cite_row(t, rules)} {'; '.join(t['flags'])}" for t in flagged) + ".")
     w("")
-    w("## After, part 2: minutes saved (MODELLED, not measured)")
+    w("## After, part 2: scenario, not a result (MODELLED)")
     w("")
-    w("| Input | Label | Low case | High case |")
-    w("|---|---|---|---|")
-    w(f"| Logged minutes on tickets routed to self-serve | MEASURED | {num(routed)} | {num(routed)} |")
-    w(f"| Share of those tickets the self-serve reply resolves with no handling | ASSUMPTION | {a['deflection_low']:.0%} | {a['deflection_high']:.0%} |")
-    w(f"| Minutes saved = routed minutes x share | MODELLED | {num(routed * cases[0][1])} | {num(routed * cases[1][1])} |")
-    w(f"| After = before - saved | MODELLED | {num(after['low'])} | {num(after['high'])} |")
-    w(f"| Hours saved in the period | MODELLED | {hrs(routed * cases[0][1])} | {hrs(routed * cases[1][1])} |")
+    w("What the before number would become if the self-serve replacement existed. It does not exist yet (see `BUILDER_SPEC.md`).")
     w("")
-    w("- The share is our input. The bundle has no data on self-serve take-up. If it is 0%, after equals before.")
+    w("| Input | Label | No self-serve tool (today) | Low case | High case |")
+    w("|---|---|---|---|---|")
+    w(f"| Logged minutes on tickets routed to self-serve | MEASURED | {num(routed)} | {num(routed)} | {num(routed)} |")
+    w(f"| Share of those tickets resolved with no handling | ASSUMPTION | 0% | {a['deflection_low']:.0%} | {a['deflection_high']:.0%} |")
+    w(f"| Minutes saved = routed minutes x share | MODELLED | 0 | {num(routed * cases[0][1])} | {num(routed * cases[1][1])} |")
+    w(f"| After = before - saved | MODELLED | {num(before)} | {num(after['low'])} | {num(after['high'])} |")
+    w(f"| Hours saved in the period | MODELLED | 0.0 | {hrs(routed * cases[0][1])} | {hrs(routed * cases[1][1])} |")
+    w("")
+    w(f"- The {a['deflection_low']:.0%} and {a['deflection_high']:.0%} values have no source in the bundle. They are our input. "
+      "A two week pilot that counts routed tickets coming back to a person would measure the share.")
     w("- No dollar value is put on these hours: the bundle has no support wage.")
     w("")
     w("## Not verified")
     w("")
     w(f"- What `{col['minutes']}` measures (hands-on or elapsed, timed or estimated). Needed: the ticketing tool's field definition.")
-    w("- That a self-serve replacement exists or can be built in the CMS. Needed: CMS access or its API documentation.")
+    w("- That a self-serve replacement can be built in the CMS. It does not exist today. Needed: CMS access or its API documentation.")
     w("- The deflection share. Needed: a two week pilot counting routed tickets that come back to a person.")
     w("- That the period in the log is typical of later months. Needed: the next quarter's export.")
     w("")
@@ -127,7 +135,7 @@ def render(tickets, rules, data_label):
     w("| Source row | Date | Minutes | Action |")
     w("|---|---|---|---|")
     for t in in_target:
-        w(f"| {at.cite_row(t, rules)} | {t['date']} | {num(t['minutes']) if t['minutes'] is not None else 'unreadable: ' + repr(t['raw_minutes'])} | {t['action']} |")
+        w(f"| {at.cite_row(t, rules)} | {t['date']} | {num(t['minutes']) if t['minutes'] is not None else 'not counted: ' + repr(t['raw_minutes'])} | {t['action']} |")
     w(f"| **Total, {len(in_target)} rows** | | **{num(before)}** | |")
     return "\n".join(L) + "\n", {"before": before, "routed": routed, "by": by}
 
@@ -160,7 +168,7 @@ def resolves(units, file, n, slack):
     return False
 
 
-def check(data, rules, out, facts):
+def check(data, rules, out, facts, ceiling=None):
     """Answer-complete acceptance test. Recomputes from the raw file with the csv module,
     not with the importer, so the two code paths check each other."""
     col, target = rules["tickets"]["columns"], rules["target_category"]
@@ -174,10 +182,12 @@ def check(data, rules, out, facts):
     with open(out / "routed_queue.csv", newline="", encoding="utf-8") as f:
         queue = list(csv.DictReader(f))
     q_lines = [int(r["source"].rsplit(":L", 1)[1]) for r in queue]
-    resum = 0.0
-    for n, row in raw.items():
-        v = (row.get(col["minutes"]) or "").strip()
-        if (row.get(col["category"]) or "").strip() == target and re.fullmatch(r"\d+(\.\d+)?", v) and float(v) > 0:
+    resum, ids = 0.0, set()
+    for n, row in sorted(raw.items()):  # same counting rules as the spec, written a second time
+        v, tid = (row.get(col["minutes"]) or "").strip(), (row.get(col["id"]) or "").strip()
+        first, _ = tid not in ids, ids.add(tid)
+        if ((row.get(col["category"]) or "").strip() == target and first and re.fullmatch(r"\d+(\.\d+)?", v)
+                and 0 < float(v) <= rules["assumptions"]["max_plausible_minutes"]):
             resum += float(v)
     self_serve = [r for r in queue if r["action"] == "SELF_SERVE"]
     report = "".join((out / n).read_text(encoding="utf-8") for n in ("time_waste.md", "before_after.md"))
@@ -196,10 +206,15 @@ def check(data, rules, out, facts):
         ("unknown categories never reach SELF_SERVE or HUMAN",
          all(r["action"] == "EXCEPTION" for r in queue if r["category"] not in rules["known_categories"]), ""),
         ("report separates MEASURED, EXECUTED, MODELLED and labels ASSUMPTION with low and high",
-         all(k in report for k in ("(MEASURED)", "(EXECUTED)", "(MODELLED", "ASSUMPTION", "Low case", "High case", "## Not verified")), ""),
+         all(k in report for k in ("(MEASURED)", "(EXECUTED)", "(MODELLED)", "ASSUMPTION", "Low case", "High case", "## Not verified")), ""),
+        ("report states that the run alone saves 0 minutes and that the saving is a scenario",
+         "Minutes saved by this run alone: 0" in report and "Scenario, not a result" in report, ""),
         ("every citation resolves to a real line or Slack message", bool(cited) and not unresolved,
          f"{len(cited)} citations, {len(unresolved)} unresolved" + (f": {unresolved[:3]}" if unresolved else "")),
     ]
+    if ceiling is not None:
+        results.append((f"logged minutes on the target category are at or below {num(ceiling)}", facts["before"] <= ceiling,
+                        f"{num(facts['before'])} logged"))
     for name, ok, detail in results:
         print(f"{'PASS' if ok else 'FAIL'}  {name}" + (f" ({detail})" if detail else ""))
     ok = all(r[1] for r in results)
@@ -210,6 +225,8 @@ def check(data, rules, out, facts):
 def main():
     ap = at.parse_args(__doc__)
     ap.add_argument("--check", action="store_true", help="run the acceptance test after the run")
+    ap.add_argument("--max-target-minutes", type=float, metavar="N",
+                    help="with --check: also FAIL if logged minutes on the target category exceed N (for a pilot export)")
     args = ap.parse_args()
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
@@ -229,7 +246,7 @@ def main():
     print(f"\nWrote: {out / 'time_waste.md'}, {out / 'routed_queue.csv'}, {out / 'before_after.md'}")
     if args.check:
         print()
-        return 0 if check(data, rules, out, facts) else 1
+        return 0 if check(data, rules, out, facts, args.max_target_minutes) else 1
     return 0
 
 

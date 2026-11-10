@@ -26,7 +26,9 @@
     "deflection_high": 0.9,
     "hours_per_work_day": 8,
     "weeks_in_period": 13,
-    "months_in_period": 3
+    "months_in_period": 3,
+    "max_plausible_minutes": 480,
+    "_max_plausible_minutes_note": "ASSUMPTION: one ticket cannot take more than one 8 hour work day. Rows above this go to EXCEPTION and their minutes are not counted."
   },
   "candidates": [
     {
@@ -44,7 +46,8 @@
         "A time log of the close, one row per day worked: date, task, hours (to turn the self-reported days into a measured before figure)",
         "The written list of manual steps that the finance review assigns as an action item"
       ],
-      "why_not": "Strongest claim, but self-reported with no time log, and the CRM export, invoicing sheet and payout tracker are not in the bundle. Building it here would mean inventing the data it reconciles."
+      "why_not": "Strongest claim, but self-reported with no time log, and the CRM export, invoicing sheet and payout tracker are not in the bundle. Building it here would mean inventing the data it reconciles.",
+      "provenance": "All of them trace to one person's self-report (the finance analyst who does the work): her own Slack messages, the finance review she scribed, and the CFO repeating the figure at the leadership sync. Nobody timed it."
     },
     {
       "id": "support_all",
