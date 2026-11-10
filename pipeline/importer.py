@@ -203,6 +203,9 @@ def abbrev(a, b):
 
 def import_csv(path, rel, units, flags):
     lines = read_lines(path)
+    if not any(l.strip() for l in lines):
+        flags.append((rel, 0, "file is empty"))
+        return ["Empty file: nothing to parse."]
     preamble, sections = split_sections(lines)
     info = []
     for n, l in preamble:

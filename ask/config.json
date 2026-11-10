@@ -1,0 +1,66 @@
+{
+  "_comment": "All matching vocabulary for ask.py lives here. Terms match whole words or phrases, case-insensitive. No amounts, people, vendors or line numbers belong in this file.",
+
+  "files": {
+    "pnl": "pnl_*.csv",
+    "roster": "headcount_roster*.csv",
+    "slack": "slack_export*.md",
+    "notes": "meeting_notes/*.md",
+    "questions": "CEO_QUESTIONS*.md",
+    "org": "org_chart*.md"
+  },
+  "export_terms": ["export generated"],
+
+  "q1": {
+    "question_heading": "Q1",
+    "columns": {"category": "Category", "item": "Line Item", "notes": "Notes", "amount_contains": "USD"},
+    "saas_category_terms": ["saas", "software"],
+    "adjacent_category_terms": ["infrastructure"],
+    "subtotal_terms": ["subtotal", "total"],
+    "final_terms": ["finalized", "finalised", "final"],
+    "unconfirmed_terms": ["haven't confirmed", "not confirmed", "unconfirmed", "until I can confirm", "haven't gotten the invoice"],
+    "confirmed_terms": ["confirmed", "confirms"],
+    "renewal_terms": ["renewal", "renewed", "contract"],
+    "annual_terms": ["for the year", "/yr", "annual", "per year"],
+    "direction_terms": {"higher": ["looks higher", "too high"], "lower": ["looks lower", "too low"]},
+    "fx_terms": ["EUR", "FX"],
+    "caveat_terms": ["illustrative", "pre-close"],
+    "primary_doc_terms": ["invoice", "contract"]
+  },
+
+  "q2": {
+    "question_heading": "Q2",
+    "team": "Sales",
+    "stale_after_days": 14,
+    "columns": {"req_id": "Req_ID", "team": "Team", "title": "Title", "status": "Status",
+                "manager": "Hiring_Manager", "person": "Name", "headcount": "Headcount"},
+    "snapshot_key": "Snapshot_Date",
+    "hiring_terms": ["hiring", "hire", "headcount", "req", "reqs", "freeze", "frozen"],
+    "followup_terms": ["hiring", "hire", "headcount", "req", "reqs", "freeze", "bodies", "revisit", "re-evaluate", "objection", "backfill"],
+    "labels": [
+      ["LIFTED", ["lifted", "unfrozen", "unfreeze", "lifting the freeze", "resume hiring", "reopened"]],
+      ["FROZEN", ["freeze", "freezing", "frozen", "paused", "on hold"]],
+      ["QUESTION", ["question on the table"]],
+      ["DEFERRED", ["park it", "before we add"]],
+      ["SCOPE", ["net-new", "case-by-case"]],
+      ["APPROVED", ["approved"]]
+    ],
+    "status_labels": ["LIFTED", "FROZEN", "APPROVED"],
+    "sides": {"LIFTED": "hiring open", "APPROVED": "hiring open", "FROZEN": "hiring frozen"},
+    "decision_terms": ["decision"],
+    "relative_day_terms": {"yesterday": -1},
+    "wording_terms": ["freezing", "freeze", "frozen", "on freeze", "paused", "on hold", "not killed", "not moving forward"],
+    "scope_terms": ["net-new", "backfill", "backfills", "other teams", "Sales-only", "unaffected"],
+    "revisit_terms": ["revisit", "re-evaluate", "until pipeline recovers"],
+    "next_meeting_terms": ["next leadership sync"],
+    "supersede_terms": ["superseded", "stale"],
+    "candidate_terms": ["candidate"],
+    "open_req_terms": ["open reqs"],
+    "action_columns": {"owner": "Owner", "due": "Due"},
+    "roles": {
+      "Decision maker": ["decision made by (?P<who>\\w+)", "per (?P<who>\\w+)['’]s decision", "(?P<self>I['’]m making the call)"],
+      "Enforcer (sign-off on reqs)": ["(?P<who>\\w+)(?: \\(\\w+\\))? (?:holds the line|enforces|enforcing)"],
+      "Backfill reviewers (case by case)": ["reviewed case-by-case by (?P<who>\\w+(?: \\+ \\w+)*)"]
+    }
+  }
+}
