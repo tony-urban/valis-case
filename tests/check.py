@@ -13,7 +13,8 @@ Checks:
   4  independent arithmetic from the raw CSVs equals the printed figures
   5  cross-stream consistency (ask versus value, time_waste versus before_after)
   6  fresh-file smoke test on a perturbed copy of data/
-  7  hygiene: em dashes, imports, Python 3.9 compatibility, hardcoded names and amounts
+  7  hygiene: em dashes, imports, Python 3.8 and 3.9 compatibility, hardcoded names and amounts
+  8  regression cases for the round 1 defects, plus new adversarial cases (round 2)
 """
 import ast
 import csv
@@ -417,6 +418,7 @@ def no_trace(code, out, err):
 
 def check_fresh(P0, T0):
     committed = snapshot(ASK_OUT + VALUE_OUT + AUTO_OUT)
+    ask_clobbered, ask_out_ok = False, False
     tmp = Path(tempfile.mkdtemp(prefix="valis_check_"))
     try:
         d = tmp / "data"
@@ -426,8 +428,10 @@ def check_fresh(P0, T0):
         P, T = pnl_facts(d), ticket_facts(d)
         assert P["total"] == P0["total"] + BUMP[1] + NEW_SAAS[1] and T["count"] == T0["count"] + 2
 
-        # ask: no documented way to redirect its files, so capture stdout and restore afterwards
-        code, out, err = run(["ask/ask.py", "--data", d])
+        # ask: --out redirects its files (added after round 1). Committed outputs must stay untouched.
+        ao = tmp / "ask_out"
+        code, out, err = run(["ask/ask.py", "--data", d, "--out", ao])
+        ask_out_ok = all((ao / f).exists() and read(ao / f).strip() for f in ("q1.md", "q2.md"))
         ask_clobbered = snapshot(ASK_OUT) != {k: v for k, v in committed.items() if k in map(str, ASK_OUT)}
         q1, _, q2 = out.partition("# Q2.")
         q2 = "# Q2." + q2
@@ -527,9 +531,165 @@ def check_fresh(P0, T0):
         for _, cmd, _ in COMMANDS:
             run(cmd)
         restored = snapshot(ASK_OUT + VALUE_OUT + AUTO_OUT) == committed
-    check("6m ask does not overwrite its committed outputs when run with --data", not ask_clobbered,
-          "ask/out/ was overwritten by the perturbed run (no --out option). Restored by rerunning the default command" if ask_clobbered else "")
+    check("6m ask --data --out writes there and does not overwrite its committed outputs (round 1 M3)", not ask_clobbered and ask_out_ok,
+          "ask/out/ was overwritten by the perturbed run" if ask_clobbered else ("" if ask_out_ok else "q1.md or q2.md not written to --out"))
     check("6n committed outputs are back to what the default commands produce", restored)
+
+
+# ---------- 8. regression and new adversarial cases (round 2) ----------
+
+def slack_add(d, before_heading, author, when, text):
+    """Insert one message at the end of the channel that precedes `before_heading`."""
+    s = next(d.glob("slack_export*.md"))
+    lines = read(s).splitlines()
+    k = lines.index(before_heading)
+    while lines[k - 1].strip() in ("", "---"):
+        k -= 1
+    lines[k:k] = ["", "---", "", f"**{author}** {EM} {when}", text]
+    write(s, "\n".join(lines) + "\n")
+
+
+def swap(d, glob, a, b):
+    p = next(d.glob(glob))
+    t = read(p)
+    assert a in t, a
+    write(p, t.replace(a, b))
+
+
+def state_line(out):
+    return next((l for l in out.splitlines() if l.startswith("**2. Current state")), "")
+
+
+def check_regressions(P0, T0):
+    q2_default = state_line(read(ASK_OUT[1]))
+    ba = read(AUTO_OUT[1])
+    head = ba.split("## Before (MEASURED)")[0]
+    bad = []
+    if "Minutes saved by this run alone: 0" not in head:
+        bad.append("headline does not say the run alone saves 0 minutes")
+    if re.search(r"\d+ before, \d+ after routing", ba):
+        bad.append("the '140 before, 77 after routing' claim is back")
+    if not re.search(r"Scenario, not a result", head) or "ASSUMPTION" not in head:
+        bad.append("modelled after is not labelled a scenario resting on an ASSUMPTION in the headline")
+    if re.search(r"\*\*After \(MODELLED\)", head):
+        bad.append("a modelled after figure is still a bold headline")
+    check("8a automation headline: run alone saves 0, modelled after is a labelled scenario (round 1 M4)", not bad, short(bad))
+
+    tmp = Path(tempfile.mkdtemp(prefix="valis_check_"))
+    FIN, DANA, D17 = "## #finance", "Dana Whitfield", "Wed Jun 17, 9:00 AM"
+
+    def q2_case(name, build):
+        d = tmp / name
+        shutil.copytree(DATA, d)
+        build(d)
+        code, out, err = run(["ask/ask.py", "--q", "q2", "--data", d])
+        return no_trace(code, out, err), state_line(out), out
+
+    lifted = lambda l: bool(re.search(r"Current state: [^*]*lifted", l))
+    frozen = lambda l: bool(re.search(r"Current state: frozen", l))
+    unsure = lambda l: "NOT CERTAIN" in l
+
+    try:
+        # --- round 1 M1 cases
+        ok, l, out = q2_case("reworded", lambda d: slack_add(d, FIN, DANA, D17, "Pipeline looks better. The hold on Sales hiring is over, Tomás go ahead and make the offer on REQ-114."))
+        check("8b Q2 reworded lift by the CEO: not reported as certainly frozen, message shown (round 1 M1)",
+              ok and (unsure(l) or lifted(l)) and D17 in out and not re.search(r"Nothing in the bundle[^.]*later than 2026-06-15", out), l[:110])
+        ok, l, out = q2_case("negated", lambda d: slack_add(d, FIN, DANA, D17, "To kill the rumour: we are NOT lifting the freeze on Sales hiring. REQ-114 stays where it is."))
+        check("8c Q2 negated lift by the CEO: not reported as lifted (round 1 M1)", ok and not lifted(l), l[:110])
+        ok, l, out = q2_case("opinion", lambda d: slack_add(d, FIN, "Tomás Reyes", D17, "I think the freeze should be lifted, we should resume hiring for REQ-114 now."))
+        check("8d Q2 opinion from a non-owner: state unchanged, message still shown (round 1 M1)", ok and frozen(l) and D17 in out, l[:110])
+
+        # --- new in round 2
+        def note(d):
+            write(d / "meeting_notes" / "leadership_sync_2026-06-17.md",
+                  f"# Leadership Sync {EM} 2026-06-17\n\n**Date:** 2026-06-17 (Wed)\n**Attendees:** Dana Whitfield (CEO), Priya Raman (CFO)\n\n"
+                  "## 1. Sales headcount  *(decision)*\n\n- Priya showed Q2 pipeline coverage back at target.\n"
+                  "- **DECISION:** Lift the Sales headcount freeze. REQ-114 (AE) is reopened and recruiting resumes. Decision made by Dana (CEO).\n")
+        ok, l, out = q2_case("note", note)
+        check("8e Q2 later meeting note with a decision record reversing the freeze: reported as lifted or not certain",
+              ok and (lifted(l) or unsure(l)) and "leadership_sync_2026-06-17.md" in out, l[:110])
+        ok, l, out = q2_case("farneg", lambda d: slack_add(d, FIN, DANA, D17, "We are not, despite what Tomás has been telling people in the hallway all week, lifting the freeze on Sales hiring."))
+        check("8f Q2 negation far from the status word: not reported as lifted", ok and not lifted(l), l[:110])
+        ok, l, out = q2_case("conditional", lambda d: slack_add(d, FIN, DANA, D17, "If July conversion holds we will be lifting the freeze on Sales hiring, REQ-114 first in line."))
+        check("8g Q2 conditional future lift: not reported as lifted", ok and not lifted(l), l[:110])
+        ok, l, out = q2_case("othertopic", lambda d: slack_add(d, FIN, DANA, D17, "We are lifting the freeze on Engineering contractor spend as of today."))
+        check("8h Q2 CEO lifts a different freeze (no mention of Sales): Sales state not reported as lifted", ok and not lifted(l), l[:110])
+        ok, l, out = q2_case("order", lambda d: slack_add(d, FIN, DANA, "Tue Jun 9, 5:00 PM", "Before tomorrow: for now Sales hiring stays open and REQ-114 is approved as is."))
+        check("8i Q2 older message placed out of order in the file: later decision still governs", ok and frozen(l), l[:110])
+
+        def refreeze(d):
+            slack_add(d, FIN, DANA, D17, "Update: we are lifting the freeze on Sales hiring, REQ-114 is approved to proceed.")
+            slack_add(d, FIN, DANA, "Wed Jun 17, 4:00 PM", "Scratch that. After the forecast call Sales hiring is frozen again, REQ-114 back on hold.")
+        ok, l, out = q2_case("refreeze", refreeze)
+        check("8j Q2 lift then refreeze on the same day: last statement governs", ok and frozen(l) and "4:00 PM" in l, l[:110])
+
+        # --- round 1 M2: a later message about the duplicate
+        d = tmp / "resolved"
+        shutil.copytree(DATA, d)
+        slack_add(d, "## #ops", "Maya Fortin", "Tue Jun 16, 9:00 AM", "Invoice is back. Amplitude and Amplitude Analytics are two separate contracts, not a duplicate. Both lines are real.")
+        r1, r2 = run(["ask/ask.py", "--q", "q1", "--data", d]), run(["value/value.py", "--data", d])
+        bad = [nm for nm, r in (("ask", r1), ("value", r2)) if not no_trace(*r)]
+        if re.search(r"latest (word|message) on it is `[^`]*Mon Jun 2, 10:47 AM", r1[1]):
+            bad.append("ask still calls the Jun 2 message the latest")
+        if "Tue Jun 16, 9:00 AM" not in r1[1] or "later message" not in r1[1].split("## Evidence")[0]:
+            bad.append("ask answer block does not flag the later message")
+        vh = r2[1].splitlines()[0] if r2[1] else ""
+        if "later message" not in vh or "closed by one invoice" in vh:
+            bad.append("value headline does not flag the later message")
+        check("8k later message about the duplicate is flagged at the top by ask and value (round 1 M2)", not bad, short(bad) or vh[:110])
+
+        # --- round 1 m5 plus cross-stream agreement on the same file
+        d = tmp / "currency"
+        shutil.copytree(DATA, d)
+        swap(d, "pnl_*.csv", f"{SAAS},Looker,11000", f'{SAAS},Looker,"$11,000"')
+        r1, r2 = run(["ask/ask.py", "--q", "q1", "--data", d]), run(["value/value.py", "--data", d])
+        a = re.search(r"\*\*(PARTIAL\. )?As listed, ([\d,.]+) USD", r1[1])
+        check("8l ask reads a $ and comma formatted amount, or marks the headline PARTIAL (round 1 m5)",
+              no_trace(*r1) and bool(a) and (a.group(2) == n(P0["total"]) or bool(a.group(1))), a.group(0) if a else "headline not found")
+        v = re.search(r"\| Computed sum of the \d+ numeric rows above \| ([\d,.]+) \|", r2[1])
+        check("8m ask and value give the same as-listed total on that same file (cross-stream)",
+              no_trace(*r2) and bool(a and v) and a.group(2) == v.group(1), f"ask {a and a.group(2)}, value {v and v.group(1)}")
+
+        # --- round 1 m6: implausible minutes and a repeated ticket ID
+        d = tmp / "tickets"
+        shutil.copytree(DATA, d)
+        t = next(d.glob("support_tickets_*.csv"))
+        first_id = read(t).splitlines()[1].split(",")[0]
+        write(t, read(t).rstrip("\n") + f"\nTCK-9005,2026-03-30,{TARGET},creator_x,Ops Support,9999,Closed\n{first_id},2026-03-30,{TARGET},creator_y,Ops Support,20,Closed\n")
+        o = tmp / "tickets_out"
+        r = run(["automation/run.py", "--data", d, "--out", o, "--check"])
+        bad = [] if no_trace(*r) else ["run failed"]
+        if (o / "routed_queue.csv").exists():
+            with open(o / "routed_queue.csv", encoding="utf-8", newline="") as f:
+                q = list(csv.DictReader(f))
+            if [x["action"] for x in q if x["ticket_id"] == "TCK-9005"] != ["EXCEPTION"]:
+                bad.append("9,999 minute ticket not in EXCEPTION")
+            if [x["action"] for x in q if x["ticket_id"] == first_id][1:] != ["EXCEPTION"]:
+                bad.append("repeated ticket ID not in EXCEPTION")
+            if f"**Before (MEASURED): {n(T0['t_minutes'])} minutes" not in read(o / "before_after.md"):
+                bad.append("before number moved: excluded minutes were counted")
+        else:
+            bad.append("no routed_queue.csv")
+        check("8n implausible minutes and a repeated ticket ID go to EXCEPTION and are not counted (round 1 m6)", not bad, short(bad))
+
+        # --- new: renamed column, second lookalike pair
+        d = tmp / "renamed"
+        shutil.copytree(DATA, d)
+        swap(d, "support_tickets_*.csv", "Handle_Minutes", "Minutes")
+        r = run(["automation/run.py", "--data", d, "--out", tmp / "renamed_out"])
+        check("8o ticket file with a renamed column: plain CANNOT RUN naming the column, no traceback, nothing written",
+              "Traceback" not in r[1] + r[2] and "CANNOT RUN" in r[1] + r[2] and "Handle_Minutes" in r[1] + r[2] and not (tmp / "renamed_out" / "routed_queue.csv").exists())
+        d = tmp / "pairs"
+        shutil.copytree(DATA, d)
+        swap(d, "pnl_*.csv", f"{SAAS},Zoom,1800,Video calls", f"{SAAS},Zoom,1800,Video calls\n{SAAS},Zoom Phone,1800,Telephony")
+        r1, r2 = run(["ask/ask.py", "--q", "q1", "--data", d]), run(["value/value.py", "--data", d])
+        want = n(P0["dup"] + 1800)
+        check("8p second lookalike pair in the category: both tools show both pairs and the same combined amount",
+              no_trace(*r1) and no_trace(*r2) and r2[1].startswith(f"# Value number: {want} USD") and f"- {want})" in r1[1]
+              and "Zoom Phone" in r1[1] and "detected by rule only" in r1[1], f"expected {want}")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+    check("8q committed outputs untouched by the regression runs", q2_default == state_line(read(ASK_OUT[1])) and ba == read(AUTO_OUT[1]))
 
 
 # ---------- 7. hygiene ----------
@@ -591,21 +751,53 @@ def check_hygiene():
     check("7b .py files import only the standard library, and shipped code has no network or shell module", not bad,
           short(bad) or f"{seen} imports scanned" + ("" if std is not None else ", stdlib list needs Python 3.10+, network scan only"))
 
-    # the stated target is macOS, whose stock python3 is 3.9: flag syntax or calls that need 3.10 or later
+    # the stated target is macOS, whose stock python3 is 3.9, and the READMEs promise 3.8 or later.
+    # Static check: 3.8 grammar, plus calls and modules that only exist from 3.9 or 3.10.
+    new_attrs = {"removeprefix": "3.9", "removesuffix": "3.9", "bit_count": "3.10", "pairwise": "3.10", "is_relative_to": "3.9",
+                 "readlink": "3.9", "with_stem": "3.9", "randbytes": "3.9", "to_thread": "3.9"}
+    new_mods = {"zoneinfo": "3.9", "graphlib": "3.9", "tomllib": "3.11"}
+    generic = {"list", "dict", "tuple", "set", "frozenset", "type"}
     bad = []
-    for p in sorted(ROOT.rglob("*.py")):
-        if set(p.relative_to(ROOT).parts) & {".git", "__pycache__"}:
-            continue
+    shipped_py = [p for p in sorted(ROOT.rglob("*.py")) if not (set(p.relative_to(ROOT).parts) & {".git", "__pycache__"})]
+    for p in shipped_py:
+        rel = p.relative_to(ROOT).as_posix()
         try:
-            tree = ast.parse(read(p), feature_version=(3, 9))
+            tree = ast.parse(read(p), feature_version=(3, 8))
         except SyntaxError as e:
-            bad.append(f"{p.name}: syntax newer than Python 3.9 (line {e.lineno})")
+            bad.append(f"{rel}: syntax newer than Python 3.8 (line {e.lineno})")
             continue
         for node in ast.walk(tree):
-            if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute) and node.func.attr == "write_text" \
-                    and "newline" in {k.arg for k in node.keywords}:
-                bad.append(f"{p.relative_to(ROOT).as_posix()}:{node.lineno} Path.write_text(newline=) needs Python 3.10 or later")
-    check("7d shipped code avoids calls newer than Python 3.9 (stock macOS python3)", not bad, short(bad))
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute):
+                kw = {k.arg for k in node.keywords}
+                if node.func.attr == "write_text" and "newline" in kw:
+                    bad.append(f"{rel}:{node.lineno} Path.write_text(newline=) needs Python 3.10")
+                if node.func.attr in new_attrs:
+                    bad.append(f"{rel}:{node.lineno} .{node.func.attr}() needs Python {new_attrs[node.func.attr]}")
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Name) and node.func.id == "zip" \
+                    and "strict" in {k.arg for k in node.keywords}:
+                bad.append(f"{rel}:{node.lineno} zip(strict=) needs Python 3.10")
+            if isinstance(node, ast.Attribute) and node.attr in ("week", "weekday") and isinstance(node.value, ast.Call) \
+                    and isinstance(node.value.func, ast.Attribute) and node.value.func.attr == "isocalendar":
+                bad.append(f"{rel}:{node.lineno} isocalendar().{node.attr} needs Python 3.9")
+            if isinstance(node, ast.Subscript) and isinstance(node.value, ast.Name) and node.value.id in generic:
+                bad.append(f"{rel}:{node.lineno} {node.value.id}[...] needs Python 3.9")
+            if isinstance(node, (ast.Import, ast.ImportFrom)):
+                for m in ([a.name for a in node.names] if isinstance(node, ast.Import) else [node.module or ""]):
+                    if m.split(".")[0] in new_mods:
+                        bad.append(f"{rel}:{node.lineno} module {m} needs Python {new_mods[m.split('.')[0]]}")
+    old_py = next((w for w in (shutil.which("python3.8"), shutil.which("python3.9")) if w), None)
+    ran = "no python3.8 or python3.9 on this machine: STATIC ONLY, no real run on those versions happened"
+    if old_py:
+        tmp = Path(tempfile.mkdtemp(prefix="valis_check_"))
+        try:
+            for cmd in (["ask/ask.py", "--out", tmp / "a"], ["value/value.py", "--out", tmp / "v.md"], ["automation/run.py", "--out", tmp / "o", "--check"]):
+                pr = subprocess.run([old_py] + [str(c) for c in cmd], cwd=str(ROOT), capture_output=True, timeout=180)
+                if pr.returncode != 0 or b"Traceback" in pr.stderr:
+                    bad.append(f"{cmd[0]} fails under {old_py}")
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+        ran = f"also run for real under {old_py}"
+    check("7d code is compatible with Python 3.8 and 3.9 (round 1 B1)", not bad, short(bad) or f"{len(shipped_py)} files, {ran}")
 
     # hardcoded names, vendors, categories and amounts in deliverable code (vocabulary files are checked for people and vendors only)
     people, vendors, cats = set(), set(), set()
@@ -662,6 +854,7 @@ def main():
     P, T = check_arithmetic(units)
     check_consistency(P)
     check_fresh(P, T)
+    check_regressions(P, T)
     check_hygiene()
     check("1 data/ still matches data/CHECKSUMS.txt after all runs",
           all(hashlib.sha256((DATA / l.split(None, 1)[1].strip()).read_bytes()).hexdigest() == l.split()[0]
