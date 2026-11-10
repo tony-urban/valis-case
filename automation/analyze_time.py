@@ -452,8 +452,20 @@ def parse_args(doc):
     return ap
 
 
+def safe_out(args):
+    """Committed outputs are only ever written from the committed data. With a
+    different --data and no explicit --out, write to a scratch folder instead."""
+    data, out = Path(args.data), Path(args.out)
+    if data.resolve() != (ROOT / "data").resolve() and out.resolve() == (HERE / "out").resolve():
+        import tempfile
+        out = Path(tempfile.mkdtemp(prefix="automation_out_"))
+        print(f"NOTE: --data is not the committed data and no --out was given. Writing to {out}, not automation/out/.")
+    return out
+
+
 if __name__ == "__main__":
     args = parse_args(__doc__).parse_args()
+    args.out = str(safe_out(args))
     try:
         write_report(Path(args.data), load_rules(args.category), Path(args.out))
         print(f"wrote {Path(args.out) / 'time_waste.md'}")

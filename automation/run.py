@@ -243,7 +243,7 @@ def main():
     args = ap.parse_args()
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8", errors="replace")
-    data, out = Path(args.data), Path(args.out)
+    data, out = Path(args.data), at.safe_out(args)
     try:
         rules = at.load_rules(args.category)
         tickets, _ = at.write_report(data, rules, out)

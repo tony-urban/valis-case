@@ -40,7 +40,7 @@ Every run rewrites the generated outputs byte for byte the same. `tests/check.py
 | `BUILD_LOG.md` | Deliverable 4: timestamped build log (prompts, files, dead ends, judgment calls). |
 | `pipeline/` | The agent pipeline used to solve the case, one handoff file per stage, plus the shared parser `importer.py`. |
 | `tests/` | `check.py`, written by an agent that built none of the work. |
-| `chat_logs/` | Exported LLM chat transcripts. |
+| `chat_logs/` | Exported LLM chat transcripts (added at submission, empty until then). |
 
 ## Runtime rules
 
@@ -58,7 +58,7 @@ The case was solved by a chain of separate agents, each with its own context and
 | 01 Importer | `pipeline/importer.py` (a script, not an LLM), `pipeline/01_inventory.md`, `pipeline/index.json`: every citable line in the bundle |
 | 02 Task-setter | `pipeline/02_task.md`: requirements, rules R1 to R13, the citation format |
 | 03 Scoper | `pipeline/03_scope.md`: work streams, traps, cross-stream rulings |
-| 04 Orchestrator | no separate file: its decisions are logged in `BUILD_LOG.md` |
+| 04 Orchestrator | `pipeline/04_runs.md`, decisions logged in `BUILD_LOG.md` |
 | 05 Workers | one per work stream: `ask/`, `value/`, `automation/`, each with its own `JUDGMENTS.md` |
 | 06 Tester | `tests/check.py` and `pipeline/06_test.md`, two rounds, the cap |
 | 07 Presenter | `answers/REPORT.md` and this README |
@@ -68,7 +68,7 @@ Human decisions are marked "Decision (Tony)" in `BUILD_LOG.md`. Everything else 
 
 ## Walkthrough map for a 30 minute screen share
 
-For any live change, first copy `data/` to a scratch folder and edit the copy. With `--data <folder>` the committed outputs are not touched.
+For any live change, first copy `data/` to a scratch folder and edit the copy. With `--data <folder>` the committed outputs are not touched: the tools print the result or write to a scratch folder unless you pass `--out <folder>`.
 
 | Tool | File | Functions worth opening | A fresh-file change to make live | Expected effect |
 |---|---|---|---|---|
