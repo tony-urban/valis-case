@@ -18,3 +18,11 @@ Times are Europe/London, 2026-11-10. Clock started 15:39.
 | 16:03 | Decision (Tony) | Tester loop capped at 2 rounds. Reason: if two rounds cannot produce a result, the likely answer is that the data is not there. |
 | 16:05 | Action | Extracted archive. 11 content files, matching the START_HERE list including all three meeting notes. Copied unmodified into `data/`. Dropped macOS metadata (`.DS_Store`, `__MACOSX/`). Wrote `data/CHECKSUMS.txt`. |
 | 16:08 | Action | Created repo scaffold: README, pipeline definition, empty deliverable folders, this log. |
+| 16:08 | Blocker | First push refused: repo not authorized for the session. |
+| 16:10 | Decision (Tony) | Work on `main`. Repo can be public: all data is synthetic. Start the work. |
+| 16:10 | Blocker | GitHub re-linked: reads work, pushes still refused (Claude GitHub App has no access to the repo). Sent Tony the two fix links. Committing locally until resolved. |
+| 16:12 | Decision | Stage 1 (Importer) built as a deterministic script, `pipeline/importer.py`, not an LLM agent. Reason: reproducible, reviewers can rerun it, and it has to work on a fresh file in the live walkthrough. |
+| 16:14 | Judgment | Importer reports only mechanical facts per file (blanks, invalid dates, non-numeric amounts, stated totals vs computed sums, near-identical labels). It does not decide what any flag means. Reason: keep interpretation in later stages where it is tested. |
+| 16:16 | Dead-end | First version of the similar-label check used substring matching. It flagged "COO" inside "Operations Coordinator" (false positive) and missed "Creator Mgmt" vs "Creator Management". Replaced with word-prefix and abbreviation matching. |
+| 16:18 | Check | Slack message count verified two ways: importer parse (66) and an independent pattern count on the raw file (66). |
+| 16:18 | Output | `pipeline/01_inventory.md` (11 files, 515 addressable units, 25 flags) and `pipeline/index.json`. Awaiting Tony's approval before stage 2. |

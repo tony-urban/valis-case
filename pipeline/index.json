@@ -1,0 +1,5320 @@
+[
+ {
+  "file": "00_START_HERE.md",
+  "line": 1,
+  "kind": "heading",
+  "text": "Valis — build exercise (Principal, GTM)"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 3,
+  "kind": "line",
+  "section": "Valis — build exercise (Principal, GTM)",
+  "text": "**The setup.** You've been dropped in next to **Dana Whitfield, CEO of Northwind Media** — a"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 4,
+  "kind": "line",
+  "section": "Valis — build exercise (Principal, GTM)",
+  "text": "~300-person creator-economy company. Her data is scattered across Slack, spreadsheets, meeting notes,"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 5,
+  "kind": "line",
+  "section": "Valis — build exercise (Principal, GTM)",
+  "text": "and an org chart, and — her words — she's *\"drowning in dashboards and doesn't fully trust her own"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 6,
+  "kind": "line",
+  "section": "Valis — build exercise (Principal, GTM)",
+  "text": "numbers.\"* You have **one focused day** to show what a Valis-style first slice looks like — **built by"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 7,
+  "kind": "line",
+  "section": "Valis — build exercise (Principal, GTM)",
+  "text": "hand, on her real (synthetic) mess.**"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 9,
+  "kind": "line",
+  "section": "Valis — build exercise (Principal, GTM)",
+  "text": "Everything in this folder is **100% synthetic** — a fabricated company. Use it freely; nothing here is"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 10,
+  "kind": "line",
+  "section": "Valis — build exercise (Principal, GTM)",
+  "text": "real client data."
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 12,
+  "kind": "line",
+  "section": "Valis — build exercise (Principal, GTM)",
+  "text": "**Start with `CEO_CONTEXT.md`** (Dana's framing), then **`CEO_QUESTIONS.md`** (what she's asking). The"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 13,
+  "kind": "line",
+  "section": "Valis — build exercise (Principal, GTM)",
+  "text": "rest is the raw material to work from."
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 15,
+  "kind": "heading",
+  "text": "What's attached — the \"Northwind-in-a-box\" bundle"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 17,
+  "kind": "line",
+  "section": "What's attached — the \"Northwind-in-a-box\" bundle",
+  "text": "- `CEO_CONTEXT.md` — Dana's orientation note · **read first**"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 18,
+  "kind": "line",
+  "section": "What's attached — the \"Northwind-in-a-box\" bundle",
+  "text": "- `CEO_QUESTIONS.md` — the questions to answer"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 19,
+  "kind": "line",
+  "section": "What's attached — the \"Northwind-in-a-box\" bundle",
+  "text": "- `org_chart.md` — leadership and team structure"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 20,
+  "kind": "line",
+  "section": "What's attached — the \"Northwind-in-a-box\" bundle",
+  "text": "- `pnl_q1_2026.csv` — quarterly P&L extract"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 21,
+  "kind": "line",
+  "section": "What's attached — the \"Northwind-in-a-box\" bundle",
+  "text": "- `headcount_roster.csv` — headcount roster + open requisitions (snapshot 2026-05-01)"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 22,
+  "kind": "line",
+  "section": "What's attached — the \"Northwind-in-a-box\" bundle",
+  "text": "- `support_tickets_q1_2026.csv` — support-ticket log"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 23,
+  "kind": "line",
+  "section": "What's attached — the \"Northwind-in-a-box\" bundle",
+  "text": "- `slack_export.md` — `#leadership` / `#finance` / `#ops` / `#people`, ~8 weeks"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 24,
+  "kind": "line",
+  "section": "What's attached — the \"Northwind-in-a-box\" bundle",
+  "text": "- `meeting_notes/` — leadership sync, finance review, data review"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 26,
+  "kind": "heading",
+  "text": "Deliverables — four things, in one folder you send back"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 28,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "1. **A working ask-with-sources slice.** Build something that *runs on this data* and answers the CEO's"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 29,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "two questions, each **with its sources cited to the exact file/line/message and a calibrated"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 30,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "confidence level**:"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 31,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "- *\"What did we actually spend on SaaS tools last quarter?\"*"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 32,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "- *\"Did we decide to hire in Sales or freeze hiring — what's the current state, and who owns it?\"*"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 33,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "2. **One value number, CFO-grade.** From the data, produce **one number you'd put in front of the CFO**"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 34,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "to prove value (a cost you'd cut, time you'd save, a leak you'd close). Show its **baseline, the"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 35,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "arithmetic, the exact source rows, and an explicit list of what you could NOT verify.** Assume a"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 36,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "finance person will try to break it."
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 37,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "3. **One automation, shipped and running.** Mine the bundle for where Northwind wastes the most time."
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 38,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "Pick the single best workflow to automate and **build a working version that actually runs on this"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 39,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "data** end-to-end and produces a real before→after number — plus the **one-page builder spec** you'd"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 40,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "hand a remote builder (scope, a data contract referencing the actual columns/files, an"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 41,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "\"answer-complete\" acceptance test, what's in/out). The thing must run; \"a builder could extend this\""
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 42,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "is for polish, not a substitute for it running."
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 43,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "4. **A build log.** As you work, keep a running, **timestamped** log — the prompts you ran, files you"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 44,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "created, dead-ends, and **every judgment call you made on the dirty data** — wherever something"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 45,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "looked inconsistent, ambiguous, or untrustworthy and you had to decide how to handle it — each with a"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 46,
+  "kind": "line",
+  "section": "Deliverables — four things, in one folder you send back",
+  "text": "one-line reason. We read this as carefully as the artifact."
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 48,
+  "kind": "heading",
+  "text": "How to work it"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 50,
+  "kind": "line",
+  "section": "How to work it",
+  "text": "- **Time-box.** One focused day (~8h). Solo. **Use your own AI tooling — Claude, MCP, skills — heavily;"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 51,
+  "kind": "line",
+  "section": "How to work it",
+  "text": "we want to see you AI-native.** The test is whether *you* drive, debug, and own the output, not"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 52,
+  "kind": "line",
+  "section": "How to work it",
+  "text": "whether your agent can."
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 53,
+  "kind": "line",
+  "section": "How to work it",
+  "text": "- **How to submit.** Send back one folder (your artifact + build log + value-number worksheet + builder"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 54,
+  "kind": "line",
+  "section": "How to work it",
+  "text": "spec). Then we'll do a **30-minute live walkthrough** where you screen-share, reproduce a step or two"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 55,
+  "kind": "line",
+  "section": "How to work it",
+  "text": "we pick on the spot — possibly on a fresh file you haven't seen — and we'll push on the value number."
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 56,
+  "kind": "line",
+  "section": "How to work it",
+  "text": "- **What \"show your work\" means here.** Every number traces to a row. Confidence is honest — high where"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 57,
+  "kind": "line",
+  "section": "How to work it",
+  "text": "the data is clean, *\"I couldn't verify this\"* where it isn't. If a question has no clean answer in the"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 58,
+  "kind": "line",
+  "section": "How to work it",
+  "text": "data, say so and tell us what you'd need — **don't manufacture one.** The right answer matters less"
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 59,
+  "kind": "line",
+  "section": "How to work it",
+  "text": "than that it's true and traceable."
+ },
+ {
+  "file": "00_START_HERE.md",
+  "line": 61,
+  "kind": "line",
+  "section": "How to work it",
+  "text": "*Valis — confidential. Shared under NDA.*"
+ },
+ {
+  "file": "CEO_CONTEXT.md",
+  "line": 1,
+  "kind": "heading",
+  "text": "A note from Dana"
+ },
+ {
+  "file": "CEO_CONTEXT.md",
+  "line": 3,
+  "kind": "line",
+  "section": "A note from Dana",
+  "text": "Hi — thanks for jumping in."
+ },
+ {
+  "file": "CEO_CONTEXT.md",
+  "line": 5,
+  "kind": "line",
+  "section": "A note from Dana",
+  "text": "I'm Dana Whitfield, CEO of Northwind Media. We're about 300 people in the creator economy: we manage and grow online creators, sell brand partnerships, produce a lot of content, and we've got a small product and data team holding the tooling together. We've grown fast, which is great, and also means a lot of how we run is still held together with spreadsheets, Slack threads, and the heroics of a few people who \"just know how it works.\""
+ },
+ {
+  "file": "CEO_CONTEXT.md",
+  "line": 7,
+  "kind": "line",
+  "section": "A note from Dana",
+  "text": "Here's my honest #1 frustration: **I'm drowning in dashboards and status meetings, and I don't fully trust my own numbers.** Every team has its own view of the truth, the same metric means three different things depending on who you ask, and by the time something reaches me it's been summarized so many times I can't tell what's a fact and what's a vibe. I don't want more dashboards. I want someone who can go into the raw stuff, reconcile it, and tell me straight what's actually true — and where it isn't, say so instead of papering over it."
+ },
+ {
+  "file": "CEO_CONTEXT.md",
+  "line": 9,
+  "kind": "line",
+  "section": "A note from Dana",
+  "text": "**What's in this folder:** I've dropped in a slice of how we actually operate — last quarter's financials (the P&L and a few supporting exports), a headcount roster, support ticket data, and a pile of Slack and meeting notes from the last couple of months. It's deliberately messy, just like real life. There's a short `CEO_QUESTIONS.md` with the two things I most want answered plus a question about where we're wasting time. Dig into the source files, cross-check them against each other, and give me answers you'd be willing to stake your name on. If two sources disagree, I'd rather hear \"these don't reconcile and here's why\" than a clean number that's wrong."
+ },
+ {
+  "file": "CEO_CONTEXT.md",
+  "line": 11,
+  "kind": "line",
+  "section": "A note from Dana",
+  "text": "Thanks — looking forward to seeing how you think."
+ },
+ {
+  "file": "CEO_CONTEXT.md",
+  "line": 13,
+  "kind": "line",
+  "section": "A note from Dana",
+  "text": "— Dana"
+ },
+ {
+  "file": "CEO_QUESTIONS.md",
+  "line": 1,
+  "kind": "heading",
+  "text": "Questions for the Operator"
+ },
+ {
+  "file": "CEO_QUESTIONS.md",
+  "line": 3,
+  "kind": "line",
+  "section": "Questions for the Operator",
+  "text": "A few things I want a clear read on. Dig into the data we've got — the P&L export, the headcount roster, the Slack threads, the meeting notes, the support tickets — and come back with straight answers."
+ },
+ {
+  "file": "CEO_QUESTIONS.md",
+  "line": 5,
+  "kind": "line",
+  "section": "Questions for the Operator",
+  "text": "— Dana Whitfield, CEO"
+ },
+ {
+  "file": "CEO_QUESTIONS.md",
+  "line": 9,
+  "kind": "heading",
+  "text": "Q1. SaaS spend"
+ },
+ {
+  "file": "CEO_QUESTIONS.md",
+  "line": 11,
+  "kind": "line",
+  "section": "Q1. SaaS spend",
+  "text": "**\"What did we actually spend on SaaS tools last quarter?\"**"
+ },
+ {
+  "file": "CEO_QUESTIONS.md",
+  "line": 13,
+  "kind": "line",
+  "section": "Q1. SaaS spend",
+  "text": "I want the real number for software/SaaS for Q1 2026. Finance has the P&L line items; pull it from there and tell me what we're paying for."
+ },
+ {
+  "file": "CEO_QUESTIONS.md",
+  "line": 15,
+  "kind": "heading",
+  "text": "Q2. Sales hiring"
+ },
+ {
+  "file": "CEO_QUESTIONS.md",
+  "line": 17,
+  "kind": "line",
+  "section": "Q2. Sales hiring",
+  "text": "**\"Did we decide to hire in Sales or freeze hiring — what's the current state, and who owns it?\"**"
+ },
+ {
+  "file": "CEO_QUESTIONS.md",
+  "line": 19,
+  "kind": "line",
+  "section": "Q2. Sales hiring",
+  "text": "There's been back-and-forth on this. I need to know where we landed, what the situation is right now, and who's accountable for the call."
+ },
+ {
+  "file": "CEO_QUESTIONS.md",
+  "line": 21,
+  "kind": "heading",
+  "text": "Workflow"
+ },
+ {
+  "file": "CEO_QUESTIONS.md",
+  "line": 23,
+  "kind": "line",
+  "section": "Workflow",
+  "text": "**\"Where are we wasting the most time, and what would you automate first?\"**"
+ },
+ {
+  "file": "CEO_QUESTIONS.md",
+  "line": 25,
+  "kind": "line",
+  "section": "Workflow",
+  "text": "Across the company — ops, finance, content, support — where is manual effort piling up? If you could automate one workflow, what would it be and why?"
+ },
+ {
+  "file": "CEO_QUESTIONS.md",
+  "line": 29,
+  "kind": "line",
+  "section": "Workflow",
+  "text": "*Use whatever sources you need. I care more about a correct, well-supported answer than a fast one.*"
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 1,
+  "kind": "meta",
+  "text": "Northwind Media — Headcount Roster Snapshot"
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 2,
+  "kind": "meta",
+  "text": "Snapshot_Date,2026-05-01"
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 3,
+  "kind": "meta",
+  "text": "Currency,USD"
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 4,
+  "kind": "meta",
+  "text": "Prepared_by,Elena Novak (Head of People)"
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 8,
+  "kind": "row",
+  "section": "TEAM_HEADCOUNT_SUMMARY",
+  "fields": {
+   "Team": "Content/Production",
+   "Headcount": "95"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 9,
+  "kind": "row",
+  "section": "TEAM_HEADCOUNT_SUMMARY",
+  "fields": {
+   "Team": "Creator Management",
+   "Headcount": "60"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 10,
+  "kind": "row",
+  "section": "TEAM_HEADCOUNT_SUMMARY",
+  "fields": {
+   "Team": "Growth/Marketing",
+   "Headcount": "45"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 11,
+  "kind": "row",
+  "section": "TEAM_HEADCOUNT_SUMMARY",
+  "fields": {
+   "Team": "Sales",
+   "Headcount": "35"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 12,
+  "kind": "row",
+  "section": "TEAM_HEADCOUNT_SUMMARY",
+  "fields": {
+   "Team": "Engineering",
+   "Headcount": "25"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 13,
+  "kind": "row",
+  "section": "TEAM_HEADCOUNT_SUMMARY",
+  "fields": {
+   "Team": "Data",
+   "Headcount": "10"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 14,
+  "kind": "row",
+  "section": "TEAM_HEADCOUNT_SUMMARY",
+  "fields": {
+   "Team": "Operations",
+   "Headcount": "15"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 15,
+  "kind": "row",
+  "section": "TEAM_HEADCOUNT_SUMMARY",
+  "fields": {
+   "Team": "Finance",
+   "Headcount": "6"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 16,
+  "kind": "row",
+  "section": "TEAM_HEADCOUNT_SUMMARY",
+  "fields": {
+   "Team": "People/HR",
+   "Headcount": "6"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 17,
+  "kind": "row",
+  "section": "TEAM_HEADCOUNT_SUMMARY",
+  "fields": {
+   "Team": "G&A/Exec",
+   "Headcount": "3"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 18,
+  "kind": "row",
+  "section": "TEAM_HEADCOUNT_SUMMARY",
+  "fields": {
+   "Team": "TOTAL",
+   "Headcount": "300"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 22,
+  "kind": "row",
+  "section": "OPEN_REQUISITIONS",
+  "fields": {
+   "Req_ID": "REQ-114",
+   "Team": "Sales",
+   "Title": "Account Executive",
+   "Status": "APPROVED",
+   "Target_Start": "2026-07-15",
+   "Hiring_Manager": "Tomás Reyes"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 23,
+  "kind": "row",
+  "section": "OPEN_REQUISITIONS",
+  "fields": {
+   "Req_ID": "REQ-118",
+   "Team": "Engineering",
+   "Title": "Backend Engineer",
+   "Status": "OPEN",
+   "Target_Start": "2026-08-01",
+   "Hiring_Manager": "Raj Patel"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 24,
+  "kind": "row",
+  "section": "OPEN_REQUISITIONS",
+  "fields": {
+   "Req_ID": "REQ-121",
+   "Team": "Content/Production",
+   "Title": "Senior Video Editor",
+   "Status": "OPEN",
+   "Target_Start": "2026-07-01",
+   "Hiring_Manager": "Yuki Tanaka"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 25,
+  "kind": "row",
+  "section": "OPEN_REQUISITIONS",
+  "fields": {
+   "Req_ID": "REQ-125",
+   "Team": "Data",
+   "Title": "Analytics Engineer",
+   "Status": "OPEN",
+   "Target_Start": "",
+   "Hiring_Manager": "Ben Okoro"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 29,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Dana Whitfield",
+   "Team": "G&A/Exec",
+   "Title": "CEO",
+   "Status": "Active",
+   "Start_Date": "2019-02-04",
+   "Manager": "Board"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 30,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Marcus Lindqvist",
+   "Team": "G&A/Exec",
+   "Title": "COO",
+   "Status": "Active",
+   "Start_Date": "2019-06-17",
+   "Manager": "Dana Whitfield"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 31,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Priya Raman",
+   "Team": "Finance",
+   "Title": "CFO",
+   "Status": "Active",
+   "Start_Date": "2020-01-13",
+   "Manager": "Dana Whitfield"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 32,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Tomás Reyes",
+   "Team": "Sales",
+   "Title": "VP Sales (Brand Partnerships)",
+   "Status": "Active",
+   "Start_Date": "2020-09-21",
+   "Manager": "Marcus Lindqvist"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 33,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Hannah Cole",
+   "Team": "Growth/Marketing",
+   "Title": "VP Growth / Marketing",
+   "Status": "Active",
+   "Start_Date": "2021-03-08",
+   "Manager": "Marcus Lindqvist"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 34,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Yuki Tanaka",
+   "Team": "Content/Production",
+   "Title": "VP Content / Production",
+   "Status": "Active",
+   "Start_Date": "2020-05-11",
+   "Manager": "Marcus Lindqvist"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 35,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Sofia Marchetti",
+   "Team": "Creator Management",
+   "Title": "Head of Talent / Creator Management",
+   "Status": "Active",
+   "Start_Date": "2021-07-26",
+   "Manager": "Marcus Lindqvist"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 36,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Raj Patel",
+   "Team": "Engineering",
+   "Title": "VP Engineering",
+   "Status": "Active",
+   "Start_Date": "2021-01-18",
+   "Manager": "Marcus Lindqvist"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 37,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Ben Okoro",
+   "Team": "Data",
+   "Title": "Head of Data",
+   "Status": "Active",
+   "Start_Date": "2021-11-02",
+   "Manager": "Raj Patel"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 38,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Elena Novak",
+   "Team": "People/HR",
+   "Title": "Head of People",
+   "Status": "Active",
+   "Start_Date": "2020-08-30",
+   "Manager": "Dana Whitfield"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 39,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Liam Doyle",
+   "Team": "Operations",
+   "Title": "Head of Operations",
+   "Status": "Active",
+   "Start_Date": "2021-04-12",
+   "Manager": "Marcus Lindqvist"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 40,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Maya Fortin",
+   "Team": "Finance",
+   "Title": "Finance Analyst",
+   "Status": "Active",
+   "Start_Date": "2022-06-06",
+   "Manager": "Priya Raman"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 41,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Aisha Bello",
+   "Team": "Sales",
+   "Title": "Account Executive",
+   "Status": "Active",
+   "Start_Date": "2022-10-03",
+   "Manager": "Tomás Reyes"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 42,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Carlos Mendez",
+   "Team": "Sales",
+   "Title": "Account Executive",
+   "Status": "Active",
+   "Start_Date": "2023-02-20",
+   "Manager": "Tomás Reyes"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 43,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Nina Petrova",
+   "Team": "Sales",
+   "Title": "Sales Development Rep",
+   "Status": "Active",
+   "Start_Date": "2024-01-15",
+   "Manager": "Tomás Reyes"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 44,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Owen Walsh",
+   "Team": "Content/Production",
+   "Title": "Video Editor",
+   "Status": "Active",
+   "Start_Date": "2022-09-12",
+   "Manager": "Yuki Tanaka"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 45,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Grace Kim",
+   "Team": "Content/Production",
+   "Title": "Producer",
+   "Status": "Active",
+   "Start_Date": "2023-05-29",
+   "Manager": "Yuki Tanaka"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 46,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Felix Braun",
+   "Team": "Content/Production",
+   "Title": "Motion Designer",
+   "Status": "Active",
+   "Start_Date": "2026-13-02",
+   "Manager": "Yuki Tanaka"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 47,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Lena Schulz",
+   "Team": "Creator Mgmt",
+   "Title": "Talent Manager",
+   "Status": "Active",
+   "Start_Date": "2022-11-14",
+   "Manager": "Sofia Marchetti"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 48,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Diego Ramos",
+   "Team": "Creator Mgmt",
+   "Title": "Talent Manager",
+   "Status": "Active",
+   "Start_Date": "2023-08-07",
+   "Manager": "Sofia Marchetti"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 49,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Amara Okeke",
+   "Team": "Creator Management",
+   "Title": "Creator Success Lead",
+   "Status": "Active",
+   "Start_Date": "2023-03-19",
+   "Manager": "Sofia Marchetti"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 50,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Jonas Vik",
+   "Team": "Creator Management",
+   "Title": "Onboarding Specialist",
+   "Status": "Active",
+   "Start_Date": "",
+   "Manager": "Sofia Marchetti"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 51,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Ruby Chen",
+   "Team": "Growth/Marketing",
+   "Title": "Growth Marketer",
+   "Status": "Active",
+   "Start_Date": "2023-06-22",
+   "Manager": "Hannah Cole"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 52,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Theo Laurent",
+   "Team": "Growth/Marketing",
+   "Title": "Content Marketer",
+   "Status": "Active",
+   "Start_Date": "2024-02-05",
+   "Manager": "Hannah Cole"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 53,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Priscilla Adeyemi",
+   "Team": "Data",
+   "Title": "Data Analyst",
+   "Status": "Active",
+   "Start_Date": "2023-09-25",
+   "Manager": "Ben Okoro"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 54,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Sam Holloway",
+   "Team": "Engineering",
+   "Title": "Software Engineer",
+   "Status": "Active",
+   "Start_Date": "2022-07-18",
+   "Manager": "Raj Patel"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 55,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Marta Kowalski",
+   "Team": "Engineering",
+   "Title": "Software Engineer",
+   "Status": "Active",
+   "Start_Date": "2023-10-30",
+   "Manager": "Raj Patel"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 56,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Hugo Silva",
+   "Team": "Operations",
+   "Title": "Operations Coordinator",
+   "Status": "Active",
+   "Start_Date": "2023-04-03",
+   "Manager": "Liam Doyle"
+  }
+ },
+ {
+  "file": "headcount_roster.csv",
+  "line": 57,
+  "kind": "row",
+  "section": "EMPLOYEE_ROSTER",
+  "fields": {
+   "Name": "Bianca Rossi",
+   "Team": "People/HR",
+   "Title": "Recruiter",
+   "Status": "Active",
+   "Start_Date": "2024-03-11",
+   "Manager": "Elena Novak"
+  }
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 1,
+  "kind": "heading",
+  "text": "Data Review — 2026-05-20"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 3,
+  "kind": "line",
+  "section": "Data Review — 2026-05-20",
+  "text": "**Attendees:** Ben Okoro (Head of Data), Dana Whitfield (CEO), Hannah Cole (VP Growth / Marketing)"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 4,
+  "kind": "line",
+  "section": "Data Review — 2026-05-20",
+  "text": "**Note-taker:** Ben Okoro"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 5,
+  "kind": "line",
+  "section": "Data Review — 2026-05-20",
+  "text": "**Cadence:** Bi-weekly metrics review"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 9,
+  "kind": "heading",
+  "text": "1. Active creators — working definition"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 11,
+  "kind": "line",
+  "section": "1. Active creators — working definition",
+  "text": "Ben walked through how the Data team currently counts \"active\" creators, since the number keeps coming up differently in different rooms."
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 13,
+  "kind": "line",
+  "section": "1. Active creators — working definition",
+  "text": "> **Data team definition of \"active\":** a creator who **posted ≥1 time in the last 30 days**."
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 14,
+  "kind": "line",
+  "section": "1. Active creators — working definition",
+  "text": "> On this definition, **active creators = 1,210** (as of 2026-05-19 dashboard snapshot)."
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 16,
+  "kind": "line",
+  "section": "1. Active creators — working definition",
+  "text": "Ben flagged that this is *not* the same as the headcount Finance and Talent quote. Finance/Talent talk about \"creators under contract\" (the signed roster), which is a larger number and counts everyone with an active agreement regardless of whether they posted. The Data dashboard intentionally measures **engagement**, not the contract book."
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 18,
+  "kind": "line",
+  "section": "1. Active creators — working definition",
+  "text": "- Dana: wants the two reconciled before the board update — \"I don't want to say 1,210 in one slide and a different number in another.\""
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 19,
+  "kind": "line",
+  "section": "1. Active creators — working definition",
+  "text": "- Ben: will publish a short definitions note so we stop comparing apples to oranges. **Action: Ben to write up \"active (posted ≥1/30d)\" vs \"under contract\" so each number is labeled with its definition.**"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 20,
+  "kind": "line",
+  "section": "1. Active creators — working definition",
+  "text": "- Until then: when a single \"creator count\" is requested, **ask which definition is meant** — engagement (Data, 1,210) or contracted roster (Finance/Talent)."
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 22,
+  "kind": "heading",
+  "text": "2. Posting funnel (last 30 days)"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 24,
+  "kind": "line",
+  "section": "2. Posting funnel (last 30 days)",
+  "text": "| Metric | Value | Notes |"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 25,
+  "kind": "line",
+  "section": "2. Posting funnel (last 30 days)",
+  "text": "|---|---|---|"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 26,
+  "kind": "line",
+  "section": "2. Posting funnel (last 30 days)",
+  "text": "| Creators under management (dashboard universe) | — | pulled from roster sync; see definitions note |"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 27,
+  "kind": "line",
+  "section": "2. Posting funnel (last 30 days)",
+  "text": "| Active (posted ≥1, last 30d) | 1,210 | working definition above |"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 28,
+  "kind": "line",
+  "section": "2. Posting funnel (last 30 days)",
+  "text": "| Posted ≥4 (weekly cadence) | 690 | ~57% of active |"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 29,
+  "kind": "line",
+  "section": "2. Posting funnel (last 30 days)",
+  "text": "| Zero posts in last 30d | (see definitions note) | the gap vs the contracted roster |"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 31,
+  "kind": "line",
+  "section": "2. Posting funnel (last 30 days)",
+  "text": "Hannah: the weekly-cadence cohort (690) is the one that correlates with brand-deal eligibility — wants that broken out as a standing tile."
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 33,
+  "kind": "heading",
+  "text": "3. Dashboard / pipeline items"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 35,
+  "kind": "line",
+  "section": "3. Dashboard / pipeline items",
+  "text": "- **Looker refresh latency** — creator engagement model now refreshes nightly (was 2x/week). Stable for 3 weeks. Ben considers it done."
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 36,
+  "kind": "line",
+  "section": "3. Dashboard / pipeline items",
+  "text": "- **Amplitude event hygiene** — duplicate `post_published` events from the mobile client were inflating the cadence number by ~2–3% in April; fix shipped, numbers above are post-fix."
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 37,
+  "kind": "line",
+  "section": "3. Dashboard / pipeline items",
+  "text": "- **Attribution for subscriptions** — Hannah asked for a first-touch vs last-touch split on creator-subscription signups. Ben: doable, ~1 week, low priority vs the definitions cleanup."
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 39,
+  "kind": "heading",
+  "text": "4. Open items"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 41,
+  "kind": "line",
+  "section": "4. Open items",
+  "text": "- [ ] Ben — publish \"active vs under contract\" definitions note (owner: Data) — **before board update**"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 42,
+  "kind": "line",
+  "section": "4. Open items",
+  "text": "- [ ] Ben — add weekly-cadence (690) standing tile for Hannah"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 43,
+  "kind": "line",
+  "section": "4. Open items",
+  "text": "- [ ] Hannah — confirm which creator number Growth reports externally so it matches the labeled definition"
+ },
+ {
+  "file": "meeting_notes/data_review_2026-05-20.md",
+  "line": 47,
+  "kind": "line",
+  "section": "4. Open items",
+  "text": "*Next data review: 2026-06-03.*"
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 1,
+  "kind": "heading",
+  "text": "Finance Review — May 2026 Close Prep"
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 3,
+  "kind": "line",
+  "section": "Finance Review — May 2026 Close Prep",
+  "text": "**Date:** 2026-05-28"
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 4,
+  "kind": "line",
+  "section": "Finance Review — May 2026 Close Prep",
+  "text": "**Attendees:** Priya Raman (CFO), Maya Fortin (Finance Analyst), Dana Whitfield (CEO)"
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 5,
+  "kind": "line",
+  "section": "Finance Review — May 2026 Close Prep",
+  "text": "**Scribe:** Maya Fortin"
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 9,
+  "kind": "heading",
+  "text": "1. Month-end close status"
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 11,
+  "kind": "line",
+  "section": "1. Month-end close status",
+  "text": "- April close landed on time, but the brand-deal revenue reconciliation was again the long pole. Maya flagged it took ~3 full days this cycle (same as the last few months)."
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 12,
+  "kind": "line",
+  "section": "1. Month-end close status",
+  "text": "- The recon spans three systems that never agree on the first pass: the **CRM deal export**, the **invoicing sheet**, and the **payout tracker**. Deal amounts, close dates, and payout splits drift between all three, so every month is a manual line-by-line tie-out."
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 13,
+  "kind": "line",
+  "section": "1. Month-end close status",
+  "text": "- Priya: this is now the single biggest finance time-sink and it's only going to get worse as brand-partnership volume grows. Flagged as the top candidate for fixing/automating — owner Maya to write up the current manual steps before we scope anything."
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 14,
+  "kind": "line",
+  "section": "1. Month-end close status",
+  "text": "- Q1 2026 revenue recognized as booked: Brand partnerships $4,200,000 · Creator subscriptions $900,000 · Other $150,000. No restatements this cycle."
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 16,
+  "kind": "heading",
+  "text": "2. Roster / per-creator economics"
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 18,
+  "kind": "line",
+  "section": "2. Roster / per-creator economics",
+  "text": "- Finance is modeling subscription and management economics against the **active roster of 1,840 creators under contract**. Priya wants the per-creator contribution view built off that 1,840 base for the board deck."
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 19,
+  "kind": "line",
+  "section": "2. Roster / per-creator economics",
+  "text": "- Dana asked whether 1,840 is the right denominator — Maya to confirm with Data, since marketing/data have been quoting a different engagement-based number. Parked for now; finance continues on 1,840 under contract."
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 21,
+  "kind": "heading",
+  "text": "3. Vendor / SaaS notes"
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 23,
+  "kind": "line",
+  "section": "3. Vendor / SaaS notes",
+  "text": "- **Salesforce renewal closed** — locked at **$60k for the year**. Priya confirmed signed. Maya to make sure the SaaS line picks this up cleanly (the current quarterly P&L figure looks higher than a $60k annual would imply — Maya to check the invoice/contract against what's posted before we call it reconciled)."
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 24,
+  "kind": "line",
+  "section": "3. Vendor / SaaS notes",
+  "text": "- HubSpot, Looker, Amplitude renewals all auto-renew dates inside the next two quarters — Maya to pull a vendor calendar so we stop getting surprised."
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 25,
+  "kind": "line",
+  "section": "3. Vendor / SaaS notes",
+  "text": "- General reminder: a couple of EU-billed tools come through in EUR; normalize to USD at month-end FX before they hit the SaaS subtotal."
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 27,
+  "kind": "heading",
+  "text": "4. Cash / AR"
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 29,
+  "kind": "line",
+  "section": "4. Cash / AR",
+  "text": "- AR aging clean — largest brand-partnership receivable inside terms."
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 30,
+  "kind": "line",
+  "section": "4. Cash / AR",
+  "text": "- No payroll or accrual anomalies flagged for May."
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 32,
+  "kind": "heading",
+  "text": "Action items"
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 34,
+  "kind": "line",
+  "section": "Action items",
+  "text": "| # | Owner | Item | Due |"
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 35,
+  "kind": "line",
+  "section": "Action items",
+  "text": "|---|---|---|---|"
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 36,
+  "kind": "line",
+  "section": "Action items",
+  "text": "| 1 | Maya | Document current month-end brand-deal recon steps (CRM export + invoicing sheet + payout tracker) | Before June close |"
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 37,
+  "kind": "line",
+  "section": "Action items",
+  "text": "| 2 | Maya | Confirm Salesforce posted figure against the signed $60k/yr contract | Next week |"
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 38,
+  "kind": "line",
+  "section": "Action items",
+  "text": "| 3 | Maya | Confirm 1,840 active-roster definition with Data | Next week |"
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 39,
+  "kind": "line",
+  "section": "Action items",
+  "text": "| 4 | Maya | Build vendor renewal calendar | June close |"
+ },
+ {
+  "file": "meeting_notes/finance_review_2026-05-28.md",
+  "line": 42,
+  "kind": "line",
+  "section": "Action items",
+  "text": "*Internal finance note. Figures illustrative / pre-close.*"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 1,
+  "kind": "heading",
+  "text": "Leadership Sync — 2026-06-11"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 3,
+  "kind": "line",
+  "section": "Leadership Sync — 2026-06-11",
+  "text": "**Date:** 2026-06-11 (Thu), 09:00–10:05"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 4,
+  "kind": "line",
+  "section": "Leadership Sync — 2026-06-11",
+  "text": "**Location:** Boardroom / Zoom hybrid"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 5,
+  "kind": "line",
+  "section": "Leadership Sync — 2026-06-11",
+  "text": "**Attendees:** Dana Whitfield (CEO), Marcus Lindqvist (COO), Priya Raman (CFO), Tomás Reyes (VP Sales), Hannah Cole (VP Growth)"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 6,
+  "kind": "line",
+  "section": "Leadership Sync — 2026-06-11",
+  "text": "**Regrets:** Yuki Tanaka (Content), Raj Patel (Eng) — async update sent"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 7,
+  "kind": "line",
+  "section": "Leadership Sync — 2026-06-11",
+  "text": "**Notes:** Marcus"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 11,
+  "kind": "heading",
+  "text": "1. Q1 sales miss + Sales headcount freeze  *(decision)*"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 13,
+  "kind": "line",
+  "section": "1. Q1 sales miss + Sales headcount freeze  *(decision)*",
+  "text": "- Priya walked the room through Q1 actuals one more time. Brand partnerships landed at **$4.2M** vs the internal target; pipeline conversion slipped late in the quarter and a couple of large renewals pushed into Q2."
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 14,
+  "kind": "line",
+  "section": "1. Q1 sales miss + Sales headcount freeze  *(decision)*",
+  "text": "- Tomás: pipeline is \"rebuilding but thin\" — top of funnel is fine, mid-funnel slow. Two AEs ramping slower than expected."
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 15,
+  "kind": "line",
+  "section": "1. Q1 sales miss + Sales headcount freeze  *(decision)*",
+  "text": "- Dana raised the open Sales req (the AE role, REQ-114, Tomás's team) that was approved back in early May. Question on the table: do we keep hiring into Sales or hold?"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 16,
+  "kind": "line",
+  "section": "1. Q1 sales miss + Sales headcount freeze  *(decision)*",
+  "text": "- **DECISION:** **Freeze all new Sales headcount until pipeline recovers.** Quote (Dana): *\"After the Q1 sales miss we're freezing all new Sales headcount until pipeline recovers.\"* This includes **REQ-114 (AE) — now on hold**, not actively recruiting. The 2026-05-01 roster showing it APPROVED is superseded by this decision."
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 17,
+  "kind": "line",
+  "section": "1. Q1 sales miss + Sales headcount freeze  *(decision)*",
+  "text": "- Scope: net-new Sales reqs only. Backfills for regretted attrition to be reviewed case-by-case by Priya + Tomás, not auto-approved."
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 18,
+  "kind": "line",
+  "section": "1. Q1 sales miss + Sales headcount freeze  *(decision)*",
+  "text": "- **Owner:** Decision made by **Dana (CEO)**; **Priya (CFO) holds the line / enforces** — no new Sales req moves forward without her sign-off."
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 19,
+  "kind": "line",
+  "section": "1. Q1 sales miss + Sales headcount freeze  *(decision)*",
+  "text": "- Revisit trigger: pipeline coverage back to target + two consecutive months of recovered conversion. Re-evaluate at **July leadership sync**."
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 20,
+  "kind": "line",
+  "section": "1. Q1 sales miss + Sales headcount freeze  *(decision)*",
+  "text": "- Tomás flagged candidate already in late-stage interviews for REQ-114 — Priya to confirm whether to pause or let the loop finish without an offer. **Action: Priya + Tomás to align this week.**"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 21,
+  "kind": "line",
+  "section": "1. Q1 sales miss + Sales headcount freeze  *(decision)*",
+  "text": "- Elena (People) to be looped in so recruiting pauses the req in Greenhouse. **Action: Marcus to notify Elena.**"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 23,
+  "kind": "heading",
+  "text": "2. Q2 forecast reset  *(discussion)*"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 25,
+  "kind": "line",
+  "section": "2. Q2 forecast reset  *(discussion)*",
+  "text": "- Priya to re-baseline the Q2 forecast given the renewal slip; draft to leadership by **2026-06-18**."
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 26,
+  "kind": "line",
+  "section": "2. Q2 forecast reset  *(discussion)*",
+  "text": "- Hannah: Growth/Marketing demand-gen spend held flat for now; revisit once Q2 forecast is reset. No cuts this week."
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 28,
+  "kind": "heading",
+  "text": "3. Creator roster reporting  *(discussion / parking lot)*"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 30,
+  "kind": "line",
+  "section": "3. Creator roster reporting  *(discussion / parking lot)*",
+  "text": "- Recurring confusion on the headline creator number — Ben (Data) reports **1,210 active** (posted ≥1x in last 30 days), Finance reports **1,840 under contract**. Two different definitions, not reconciled."
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 31,
+  "kind": "line",
+  "section": "3. Creator roster reporting  *(discussion / parking lot)*",
+  "text": "- Dana: pick ONE headline definition before the board update. **Action: Priya + Ben to agree a single definition and label, by next sync.**"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 33,
+  "kind": "heading",
+  "text": "4. Month-end close friction  *(noted)*"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 35,
+  "kind": "line",
+  "section": "4. Month-end close friction  *(noted)*",
+  "text": "- Priya raised that month-end brand-deal revenue reconciliation is eating ~3 days of Maya's time every month and never ties out first pass. Flagged as a candidate for the ops/automation review Marcus is running. No decision today."
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 39,
+  "kind": "heading",
+  "text": "Action items"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 40,
+  "kind": "line",
+  "section": "Action items",
+  "text": "| # | Action | Owner | Due |"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 41,
+  "kind": "line",
+  "section": "Action items",
+  "text": "|---|--------|-------|-----|"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 42,
+  "kind": "line",
+  "section": "Action items",
+  "text": "| 1 | Confirm REQ-114 candidate handling (pause vs finish loop, no offer) | Priya + Tomás | 2026-06-13 |"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 43,
+  "kind": "line",
+  "section": "Action items",
+  "text": "| 2 | Notify Elena/People to pause Sales req in Greenhouse | Marcus | 2026-06-12 |"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 44,
+  "kind": "line",
+  "section": "Action items",
+  "text": "| 3 | Re-baseline Q2 forecast draft to leadership | Priya | 2026-06-18 |"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 45,
+  "kind": "line",
+  "section": "Action items",
+  "text": "| 4 | Agree single creator-count definition + label | Priya + Ben | Next sync |"
+ },
+ {
+  "file": "meeting_notes/leadership_sync_2026-06-11.md",
+  "line": 47,
+  "kind": "line",
+  "section": "Action items",
+  "text": "**Next leadership sync:** 2026-06-25"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 1,
+  "kind": "heading",
+  "text": "Northwind Media — Org Chart"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 3,
+  "kind": "line",
+  "section": "Northwind Media — Org Chart",
+  "text": "_Snapshot: Q2 2026 · Headcount ≈ 300 FTE_"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 5,
+  "kind": "line",
+  "section": "Northwind Media — Org Chart",
+  "text": "Northwind Media is a creator-economy company: we manage and grow online creators,"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 6,
+  "kind": "line",
+  "section": "Northwind Media — Org Chart",
+  "text": "sell brand partnerships, produce content, and run a small product/data team."
+ },
+ {
+  "file": "org_chart.md",
+  "line": 10,
+  "kind": "heading",
+  "text": "Leadership"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 12,
+  "kind": "line",
+  "section": "Leadership",
+  "text": "| Leader | Title | Function |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 13,
+  "kind": "line",
+  "section": "Leadership",
+  "text": "|---|---|---|"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 14,
+  "kind": "line",
+  "section": "Leadership",
+  "text": "| **Dana Whitfield** | CEO | Office of the CEO |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 15,
+  "kind": "line",
+  "section": "Leadership",
+  "text": "| **Marcus Lindqvist** | COO | Operations & cross-functional delivery |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 16,
+  "kind": "line",
+  "section": "Leadership",
+  "text": "| **Priya Raman** | CFO | Finance |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 17,
+  "kind": "line",
+  "section": "Leadership",
+  "text": "| **Tomás Reyes** | VP Sales | Brand Partnerships |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 18,
+  "kind": "line",
+  "section": "Leadership",
+  "text": "| **Hannah Cole** | VP Growth / Marketing | Growth & Marketing |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 19,
+  "kind": "line",
+  "section": "Leadership",
+  "text": "| **Yuki Tanaka** | VP Content / Production | Content & Production |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 20,
+  "kind": "line",
+  "section": "Leadership",
+  "text": "| **Sofia Marchetti** | Head of Talent / Creator Management | Creator Mgmt |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 21,
+  "kind": "line",
+  "section": "Leadership",
+  "text": "| **Raj Patel** | VP Engineering | Engineering |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 22,
+  "kind": "line",
+  "section": "Leadership",
+  "text": "| **Ben Okoro** | Head of Data | Data |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 23,
+  "kind": "line",
+  "section": "Leadership",
+  "text": "| **Elena Novak** | Head of People / HR | People |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 24,
+  "kind": "line",
+  "section": "Leadership",
+  "text": "| **Liam Doyle** | Head of Operations | Ops |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 28,
+  "kind": "heading",
+  "text": "Reporting tree"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 30,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "```"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 31,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "Dana Whitfield — CEO"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 32,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "│"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 33,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "├── Marcus Lindqvist — COO"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 34,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "│   ├── Liam Doyle — Head of Operations ......................... Ops (15)"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 35,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "│   └── (cross-functional delivery oversight across Content, Sales, Growth)"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 36,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "│"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 37,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "├── Priya Raman — CFO"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 38,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "│   └── Finance team .............................................. Finance (6)"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 39,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "│       └── Maya Fortin — Finance Analyst (month-end reconciliation)"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 40,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "│"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 41,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "├── Tomás Reyes — VP Sales (Brand Partnerships) ................. Sales (35)"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 42,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "│"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 43,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "├── Hannah Cole — VP Growth / Marketing ........................ Growth/Marketing (45)"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 44,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "│"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 45,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "├── Yuki Tanaka — VP Content / Production ...................... Content/Production (95)"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 46,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "│"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 47,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "├── Sofia Marchetti — Head of Talent / Creator Management ...... Creator Mgmt (60)"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 48,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "│"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 49,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "├── Raj Patel — VP Engineering ................................. Engineering (25)"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 50,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "│"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 51,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "├── Ben Okoro — Head of Data ................................... Data (10)"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 52,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "│"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 53,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "└── Elena Novak — Head of People / HR ......................... People/HR (6)"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 54,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "```"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 56,
+  "kind": "line",
+  "section": "Reporting tree",
+  "text": "> G&A / Exec sits in the Office of the CEO alongside Dana, Marcus, and Priya (≈3 shared G&A/Exec staff are counted in the totals below, separate from the function leads)."
+ },
+ {
+  "file": "org_chart.md",
+  "line": 60,
+  "kind": "heading",
+  "text": "Headcount by team"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 62,
+  "kind": "line",
+  "section": "Headcount by team",
+  "text": "| Team | Lead | Headcount |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 63,
+  "kind": "line",
+  "section": "Headcount by team",
+  "text": "|---|---|---|"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 64,
+  "kind": "line",
+  "section": "Headcount by team",
+  "text": "| Content / Production | Yuki Tanaka | 95 |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 65,
+  "kind": "line",
+  "section": "Headcount by team",
+  "text": "| Creator Mgmt | Sofia Marchetti | 60 |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 66,
+  "kind": "line",
+  "section": "Headcount by team",
+  "text": "| Growth / Marketing | Hannah Cole | 45 |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 67,
+  "kind": "line",
+  "section": "Headcount by team",
+  "text": "| Sales (Brand Partnerships) | Tomás Reyes | 35 |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 68,
+  "kind": "line",
+  "section": "Headcount by team",
+  "text": "| Engineering | Raj Patel | 25 |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 69,
+  "kind": "line",
+  "section": "Headcount by team",
+  "text": "| Operations | Liam Doyle | 15 |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 70,
+  "kind": "line",
+  "section": "Headcount by team",
+  "text": "| Data | Ben Okoro | 10 |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 71,
+  "kind": "line",
+  "section": "Headcount by team",
+  "text": "| Finance | Priya Raman | 6 |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 72,
+  "kind": "line",
+  "section": "Headcount by team",
+  "text": "| People / HR | Elena Novak | 6 |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 73,
+  "kind": "line",
+  "section": "Headcount by team",
+  "text": "| G&A / Exec | Office of the CEO | 3 |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 74,
+  "kind": "line",
+  "section": "Headcount by team",
+  "text": "| **Total** | | **~300** |"
+ },
+ {
+  "file": "org_chart.md",
+  "line": 78,
+  "kind": "line",
+  "section": "Headcount by team",
+  "text": "_Northwind Media · internal org reference._"
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 2,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Revenue",
+   "Line Item": "Brand partnerships",
+   "Q1_2026_USD": "4200000",
+   "Notes": "Net of agency commissions"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 3,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Revenue",
+   "Line Item": "Creator subscriptions",
+   "Q1_2026_USD": "900000",
+   "Notes": "Subscription/membership revenue"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 4,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Revenue",
+   "Line Item": "Other",
+   "Q1_2026_USD": "150000",
+   "Notes": "Licensing + one-off"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 5,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Revenue",
+   "Line Item": "Total Revenue",
+   "Q1_2026_USD": "5250000",
+   "Notes": "Sum of revenue lines"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 6,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Operating Expenses",
+   "Line Item": "",
+   "Q1_2026_USD": "",
+   "Notes": ""
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 7,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Personnel",
+   "Line Item": "Salaries & benefits (all teams)",
+   "Q1_2026_USD": "3120000",
+   "Notes": "~300 FTE; loaded cost; see headcount_roster.csv"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 8,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Personnel",
+   "Line Item": "Contractor / freelance production",
+   "Q1_2026_USD": "410000",
+   "Notes": "Variable production crews"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 9,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Software & SaaS",
+   "Line Item": "Salesforce",
+   "Q1_2026_USD": "12000",
+   "Notes": "CRM; renewal discussion in #finance — see note"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 10,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Software & SaaS",
+   "Line Item": "HubSpot",
+   "Q1_2026_USD": "9000",
+   "Notes": "Marketing automation"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 11,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Software & SaaS",
+   "Line Item": "Looker",
+   "Q1_2026_USD": "11000",
+   "Notes": "BI / dashboards"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 12,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Software & SaaS",
+   "Line Item": "Amplitude",
+   "Q1_2026_USD": "7500",
+   "Notes": "Product analytics"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 13,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Software & SaaS",
+   "Line Item": "Amplitude Analytics",
+   "Q1_2026_USD": "7500",
+   "Notes": "Product analytics"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 14,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Software & SaaS",
+   "Line Item": "Figma",
+   "Q1_2026_USD": "3600",
+   "Notes": "Design"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 15,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Software & SaaS",
+   "Line Item": "Adobe Creative Cloud",
+   "Q1_2026_USD": "5400",
+   "Notes": "Editing / creative suite"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 16,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Software & SaaS",
+   "Line Item": "Notion",
+   "Q1_2026_USD": "2400",
+   "Notes": "Docs / wiki"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 17,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Software & SaaS",
+   "Line Item": "Slack",
+   "Q1_2026_USD": "4200",
+   "Notes": "Internal comms"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 18,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Software & SaaS",
+   "Line Item": "Google Workspace",
+   "Q1_2026_USD": "6000",
+   "Notes": "Email / docs / storage"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 19,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Software & SaaS",
+   "Line Item": "Zoom",
+   "Q1_2026_USD": "1800",
+   "Notes": "Video calls"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 20,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Software & SaaS",
+   "Line Item": "GitHub",
+   "Q1_2026_USD": "3000",
+   "Notes": "Source control"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 21,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Software & SaaS",
+   "Line Item": "Sentry",
+   "Q1_2026_USD": "1500",
+   "Notes": "Error monitoring"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 22,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Software & SaaS",
+   "Line Item": "Greenhouse",
+   "Q1_2026_USD": "4000",
+   "Notes": "ATS / recruiting"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 23,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Software & SaaS",
+   "Line Item": "Airtable",
+   "Q1_2026_USD": "2100",
+   "Notes": "Ops trackers"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 24,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Software & SaaS",
+   "Line Item": "Software & SaaS subtotal",
+   "Q1_2026_USD": "81000",
+   "Notes": "As-listed sum of SaaS line items"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 25,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Infrastructure",
+   "Line Item": "AWS",
+   "Q1_2026_USD": "38000",
+   "Notes": "Cloud hosting / compute / storage"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 26,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Infrastructure",
+   "Line Item": "Cloudflare",
+   "Q1_2026_USD": "€1900",
+   "Notes": "CDN + DNS; billed in EUR — normalize before totaling"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 27,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Infrastructure",
+   "Line Item": "Infrastructure subtotal",
+   "Q1_2026_USD": "",
+   "Notes": "Subtotal pending FX normalization of EUR line"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 28,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Marketing",
+   "Line Item": "Paid media",
+   "Q1_2026_USD": "260000",
+   "Notes": "Performance + brand"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 29,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Marketing",
+   "Line Item": "Events & sponsorships",
+   "Q1_2026_USD": "48000",
+   "Notes": ""
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 30,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Facilities",
+   "Line Item": "Office & utilities",
+   "Q1_2026_USD": "95000",
+   "Notes": "Two locations"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 31,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "Facilities",
+   "Line Item": "Travel & entertainment",
+   "Q1_2026_USD": "52000",
+   "Notes": ""
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 32,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "G&A",
+   "Line Item": "Legal & professional fees",
+   "Q1_2026_USD": "64000",
+   "Notes": ""
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 33,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "G&A",
+   "Line Item": "Insurance",
+   "Q1_2026_USD": "28000",
+   "Notes": ""
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 34,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "G&A",
+   "Line Item": "Bank & payment processing fees",
+   "Q1_2026_USD": "31000",
+   "Notes": "Creator payouts processing"
+  }
+ },
+ {
+  "file": "pnl_q1_2026.csv",
+  "line": 35,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Category": "G&A",
+   "Line Item": "Office supplies",
+   "Q1_2026_USD": "",
+   "Notes": "Blank — pending AP coding"
+  }
+ },
+ {
+  "file": "slack_export.md",
+  "line": 1,
+  "kind": "heading",
+  "text": "Northwind Media — Slack Export (partial)"
+ },
+ {
+  "file": "slack_export.md",
+  "line": 3,
+  "kind": "line",
+  "section": "Northwind Media — Slack Export (partial)",
+  "text": "> Export generated 2026-06-18. Channels: #leadership, #finance, #ops, #people."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 4,
+  "kind": "line",
+  "section": "Northwind Media — Slack Export (partial)",
+  "text": "> Range: 2026-04-21 → 2026-06-17. Times in ET. Threads flattened; some reactions/joins omitted."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 8,
+  "kind": "heading",
+  "text": "#leadership"
+ },
+ {
+  "file": "slack_export.md",
+  "line": 10,
+  "end_line": 11,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Dana Whitfield",
+  "when": "Mon Apr 21, 9:02 AM",
+  "text": "Morning all. Q1 numbers are basically locked, Priya's team is closing the books this week. Top line held up but sales came in soft vs plan. Let's not sugarcoat it in the board update."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 13,
+  "end_line": 14,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Priya Raman",
+  "when": "Mon Apr 21, 9:14 AM",
+  "text": "Agreed. Brand partnerships landed at $4.2M for the quarter, subs ~$900k, other ~$150k. The miss is all on the partnerships side — pipeline didn't convert the way Tomás forecasted."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 16,
+  "end_line": 17,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Tomás Reyes",
+  "when": "Mon Apr 21, 9:31 AM",
+  "text": "Won't argue the number. Two big renewals slipped into Q2 and one logo churned. I still think we under-invested in AE capacity going into the year. We've got REQ-114 approved and I want to get an AE seated by mid-July."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 19,
+  "end_line": 20,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Marcus Lindqvist",
+  "when": "Mon Apr 21, 9:40 AM",
+  "text": "Let's see how Q2 pipeline looks before we add bodies. Capacity isn't the issue if conversion is the issue."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 22,
+  "end_line": 23,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Tomás Reyes",
+  "when": "Mon Apr 21, 9:44 AM",
+  "text": "Conversion is partly a coverage issue though. Same reps chasing too many accounts."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 25,
+  "end_line": 26,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Dana Whitfield",
+  "when": "Mon Apr 21, 9:52 AM",
+  "text": "Park it. Let's get through the board deck first, then we talk headcount with real numbers in front of us."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 30,
+  "end_line": 31,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Hannah Cole",
+  "when": "Wed Apr 30, 11:20 AM",
+  "text": "Growth update for the deck: organic creator signups up MoM, paid is flat. Nothing alarming. I'll send slides to Marcus by EOD."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 33,
+  "end_line": 34,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Yuki Tanaka",
+  "when": "Wed Apr 30, 2:05 PM",
+  "text": "Production throughput was strong in Q1 — most shows shipped on schedule. The bottleneck is post, not shooting. Flagging for the ops conversation."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 36,
+  "end_line": 37,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Dana Whitfield",
+  "when": "Wed Apr 30, 4:40 PM",
+  "text": "Good. Keep it tight, board wants signal not noise."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 41,
+  "end_line": 42,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Marcus Lindqvist",
+  "when": "Tue May 12, 10:08 AM",
+  "text": "Board went fine. They pushed on the sales miss and on cost discipline. Action item: every VP sanity-check your line items in the Q1 P&L before we publish the final cut. Priya owns the master."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 44,
+  "end_line": 45,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Priya Raman",
+  "when": "Tue May 12, 10:15 AM",
+  "text": "On it. I'll circulate the Software & SaaS breakdown separately — there are a couple of line items I want a second set of eyes on."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 47,
+  "end_line": 48,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Raj Patel",
+  "when": "Tue May 12, 10:31 AM",
+  "text": "Eng tools should be fine — GitHub, Sentry, the usual. Nothing changed in Q1."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 52,
+  "end_line": 53,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Ben Okoro",
+  "when": "Thu May 28, 3:12 PM",
+  "text": "Heads up: the \"active creators\" number is going to look different depending on who you ask. Data defines it as posted-in-last-30-days. Finance is using roster-under-contract. They're not the same population and people keep using them interchangeably in decks."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 55,
+  "end_line": 56,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Dana Whitfield",
+  "when": "Thu May 28, 3:25 PM",
+  "text": "Yeah I've noticed that. Can we pick one and stick to it? It's confusing in the board materials."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 58,
+  "end_line": 59,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Ben Okoro",
+  "when": "Thu May 28, 3:31 PM",
+  "text": "We can, but it's a real definitional choice, not a typo. They measure different things. I'd rather you tell me which one you want as the headline than me just picking."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 61,
+  "end_line": 62,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Dana Whitfield",
+  "when": "Thu May 28, 3:48 PM",
+  "text": "Fair. Let's discuss live, not in here."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 66,
+  "end_line": 67,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Dana Whitfield",
+  "when": "Wed Jun 10, 8:47 AM",
+  "text": "OK, decision on Sales hiring. After the Q1 sales miss we're FREEZING all new Sales headcount until pipeline recovers. No new AE reqs move forward, REQ-114 included. Priya holds the line on reqs — nothing gets approved without her sign-off, and Sales is a no right now."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 69,
+  "end_line": 70,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Priya Raman",
+  "when": "Wed Jun 10, 8:52 AM",
+  "text": "Understood, I'll hold them. Tomás, that means REQ-114 is paused, not killed — we revisit when Q2 pipeline shows recovery."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 72,
+  "end_line": 73,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Tomás Reyes",
+  "when": "Wed Jun 10, 9:05 AM",
+  "text": "Noted, though I think we're going to feel this in Q3. Putting my objection on record. But I'll work with what I've got."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 75,
+  "end_line": 76,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Marcus Lindqvist",
+  "when": "Wed Jun 10, 9:11 AM",
+  "text": "This is the right call for now. Revisit at the Q2 review."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 78,
+  "end_line": 79,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Dana Whitfield",
+  "when": "Wed Jun 10, 9:14 AM",
+  "text": "Thanks all. To be clear so there's no ambiguity downstream: current state is frozen on Sales hiring, I'm making the call, Priya enforces it on the req side. Other teams' open reqs are unaffected for now."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 83,
+  "end_line": 84,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Hannah Cole",
+  "when": "Mon Jun 16, 1:02 PM",
+  "text": "Random but the marketing site contact form has been quiet for two weeks — is that a tracking thing or real? Ben can your team peek?"
+ },
+ {
+  "file": "slack_export.md",
+  "line": 86,
+  "end_line": 87,
+  "kind": "message",
+  "channel": "#leadership",
+  "author": "Ben Okoro",
+  "when": "Mon Jun 16, 1:20 PM",
+  "text": "Will check the events. Probably a tag firing issue, saw something similar last month."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 91,
+  "kind": "heading",
+  "text": "#finance"
+ },
+ {
+  "file": "slack_export.md",
+  "line": 93,
+  "end_line": 94,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Priya Raman",
+  "when": "Tue Apr 22, 9:30 AM",
+  "text": "Month-end close kicking off. Maya's running point on the reconciliation. Ping her if your numbers look off."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 96,
+  "end_line": 97,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Maya Fortin",
+  "when": "Tue Apr 22, 9:41 AM",
+  "text": "Already in it. Friendly reminder that the brand-deal revenue recon is the thing that eats my life every month — three sources that never agree on the first pass."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 99,
+  "end_line": 100,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Maya Fortin",
+  "when": "Tue Apr 22, 9:43 AM",
+  "text": "For the record the three are: the CRM export (what Sales says closed), the invoicing sheet (what we billed), and the payout tracker (what creators actually got paid against deals). They drift every single month."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 102,
+  "end_line": 103,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Priya Raman",
+  "when": "Tue Apr 22, 9:50 AM",
+  "text": "I know. It's painful. We'll get to it."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 107,
+  "end_line": 108,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Maya Fortin",
+  "when": "Fri May 2, 5:10 PM",
+  "text": "Closing out April. The brand-deal recon took me basically three full days again. CRM said one set of deals closed, invoicing had a different total, payout tracker had a third. Tied out eventually but it's the same dance every month-end. ~3 days, every time."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 110,
+  "end_line": 111,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Priya Raman",
+  "when": "Fri May 2, 5:18 PM",
+  "text": "That's genuinely the biggest recurring time sink in finance right now. Tabling it as something we should fix properly, not band-aid."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 113,
+  "end_line": 114,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Maya Fortin",
+  "when": "Fri May 2, 5:22 PM",
+  "text": "Please. If we automated the three-way match I'd get three days a month back and the numbers would actually be trustworthy on the first pass."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 118,
+  "end_line": 119,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Priya Raman",
+  "when": "Wed May 14, 11:02 AM",
+  "text": "Good news — closed the Salesforce renewal. $60k for the year, locked. Tomás, your team's CRM is sorted through next May."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 121,
+  "end_line": 122,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Tomás Reyes",
+  "when": "Wed May 14, 11:09 AM",
+  "text": "Nice, thanks for pushing on it."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 124,
+  "end_line": 125,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Maya Fortin",
+  "when": "Wed May 14, 11:15 AM",
+  "text": "Noting it for the SaaS tracker. 👍"
+ },
+ {
+  "file": "slack_export.md",
+  "line": 129,
+  "end_line": 130,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Maya Fortin",
+  "when": "Thu May 22, 2:40 PM",
+  "text": "Quick one for the board cut — when we say \"active roster,\" I'm using 1,840 creators under contract. That's the number Sofia's team gave me for creators we have signed agreements with."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 132,
+  "end_line": 133,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Sofia Marchetti",
+  "when": "Thu May 22, 2:48 PM",
+  "text": "Yes, 1,840 under contract as of end of Q1. That's the contracted roster."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 135,
+  "end_line": 136,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Ben Okoro",
+  "when": "Thu May 22, 3:01 PM",
+  "text": "Just flagging again — that's not the same as \"active.\" Data's active-creator number (posted at least once in the last 30 days) is 1,210. Different definition, different population. As long as the deck labels which one it is, fine. They keep getting mixed up."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 138,
+  "end_line": 139,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Maya Fortin",
+  "when": "Thu May 22, 3:09 PM",
+  "text": "Right, I'll label it \"under contract\" not \"active.\" Thanks Ben."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 143,
+  "end_line": 144,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Priya Raman",
+  "when": "Mon Jun 2, 10:30 AM",
+  "text": "Software & SaaS line is finalized for Q1, subtotal as listed is $81k for the quarter. Note AWS infra (~$38k) sits under Infrastructure, not here — don't let anyone fold them together."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 146,
+  "end_line": 147,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Maya Fortin",
+  "when": "Mon Jun 2, 10:38 AM",
+  "text": "One thing on the SaaS tab — we've got both an \"Amplitude\" line and an \"Amplitude Analytics\" line, each at $7.5k. I'm 90% sure that's the same product entered twice but I haven't confirmed against the invoice. Leaving both in for now and flagging it."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 149,
+  "end_line": 150,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Priya Raman",
+  "when": "Mon Jun 2, 10:45 AM",
+  "text": "Yeah that smells like a double-count. Pull the Amplitude invoice when you get a sec and we'll fix it if it's one contract."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 152,
+  "end_line": 153,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Maya Fortin",
+  "when": "Mon Jun 2, 10:47 AM",
+  "text": "Added to my list. Haven't gotten the invoice back yet so I'm leaving the CSV as-is until I can confirm."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 157,
+  "end_line": 158,
+  "kind": "message",
+  "channel": "#finance",
+  "author": "Maya Fortin",
+  "when": "Fri Jun 13, 4:55 PM",
+  "text": "May close done. Same brand-deal recon grind — ~3 days. Broken record, I know. Whenever we prioritize automation, that's my vote for #1."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 162,
+  "kind": "heading",
+  "text": "#ops"
+ },
+ {
+  "file": "slack_export.md",
+  "line": 164,
+  "end_line": 165,
+  "kind": "message",
+  "channel": "#ops",
+  "author": "Liam Doyle",
+  "when": "Mon Apr 28, 9:15 AM",
+  "text": "Ops standup notes: thumbnail re-upload requests are piling up again. Creators want swaps after publish and it's all manual through the CMS. Volume is high."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 167,
+  "end_line": 168,
+  "kind": "message",
+  "channel": "#ops",
+  "author": "Yuki Tanaka",
+  "when": "Mon Apr 28, 9:22 AM",
+  "text": "Post team feels it too. Every swap is a manual re-export and re-upload. Annoying but each one's only a few minutes."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 170,
+  "end_line": 171,
+  "kind": "message",
+  "channel": "#ops",
+  "author": "Liam Doyle",
+  "when": "Mon Apr 28, 9:30 AM",
+  "text": "Adds up though. And tax form chasing is the other one — W-9s and W-8s for new creators, constant follow-up to get them returned."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 175,
+  "end_line": 176,
+  "kind": "message",
+  "channel": "#ops",
+  "author": "Liam Doyle",
+  "when": "Tue May 6, 11:40 AM",
+  "text": "Honestly support is drowning. It's easily 40 hrs/week on creator support between the thumbnail swaps, the tax forms, and general \"where's my payout\" questions. We need help here."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 178,
+  "end_line": 179,
+  "kind": "message",
+  "channel": "#ops",
+  "author": "Elena Novak",
+  "when": "Tue May 6, 11:52 AM",
+  "text": "40 hrs/week is a lot — is that measured or a vibe? Before we ask for a hire I want the actual ticket data."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 181,
+  "end_line": 182,
+  "kind": "message",
+  "channel": "#ops",
+  "author": "Liam Doyle",
+  "when": "Tue May 6, 11:58 AM",
+  "text": "It feels like 40 easy. I'll let the queue speak for itself but it's relentless."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 184,
+  "end_line": 185,
+  "kind": "message",
+  "channel": "#ops",
+  "author": "Ben Okoro",
+  "when": "Tue May 6, 12:14 PM",
+  "text": "We log support tickets — happy to pull the Q1 numbers if it helps right-size this. I suspect the felt-volume is higher than the measured volume, that's usually how it goes."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 187,
+  "end_line": 188,
+  "kind": "message",
+  "channel": "#ops",
+  "author": "Liam Doyle",
+  "when": "Tue May 6, 12:20 PM",
+  "text": "Sure, pull it. But it FEELS like a full-time person's worth, minimum."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 192,
+  "end_line": 193,
+  "kind": "message",
+  "channel": "#ops",
+  "author": "Liam Doyle",
+  "when": "Thu May 21, 3:05 PM",
+  "text": "Thumbnail swap request #47 this week. I'm not exaggerating about the volume. If we automated self-serve thumbnail replacement half my tickets would vanish."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 195,
+  "end_line": 196,
+  "kind": "message",
+  "channel": "#ops",
+  "author": "Yuki Tanaka",
+  "when": "Thu May 21, 3:12 PM",
+  "text": "Worth scoping. Low dollar value per ticket but high annoyance."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 200,
+  "end_line": 201,
+  "kind": "message",
+  "channel": "#ops",
+  "author": "Liam Doyle",
+  "when": "Wed Jun 4, 10:10 AM",
+  "text": "Tax form season again, chasing W-8s from the international creators. Manual every time. Anyone got a tool rec?"
+ },
+ {
+  "file": "slack_export.md",
+  "line": 203,
+  "end_line": 204,
+  "kind": "message",
+  "channel": "#ops",
+  "author": "Elena Novak",
+  "when": "Wed Jun 4, 10:25 AM",
+  "text": "There are e-sign + tax form services. Cheap. Let's revisit in Q3 planning."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 208,
+  "kind": "heading",
+  "text": "#people"
+ },
+ {
+  "file": "slack_export.md",
+  "line": 210,
+  "end_line": 211,
+  "kind": "message",
+  "channel": "#people",
+  "author": "Elena Novak",
+  "when": "Wed Apr 23, 9:00 AM",
+  "text": "Reminder: headcount roster snapshot for the board goes out May 1. If your team has open reqs, make sure status is current in the tracker before then."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 213,
+  "end_line": 214,
+  "kind": "message",
+  "channel": "#people",
+  "author": "Sofia Marchetti",
+  "when": "Wed Apr 23, 9:12 AM",
+  "text": "Creator Mgmt has one backfill open, will update it."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 216,
+  "end_line": 217,
+  "kind": "message",
+  "channel": "#people",
+  "author": "Raj Patel",
+  "when": "Wed Apr 23, 9:20 AM",
+  "text": "Eng has a couple open but no urgency. I'll mark them accordingly."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 221,
+  "end_line": 222,
+  "kind": "message",
+  "channel": "#people",
+  "author": "Elena Novak",
+  "when": "Fri May 1, 4:30 PM",
+  "text": "Roster snapshot is locked as of today (2026-05-01). Open reqs captured: a Sales AE (REQ-114, approved, target start mid-July), plus a Creator Management backfill and an Eng role. That's the official picture for the board."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 224,
+  "end_line": 225,
+  "kind": "message",
+  "channel": "#people",
+  "author": "Tomás Reyes",
+  "when": "Fri May 1, 4:41 PM",
+  "text": "Good. REQ-114 is the one I care about — need that AE seated by July 15."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 229,
+  "end_line": 230,
+  "kind": "message",
+  "channel": "#people",
+  "author": "Elena Novak",
+  "when": "Thu Jun 11, 9:30 AM",
+  "text": "Following yesterday's leadership call: Sales hiring is frozen effective immediately. REQ-114 is paused per Dana's decision, Priya enforcing on reqs. The May 1 roster is now stale on that point — Sales AE is NOT moving forward right now. Updating my notes; please don't recruit against it."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 232,
+  "end_line": 233,
+  "kind": "message",
+  "channel": "#people",
+  "author": "Sofia Marchetti",
+  "when": "Thu Jun 11, 9:38 AM",
+  "text": "Got it. Does the freeze touch the Creator Management backfill?"
+ },
+ {
+  "file": "slack_export.md",
+  "line": 235,
+  "end_line": 236,
+  "kind": "message",
+  "channel": "#people",
+  "author": "Elena Novak",
+  "when": "Thu Jun 11, 9:41 AM",
+  "text": "No — freeze is Sales-only for now. Other teams' open reqs are unaffected. Just Sales."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 238,
+  "end_line": 239,
+  "kind": "message",
+  "channel": "#people",
+  "author": "Sofia Marchetti",
+  "when": "Thu Jun 11, 9:43 AM",
+  "text": "Perfect, proceeding with the backfill then."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 243,
+  "end_line": 244,
+  "kind": "message",
+  "channel": "#people",
+  "author": "Elena Novak",
+  "when": "Mon Jun 15, 2:00 PM",
+  "text": "Q3 planning prep: if you want any new headcount considered, get it to me with justification by end of month. Note Sales is on freeze so don't bother submitting Sales reqs until that lifts."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 246,
+  "end_line": 247,
+  "kind": "message",
+  "channel": "#people",
+  "author": "Hannah Cole",
+  "when": "Mon Jun 15, 2:14 PM",
+  "text": "Growth might want a lifecycle marketer. Will write it up."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 249,
+  "end_line": 250,
+  "kind": "message",
+  "channel": "#people",
+  "author": "Yuki Tanaka",
+  "when": "Mon Jun 15, 2:20 PM",
+  "text": "Post production could use another editor — that's the real bottleneck, not shooting. Will submit."
+ },
+ {
+  "file": "slack_export.md",
+  "line": 254,
+  "kind": "line",
+  "section": "#people",
+  "text": "*End of export.*"
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 2,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1001",
+   "Date": "2026-01-02",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_avaloncreates",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 3,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1002",
+   "Date": "2026-01-02",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_brightpixel",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "50",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 4,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1003",
+   "Date": "2026-01-03",
+   "Category": "Login issue",
+   "Submitted_By": "creator_chartedwaters",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "15",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 5,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1004",
+   "Date": "2026-01-03",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_dunemotion",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 6,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1005",
+   "Date": "2026-01-05",
+   "Category": "Payout question",
+   "Submitted_By": "creator_emberlite",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "55",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 7,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1006",
+   "Date": "2026-01-05",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_foxglovestudio",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 8,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1007",
+   "Date": "2026-01-06",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_glasscanyon",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 9,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1008",
+   "Date": "2026-01-06",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_harborlight",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 10,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1009",
+   "Date": "2026-01-07",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_ivoryreef",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 11,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1010",
+   "Date": "2026-01-07",
+   "Category": "Login issue",
+   "Submitted_By": "creator_junipertrail",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "10",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 12,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1011",
+   "Date": "2026-01-08",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_kelpforest",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 13,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1012",
+   "Date": "2026-01-08",
+   "Category": "Payout question",
+   "Submitted_By": "creator_lanternbay",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "50",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 14,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1013",
+   "Date": "2026-01-09",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_moonlitpath",
+   "Assigned_To": "",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 15,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1014",
+   "Date": "2026-01-09",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_northstarvideo",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 16,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1015",
+   "Date": "2026-01-12",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_oakhollow",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 17,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1016",
+   "Date": "2026-01-12",
+   "Category": "Account access",
+   "Submitted_By": "creator_pinegrove",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 18,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1017",
+   "Date": "2026-01-13",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_quietharbor",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "40",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 19,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1018",
+   "Date": "2026-01-13",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_riverstone",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 20,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1019",
+   "Date": "2026-01-14",
+   "Category": "Payout question",
+   "Submitted_By": "creator_silvercrest",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 21,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1020",
+   "Date": "2026-01-14",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_tidalwave",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 22,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1021",
+   "Date": "2026-01-15",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_umberglow",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "50",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 23,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1022",
+   "Date": "2026-01-15",
+   "Category": "Login issue",
+   "Submitted_By": "creator_violetdusk",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "10",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 24,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1023",
+   "Date": "2026-01-16",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_wildfern",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 25,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1024",
+   "Date": "2026-01-16",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_xanaduclips",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 26,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1025",
+   "Date": "2026-01-19",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_yellowpine",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 27,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1026",
+   "Date": "2026-01-19",
+   "Category": "Payout question",
+   "Submitted_By": "creator_zephyrmedia",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 28,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1027",
+   "Date": "2026-01-20",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_amberfield",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 29,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1028",
+   "Date": "2026-01-20",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_brookside",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 30,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1029",
+   "Date": "2026-01-21",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_cedarpoint",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 31,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1030",
+   "Date": "2026-01-21",
+   "Category": "Content takedown",
+   "Submitted_By": "creator_driftwood",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "40",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 32,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1031",
+   "Date": "2026-01-22",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_everglade",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 33,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1032",
+   "Date": "2026-01-22",
+   "Category": "Login issue",
+   "Submitted_By": "creator_frostpeak",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "10",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 34,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1033",
+   "Date": "2026-01-23",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_goldleaf",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "50",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 35,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1034",
+   "Date": "2026-01-23",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_hazelwood",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 36,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1035",
+   "Date": "2026-01-26",
+   "Category": "Payout question",
+   "Submitted_By": "creator_indigosky",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 37,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1036",
+   "Date": "2026-01-26",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_jadecoast",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 38,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1037",
+   "Date": "2026-01-27",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_larkspur",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 39,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1038",
+   "Date": "2026-01-27",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_mistralwind",
+   "Assigned_To": "",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 40,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1039",
+   "Date": "2026-01-28",
+   "Category": "Account access",
+   "Submitted_By": "creator_nightowl",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 41,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1040",
+   "Date": "2026-01-28",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_opalbeach",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 42,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1041",
+   "Date": "2026-01-29",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_pebblecreek",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "40",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 43,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1042",
+   "Date": "2026-01-29",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_quillfeather",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 44,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1043",
+   "Date": "2026-01-30",
+   "Category": "Payout question",
+   "Submitted_By": "creator_redwoodway",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "50",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 45,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1044",
+   "Date": "2026-01-30",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_sanddollar",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 46,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1045",
+   "Date": "2026-02-02",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_thornbush",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 47,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1046",
+   "Date": "2026-02-02",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_underbrush",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 48,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1047",
+   "Date": "2026-02-03",
+   "Category": "Login issue",
+   "Submitted_By": "creator_vellichor",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "10",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 49,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1048",
+   "Date": "2026-02-03",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_windrose",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 50,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1049",
+   "Date": "2026-02-04",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_xeriscape",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "50",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 51,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1050",
+   "Date": "2026-02-04",
+   "Category": "Payout question",
+   "Submitted_By": "creator_yarrowmeadow",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "55",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 52,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1051",
+   "Date": "2026-02-05",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_zinniagarden",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 53,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1052",
+   "Date": "2026-02-05",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_ashgrove",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 54,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1053",
+   "Date": "2026-02-06",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_birchbark",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 55,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1054",
+   "Date": "2026-02-06",
+   "Category": "Content takedown",
+   "Submitted_By": "creator_coralcove",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 56,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1055",
+   "Date": "2026-02-09",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_dewdrop",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 57,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1056",
+   "Date": "2026-02-09",
+   "Category": "Login issue",
+   "Submitted_By": "creator_elmstreet",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "10",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 58,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1057",
+   "Date": "2026-02-10",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_fernvalley",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 59,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1058",
+   "Date": "2026-02-10",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_gravelpit",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 60,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1059",
+   "Date": "2026-02-11",
+   "Category": "Payout question",
+   "Submitted_By": "creator_hollowtree",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "50",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 61,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1060",
+   "Date": "2026-02-11",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_islandbreeze",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 62,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1061",
+   "Date": "2026-02-12",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_jettystone",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 63,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1062",
+   "Date": "2026-02-12",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_kingfisher",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 64,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1063",
+   "Date": "2026-02-13",
+   "Category": "Account access",
+   "Submitted_By": "creator_lighthouse",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 65,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1064",
+   "Date": "2026-02-13",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_maplesyrup",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 66,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1065",
+   "Date": "2026-02-16",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_nettlepatch",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "50",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 67,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1066",
+   "Date": "2026-02-16",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_oysterbay",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 68,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1067",
+   "Date": "2026-02-17",
+   "Category": "Payout question",
+   "Submitted_By": "creator_pondscum",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "55",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 69,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1068",
+   "Date": "2026-02-17",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_quartzridge",
+   "Assigned_To": "",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 70,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1069",
+   "Date": "2026-02-18",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_rushreed",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 71,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1070",
+   "Date": "2026-02-18",
+   "Category": "Login issue",
+   "Submitted_By": "creator_seafoam",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "10",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 72,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1071",
+   "Date": "2026-02-19",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_tumbleweed",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 73,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1072",
+   "Date": "2026-02-19",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_underpass",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 74,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1073",
+   "Date": "2026-02-20",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_vinetrellis",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 75,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1074",
+   "Date": "2026-02-20",
+   "Category": "Payout question",
+   "Submitted_By": "creator_willowbend",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "50",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 76,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1075",
+   "Date": "2026-02-23",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_xylophone",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 77,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1076",
+   "Date": "2026-02-23",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_yewberry",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 78,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1077",
+   "Date": "2026-02-24",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_zephyrhill",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 79,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1078",
+   "Date": "2026-02-24",
+   "Category": "Account access",
+   "Submitted_By": "creator_alderwood",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 80,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1079",
+   "Date": "2026-02-25",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_bramblerose",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 81,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1080",
+   "Date": "2026-02-25",
+   "Category": "Login issue",
+   "Submitted_By": "creator_cloudbank",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "10",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 82,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1081",
+   "Date": "2026-02-26",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_dappledlight",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "50",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 83,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1082",
+   "Date": "2026-02-26",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_ebbtide",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 84,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1083",
+   "Date": "2026-02-27",
+   "Category": "Payout question",
+   "Submitted_By": "creator_fallowfield",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "55",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 85,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1084",
+   "Date": "2026-02-27",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_glimmerpond",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 86,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1085",
+   "Date": "2026-03-02",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_heathermoor",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 87,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1086",
+   "Date": "2026-03-02",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_ironbark",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 88,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1087",
+   "Date": "2026-03-03",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_jasminevine",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 89,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1088",
+   "Date": "2026-03-03",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_kettlepond",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 90,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1089",
+   "Date": "2026-03-04",
+   "Category": "Login issue",
+   "Submitted_By": "creator_lilypad",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "10",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 91,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1090",
+   "Date": "2026-03-04",
+   "Category": "Payout question",
+   "Submitted_By": "creator_marshland",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "50",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 92,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1091",
+   "Date": "2026-03-05",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_nutmeghill",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 93,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1092",
+   "Date": "2026-03-05",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_orchardgate",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 94,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1093",
+   "Date": "2026-03-06",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_pussywillow",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "40",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 95,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1094",
+   "Date": "2026-03-06",
+   "Category": "Content takedown",
+   "Submitted_By": "creator_quietbrook",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 96,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1095",
+   "Date": "2026-03-09",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_rookery",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 97,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1096",
+   "Date": "2026-03-09",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_saltmarsh",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 98,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1097",
+   "Date": "2026-03-10",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_thistledown",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 99,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1098",
+   "Date": "2026-03-10",
+   "Category": "Login issue",
+   "Submitted_By": "creator_underwood",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "10",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 100,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1099",
+   "Date": "2026-03-11",
+   "Category": "Payout question",
+   "Submitted_By": "creator_verdantglen",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "50",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 101,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1100",
+   "Date": "2026-03-11",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_waxwing",
+   "Assigned_To": "",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 102,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1101",
+   "Date": "2026-03-12",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_xanthegold",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 103,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1102",
+   "Date": "2026-03-12",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_yonderfield",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 104,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1103",
+   "Date": "2026-03-13",
+   "Category": "Account access",
+   "Submitted_By": "creator_zealouspeak",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 105,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1104",
+   "Date": "2026-03-13",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_arborvale",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 106,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1105",
+   "Date": "2026-03-16",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_bayberry",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "50",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 107,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1106",
+   "Date": "2026-03-16",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_cinderpath",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 108,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1107",
+   "Date": "2026-03-17",
+   "Category": "Payout question",
+   "Submitted_By": "creator_driftshore",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "55",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 109,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1108",
+   "Date": "2026-03-17",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_elderflower",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 110,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1109",
+   "Date": "2026-03-18",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_foampeak",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 111,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1110",
+   "Date": "2026-03-18",
+   "Category": "Login issue",
+   "Submitted_By": "creator_grottoblue",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "10",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 112,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1111",
+   "Date": "2026-03-19",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_hillcrest",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 113,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1112",
+   "Date": "2026-03-19",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_inletcove",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 114,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1113",
+   "Date": "2026-03-20",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_juniperhill",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 115,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1114",
+   "Date": "2026-03-20",
+   "Category": "Payout question",
+   "Submitted_By": "creator_kestrelridge",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "50",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 116,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1115",
+   "Date": "2026-03-23",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_lowtide",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 117,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1116",
+   "Date": "2026-03-23",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_meadowlark",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 118,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1117",
+   "Date": "2026-03-24",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_nightjar",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "45",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 119,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1118",
+   "Date": "2026-03-24",
+   "Category": "Account access",
+   "Submitted_By": "creator_overlook",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 120,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1119",
+   "Date": "2026-03-25",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_palebeach",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 121,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1120",
+   "Date": "2026-03-25",
+   "Category": "Login issue",
+   "Submitted_By": "creator_quaildale",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "10",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 122,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1121",
+   "Date": "2026-03-26",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_ridgeback",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "35",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 123,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1122",
+   "Date": "2026-03-26",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_sablecreek",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "15",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 124,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1123",
+   "Date": "2026-03-27",
+   "Category": "Payout question",
+   "Submitted_By": "creator_tanglewood",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "40",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 125,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1124",
+   "Date": "2026-03-27",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_uplandmoor",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 126,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1125",
+   "Date": "2026-03-30",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_vesperbay",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "30",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 127,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1126",
+   "Date": "2026-03-30",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_wrenfield",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "15",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 128,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1127",
+   "Date": "2026-03-30",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_yarrowhill",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Open"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 129,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1128",
+   "Date": "2026-03-31",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_zinniadell",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "30",
+   "Status": "Open"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 130,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1129",
+   "Date": "2026-03-31",
+   "Category": "Payout question",
+   "Submitted_By": "creator_ashenmoor",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "35",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 131,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1130",
+   "Date": "2026-03-31",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_blueheron",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "15",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 132,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1131",
+   "Date": "2026-01-10",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_cliffside",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 133,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1132",
+   "Date": "2026-01-23",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_dewpoint",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "30",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 134,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1133",
+   "Date": "2026-02-07",
+   "Category": "Login issue",
+   "Submitted_By": "creator_eaglecrest",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "10",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 135,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1134",
+   "Date": "2026-02-20",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_fogbank",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "15",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 136,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1135",
+   "Date": "2026-03-06",
+   "Category": "Payout question",
+   "Submitted_By": "creator_glacierway",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "40",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 137,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1136",
+   "Date": "2026-03-13",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_havenport",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "30",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 138,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1137",
+   "Date": "2026-01-17",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_inglewood",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "20",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 139,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1138",
+   "Date": "2026-02-14",
+   "Category": "Thumbnail re-upload",
+   "Submitted_By": "creator_jackpine",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "15",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 140,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1139",
+   "Date": "2026-03-04",
+   "Category": "Account access",
+   "Submitted_By": "creator_kindling",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "25",
+   "Status": "Closed"
+  }
+ },
+ {
+  "file": "support_tickets_q1_2026.csv",
+  "line": 141,
+  "kind": "row",
+  "section": "(single table)",
+  "fields": {
+   "Ticket_ID": "TCK-1140",
+   "Date": "2026-03-21",
+   "Category": "Tax form (W-9/W-8)",
+   "Submitted_By": "creator_lavendermist",
+   "Assigned_To": "Ops Support",
+   "Handle_Minutes": "30",
+   "Status": "Closed"
+  }
+ }
+]
