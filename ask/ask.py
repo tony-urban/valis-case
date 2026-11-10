@@ -115,13 +115,13 @@ def cannot(title, why, need):
 
 class Bundle:
     def __init__(self, data):
-        self.dir, self.units, self.problems = data, [], []
+        self.dir, self.units, self.problems, self.flags = data, [], [], []
         self.files = sorted(p.relative_to(data).as_posix() for p in data.rglob("*") if p.is_file())
         for rel in self.files:
             fn = {".csv": importer.import_csv, ".md": importer.import_md}.get(Path(rel).suffix.lower())
             try:
                 if fn:
-                    fn(data / rel, rel, self.units, [])
+                    fn(data / rel, rel, self.units, self.flags)
             except Exception as e:  # a file of unexpected shape must not stop the run
                 self.problems.append(f"could not parse `{rel}` ({type(e).__name__}: {e})")
         # Slack timestamps carry no year: take it from the export header (ruling C1).
@@ -202,7 +202,9 @@ def q1(B):
         return cannot(title, f"The P&L has no rows whose `{col['category']}` matches {c['saas_category_terms']}.",
                       "the category label Finance uses for software, added to `saas_category_terms` in ask/config.json.")
     items, subs = [r for r in saas if not is_sub(r)], [r for r in saas if is_sub(r)]
-    good, bad = [r for r in items if val(r) is not None], [r for r in items if val(r) is None]
+    broken = {n for f, n, msg in B.flags if f == rows[0]["file"] and "fields, header has" in msg}  # importer flag: columns shifted
+    good = [r for r in items if val(r) is not None and r["line"] not in broken]
+    bad = [r for r in items if r not in good]
     total = sum(val(r) for r in good)
     stated = val(subs[0]) if subs else None
     cur, cat_name = col["amount_contains"], cat(saas[0])
@@ -256,7 +258,8 @@ def q1(B):
                    f"({fmt(total)} - {fmt(dup_amount)}). Status: {dup_status} (evidence 2). Both figures are shown because the P&L file carries both rows.")
     if bad:
         out.append(f"- {len(bad)} line item(s) have no usable {cur} amount and are NOT in the total: "
-                   + ", ".join(f"{item(r)} = '{r['fields'][amt]}' {cite(r)}" for r in bad) + ".")
+                   + ", ".join(f"{item(r)} = '{r['fields'][amt]}'" + (" (row has the wrong number of fields, for example an unquoted comma)" if r["line"] in broken else "")
+                               + f" {cite(r)}" for r in bad) + ".")
     reread = [r for r in good if not importer.NUM.match(r["fields"][amt])]
     if reread:
         out.append(f"- {len(reread)} amount(s) were written with a $ sign or thousands separators and were read as plain {cur}: "
@@ -404,8 +407,7 @@ def table_cells(B):
 
 def classify(u, c):
     """(label, matched word) of a unit, sentence by sentence. A status word counts only if its
-    sentence is not a question, not hedged and not negated. A negated lift reads as the freeze
-    continuing. Any other negated or hedged status word is UNCLEAR: the tool does not guess."""
+    sentence is not a question, not hedged and not negated. Otherwise it is UNCLEAR: the tool does not guess."""
     order, best = c["label_order"], ("OTHER", None)
     for s in sentences(text(u)):
         for name, terms in c["labels"]:
@@ -417,7 +419,7 @@ def classify(u, c):
                 if s.rstrip('"” ').endswith("?"):
                     name = "QUESTION"
                 elif has(" ".join(clause.split()[-NEG_WINDOW:]), c["negation_terms"]):
-                    name, t = c["negated_reads_as"].get(name, "UNCLEAR"), "negated: " + t
+                    name, t = "UNCLEAR", "negated: " + t
                 elif has(s, c["hedge_terms"]):
                     name, t = "UNCLEAR", "hedged: " + t
             if order.index(name) < order.index(best[0]):
@@ -483,64 +485,73 @@ def q2(B):
                    ("record" if has(text(u), c["decision_terms"]) else "other") if u["kind"] == "line" else
                    "owner" if u["author"] in authority else "other")
     clean = [e for e in ev if e["label"] in c["status_labels"]]
-    applied = [e for e in clean if e["by"] in ("owner", "record")]
-    base = [e for e in clean if e["by"] == "roster"]
-    if not applied and not base:
+    records, chat = [e for e in clean if e["by"] == "record"], [e for e in clean if e["by"] == "owner"]
+    base = [e for e in ev if e["by"] == "roster"]
+    now = (records or chat or [e for e in base if e in clean] or [None])[-1]  # a decision record sets the state; chat only if there is none
+    if now is None:
         return cannot(title, f"No statement about {team} hiring from a decision owner, a decision record or the roster could be classified. "
                       + (f"{len(ev)} related source(s) exist and need a human read: {cites([e['u'] for e in ev][:8])}." if ev else "No related source was found."),
                       f"a roster CSV with `{col['req_id']}` and `{col['team']}` columns, and the Slack export or meeting notes.")
-    now = (applied or base)[-1]
-    runs = []
-    for e in sorted(base + applied, key=lambda e: e["when"]):  # the back-and-forth, as runs of one status
-        if not runs or runs[-1][0] != e["label"]:
-            runs.append([e["label"], e, e])
-        runs[-1][2] = e
-    agree = [e for e in clean if side[e["label"]] == side[now["label"]] and e["when"] >= now["when"] and e["by"] != "roster"]
-    latest = (agree or [now])[-1]
+    same = lambda e: side.get(e["label"]) == side[now["label"]]
+    # chat from a decision owner may CONFIRM the state of the decision record, never REVERSE it on keywords
+    after = [e for e in chat if records and e["when"] > now["when"]]
+    conflict = [e for e in after if not same(e)] if after and not same(after[-1]) else []
+    overridden = [e for e in after if not same(e) and e not in conflict]
+    first = now
+    for e in reversed([e for e in chat if e["when"] <= now["when"]]):  # owner chat that led up to the state, for "first recorded"
+        if not same(e):
+            break
+        first = e
+    decisions = [e for e in clean if e["by"] in ("owner", "record") and same(e) and first["when"] <= e["when"] <= now["when"]
+                 and has(text(e["u"]), c["decision_terms"])]
+    latest = ([e for e in clean if same(e) and e["when"] >= now["when"] and e["by"] != "roster"] or [now])[-1]
     last_clean = clean[-1]
     later = [e for e in ev if e["when"] > last_clean["when"] and e["u"]["kind"] != "row"]
     later += [{"u": u, "when": B.when(u), "label": "OTHER", "term": None, "by": "other"} for u in src if (u["file"], u["line"]) not in found
               and B.when(u) and B.when(u) > last_clean["when"] and (has(text(u), [team]) or has(text(u), status_terms))]
     unread = [e for e in later if e["label"] == "UNCLEAR" and e["by"] != "other" or (e["label"] not in ["UNCLEAR"] + c["status_labels"]
               and (topic(e["u"]) or has(text(e["u"]), [team]) or has(text(e["u"]), status_terms)))]
-    opposing = [e for e in ev if e["by"] == "other" and e["when"] > now["when"]
-                and (e["label"] == "UNCLEAR" or e["label"] in c["status_labels"] and side[e["label"]] != side[now["label"]])]
-    decisions = [e for e in applied if has(text(e["u"]), c["decision_terms"])]
-    stale = [e for e in base if side[e["label"]] != side[now["label"]] and e["when"] < now["when"]]
-    newer_roster = [e for e in base if side[e["label"]] != side[(applied or base)[-1]["label"]] and applied and e["when"] > applied[-1]["when"]]
+    opposing = [e for e in ev if e["by"] == "other" and e["when"] > now["when"] and (e["label"] == "UNCLEAR" or e in clean and not same(e))]
+    stale = [e for e in base if not same(e) and e["when"] < now["when"]]
+    newer_roster = [e for e in base if not same(e) and e["when"] > now["when"]]
     cells = table_cells(B)
     actions = [(e, cells[(e["u"]["file"], e["u"]["line"])]) for e in ev if c["action_columns"]["owner"] in cells.get((e["u"]["file"], e["u"]["line"]), {})]
     loose = [e for e in ev if has(text(e["u"]), c["candidate_terms"]) and e not in [a for a, _ in actions]]
-    tag = {"owner": "decision owner", "record": "decision record", "roster": "roster", "other": "not a decision owner, cannot change the state"}
+    tag = {"owner": "decision owner in chat", "record": "decision record", "roster": "roster", "other": "not a decision owner, cannot change the state"}
+    said = lambda es: " ".join(f"{day(e)} {e['u'].get('author', 'notes')}: {quote(e['u'])} {cite(e['u'])}" for e in es)
 
     # ---- answer ----
     state_words = {"FROZEN": f"frozen: no new {team} hiring", "LIFTED": f"the {team} freeze is lifted",
                    "APPROVED": f"{team} hiring is approved to proceed"}
-    seq = ", then ".join(f"{l} ({day(a)}" + (f" to {day(b)})" if day(a) != day(b) else ")") for l, a, b in runs)
+    steps = [e for e in base if e in clean and e["when"] < first["when"]] + [r for r in records if r is not now] + ([first] if first is not now else []) + [now]
+    seq = ", then ".join(f"{e['label']} ({tag[e['by']]}, {day(e)})" for e in sorted(steps, key=lambda e: e["when"]))
     out = [f"# {title}", "", asked, "", "## Answer", ""]
-    if decisions:
-        first = next(e for e in decisions if e["label"] == decisions[-1]["label"])
-        out.append(f"**1. Decision: yes, a decision is on record, and it is {first['label']}.** First recorded {day(first)}: "
-                   f"{quote(first['u'], [first['term']])} {cite(first['u'])}. Sequence of positions (roster, decision owners, decision records): {seq}.")
-    else:
-        first = None
-        out.append(f"**1. Decision: no explicit decision record was found.** Sequence of positions (roster, decision owners, decision records): {seq}.")
-    out += ["", ("**2. Current state: NOT CERTAIN. Last state this tool could classify: " if unread else "**2. Current state: ") + f"{state_words[now['label']]}**, as of "
+    head = ("yes, a decision is on record, and it is" if records else "stated in chat by a decision owner, NOT confirmed by a decision record. It is"
+            if chat else "no decision found. The roster alone says")
+    out.append(f"**1. Decision: {head} {now['label']}.** First recorded {day(first)}: {quote(first['u'], [first['term']])} {cite(first['u'])}. "
+               f"Sequence of positions: {seq}.")
+    doubt = ("NOT CERTAIN. Last state set by a decision record: " if conflict else "NOT CERTAIN. Last state this tool could classify: " if unread else "")
+    out += ["", f"**2. Current state: {doubt}{state_words[now['label']]}**, as of "
             + (f"the Slack export date {as_of.isoformat()} {cite(B.export_unit)}" if as_of else "an unknown date (no Slack export header found)")
-            + f". Set by a {tag[now['by']]} on {day(now)} {cite(now['u'])}. Latest statement consistent with it, dated {day(latest)}: "
-            + f"{quote(latest['u'], [latest['term']])} {cite(latest['u'])}."]
+            + f". Set by a {tag[now['by']]} on {day(now)} {cite(now['u'])}. "
+            + (f"**A later chat message from a decision owner reads as a different state and is NOT applied: chat can confirm a decision record, "
+               f"it cannot reverse one on keywords. Read it yourself:** {said(conflict)} " if conflict else "")
+            + f"Latest statement consistent with it, dated {day(latest)}: {quote(latest['u'], [latest['term']])} {cite(latest['u'])}."]
     if unread:
         out.append(f"   - **WARNING: {len(unread)} later message(s) on this topic could not be classified by this tool. The state above may be out of date. "
-                   "Read them yourself:** " + " ".join(f"{day(e)} {e['u'].get('author', 'notes')}: {quote(e['u'])} {cite(e['u'])}" for e in unread))
-    elif as_of and as_of > latest["when"][0] and not later:
+                   f"Read them yourself:** {said(unread)}")
+    elif as_of and as_of > latest["when"][0] and not later and not conflict:
         out.append(f"   - Nothing in the bundle on this topic is later than {day(latest)}, so the {(as_of - latest['when'][0]).days} day(s) up to the export date are not evidenced.")
     for e in newer_roster:
-        out.append(f"   - **Conflict:** a roster snapshot dated {day(e)} is later than the last decision statement and shows the other side (evidence 3).")
+        out.append(f"   - **Conflict:** a roster snapshot dated {day(e)} is later than the statement that set the state and shows "
+                   f"{e['u']['fields'].get(col['status'], '')} {cite(e['u'], col['req_id'])} (evidence 3).")
+    if overridden:
+        out.append(f"   - A decision owner said otherwise in chat and then restated the decision: {said(overridden)}")
     for e in opposing:
-        out.append(f"   - Later statement from someone who is not a decision owner, listed and not applied: {day(e)} {e['u'].get('author', 'notes')}: {quote(e['u'])} {cite(e['u'])}")
+        out.append(f"   - Later statement from someone who is not a decision owner, listed and not applied: {said([e])}")
     for r in reqs:
         names_it = lambda es: [e for e in es if r["fields"][col["req_id"]] in text(e["u"])]
-        mine = names_it(applied) or names_it([e for e in clean if e["by"] == "other"])
+        mine = names_it([e for e in clean if e["by"] in ("owner", "record") and same(e)]) or names_it([e for e in clean if e["by"] == "other"])
         out.append(f"   - {r['fields'][col['req_id']]} ({r['fields'].get(col['title'], '')}): roster says {r['fields'].get(col['status'], '')} {cite(r, col['req_id'])}"
                    + (f"; latest source naming it says {mine[-1]['label']} ({day(mine[-1])}, {tag[mine[-1]['by']]}) {cite(mine[-1]['u'])}." if mine else "; no later source names it."))
     if not reqs:
@@ -562,8 +573,8 @@ def q2(B):
                    + f", {u.get('author') or ('roster' if u['kind'] == 'row' else 'notes')}: {quote(u)} {cite(u)}")
     for e in undated:
         out.append(f"- undated, not used for ordering: {quote(e['u'])} {cite(e['u'])}")
-    out += ["", "**2. Later messages this tool could not classify**", ""]
-    out += [f"- {day(e)} {e['u'].get('author', 'notes')}: {quote(e['u'])} {cite(e['u'])}" for e in unread] or ["None."]
+    out += ["", "**2. Later messages this tool could not classify, or that conflict with the decision record**", ""]
+    out += [f"- {said([e])}" for e in unread + conflict] or ["None."]
 
     out += ["", "**3. Stale source next to the source that supersedes it**", ""]
     supers = [e for e in ev if has(text(e["u"]), c["supersede_terms"])]
@@ -572,7 +583,7 @@ def q2(B):
                    + f" shows {e['u']['fields'].get(col['status'], '')} {cite(e['u'], col['req_id'])}.")
     for e in newer_roster:
         out.append(f"- **These do not reconcile:** the roster snapshot dated {day(e)} shows {e['u']['fields'].get(col['status'], '')} {cite(e['u'], col['req_id'])}, "
-                   f"which is later than the last decision statement {cite(applied[-1]['u'])} and points the other way. The roster does not change the state here.")
+                   f"which is later than the statement that set the state {cite(now['u'])} and does not match it. The roster does not change the state here.")
     if stale:
         out.append(f"- Governs: {now['label']}, {tag[now['by']]}, dated {day(now)} {cite(now['u'])}.")
         out.append("- Why: (a) it is later than the snapshot" + (
@@ -583,11 +594,11 @@ def q2(B):
 
     out += ["", "**4. Dates that do not line up**", ""]
     dates = set()
-    for e in (e for e in decisions if e["label"] == decisions[-1]["label"]):
+    for e in decisions:
         rel = next((n for t, n in c["relative_day_terms"].items() if has(text(e["u"]), [t])), None)
         dates.add(e["when"][0] + timedelta(days=rel or 0))
         out.append(f"- Decision record dated {day(e)} {cite(e['u'])}")
-    for e in (e for e in agree if e["by"] == "other"):  # hearsay about the decision date, for example "yesterday's call"
+    for e in (e for e in clean if e["by"] == "other" and same(e) and e["when"] >= first["when"]):  # hearsay about the decision date, for example "yesterday's call"
         for t, n in c["relative_day_terms"].items():
             if has(text(e["u"]), [t]):
                 dates.add(e["when"][0] + timedelta(days=n))
@@ -614,7 +625,7 @@ def q2(B):
     for e, t in ((e, t) for e in ev for t in c["wording_terms"]):
         if has(text(e["u"]), [t]):
             words.setdefault(t, []).append(e["u"])
-    since = [e for e in ev if not first or e["when"] >= first["when"]]
+    since = [e for e in ev if e["when"] >= first["when"]]
     out += ["", "**5. Wording and scope, as written**", "",
             "- Status words in use: " + "; ".join(f"'{t}' {cite(us[0])}" + (f" and {len(us) - 1} more" if len(us) > 1 else "") for t, us in words.items()) + "."]
     out += [f"- Scope: {quote(e['u'], c['scope_terms'])} {cite(e['u'])}" for e in since if has(text(e["u"]), c["scope_terms"]) and e["label"] != "QUESTION"]
@@ -663,8 +674,8 @@ def q2(B):
     fresh_days = (as_of - latest["when"][0]).days if as_of else None
     out += ["", "## Confidence", ""] + confidence([
         ("What was decided", [
-            (bool(decisions), "core", f"an explicit decision record exists ({len(decisions)} found)"),
-            (bool(decisions) and decisions[-1]["label"] == now["label"], "core", "the current state matches the latest decision record (no later reversal)"),
+            (bool(decisions), "core", f"an explicit decision statement exists ({len(decisions)} found)"),
+            (not conflict, "core", f"no later message from a decision owner reads as a different state ({len(conflict)} found)"),
             (len(files_of(decisions)) > 1, "flag", f"the decision is recorded in more than one place ({len(files_of(decisions))} distinct files or channels)"),
         ]),
         ("Who owns it", [
@@ -672,9 +683,11 @@ def q2(B):
             (maker_sources > 1, "flag", f"the decision maker is stated in more than one source ({maker_sources})"),
         ]),
         (f"Current state as of {as_of.isoformat() if as_of else 'unknown'}", [
-            (bool(applied), "core", "the state was set by a decision owner or a decision record, not by the roster alone"),
+            (bool(records or chat), "core", "the state was set by a decision owner or a decision record, not by the roster alone"),
+            (not conflict, "core", f"no later chat message from a decision owner conflicts with the decision record ({len(conflict)} found, see evidence 2)"),
+            (bool(records), "flag", "the state rests on a decision record in the notes, not on chat alone"),
             (not unread, "core", f"no later message on the topic is left unclassified ({len(unread)} found, see evidence 2)"),
-            (not newer_roster, "core", "no newer roster contradicts the last decision statement"),
+            (not newer_roster, "core", "no newer roster shows a different status"),
             (fresh_days is not None and fresh_days <= c["stale_after_days"], "core",
              f"the latest consistent statement is within {c['stale_after_days']} days of the export date ({fresh_days} days)"),
             (not opposing, "flag", f"no later statement from a non-owner points the other way ({len(opposing)} found)"),
@@ -688,7 +701,7 @@ def q2(B):
 
     # ---- could not verify ----
     out += ["", "## Could not verify", ""]
-    out += [f"- What this later message means for the state: {quote(e['u'])} {cite(e['u'])}. Closes with: a person reading it, then the decision maker." for e in unread]
+    out += [f"- What this later message means for the state: {quote(e['u'])} {cite(e['u'])}. Closes with: a person reading it, then the decision maker." for e in unread + conflict]
     if as_of and latest["when"][0] < as_of:
         out.append(f"- Anything after {day((later or [latest])[-1])}. Closes with: the channels after the export date, or a word from the decision maker.")
     if stale:

@@ -54,11 +54,13 @@ Checked on temp copies of `data/` (details in the hand-off report and `JUDGMENTS
 - Add a SaaS row or shift lines: new row listed, all citations move with the file.
 - Remove the duplicate pair: "No candidate found".
 - Put a non-USD amount inside the SaaS category: the row is shown, excluded from the sum, and the as-listed claim drops to LOW.
-- Add a later message from the decision maker or enforcer that lifts the freeze: the current state follows it.
+- Add a later chat message from the decision maker that lifts the freeze, in any wording: the state reads "NOT CERTAIN. Last state set by a decision record: frozen", the message is quoted in the state line, current state LOW. Chat never reverses a decision record.
+- Add a later meeting note with a decision record that lifts the freeze: the state follows it.
 - Add a later lift worded without any status word, from the decision maker: state reads NOT CERTAIN, the message is printed verbatim, current state LOW.
-- Add "we are NOT lifting the freeze" from the decision maker: read as frozen, set by that message.
+- Add "we are NOT lifting the freeze", a conditional ("if July holds we will be lifting") or a lift of some other freeze, from the decision maker: NOT CERTAIN, quoted, LOW. Never "lifted".
 - Add "I think the freeze should be lifted" from someone who does not own the decision: state unchanged, the message is listed as not applied.
-- Change the roster status or date: the roster never changes the state. A newer roster that contradicts the decision is reported as not reconciling, current state LOW.
+- Change the roster status or date: the roster never changes the state. A newer roster with any different status, known word or not, is reported as a conflict, current state LOW.
+- A P&L row with the wrong number of fields (for example an unquoted `9,000`): named, excluded, headline starts with PARTIAL.
 - Add a later message about the duplicate pair: status becomes "suspected, later message found, read it", in the headline too.
 - Remove the P&L, the roster, the Slack export or the notes: a plain "Cannot answer, needed: ..." or a degraded answer that says what is missing. Exit code 0, no traceback.
 
@@ -66,8 +68,8 @@ Checked on temp copies of `data/` (details in the hand-off report and `JUDGMENTS
 
 - It answers these two questions only. It is not a general question answerer.
 - Status and role detection is keyword and pattern matching from `config.json`, with four guards for Q2:
-  - Only a message from the named decision maker or enforcer, or a decision record in the meeting notes, can change the state. Everyone else is listed and never applied. The roster is the baseline and cannot change the state either.
-  - A status word in a question, after a negation (within three words, same clause) or in a hedged sentence is not taken at face value. A negated lift reads as the freeze continuing. Anything else becomes UNCLEAR.
+  - A decision record in the meeting notes sets the state. A chat message from the named decision maker or enforcer may confirm that state. It may never reverse it: if it reads as a different state it is quoted, not applied, the state line says NOT CERTAIN and confidence is LOW. With no decision record at all, the state is reported as "stated in chat by a decision owner, not confirmed by a decision record", MEDIUM at best. Everyone else is listed and never applied. The roster is the baseline only.
+  - A status word in a question, after a negation (within three words, same clause) or in a hedged sentence is UNCLEAR, never a state. These two heuristics now only stop a message from counting as a confirmation. They are no longer what protects against a false reversal.
   - Any later message on the topic that the tool cannot classify is printed verbatim, the state line reads NOT CERTAIN, and current-state confidence drops to LOW.
   - A later statement from a non-owner that points the other way is shown in the answer and costs a flag.
 - These guards make the tool cautious, not clever. Sarcasm, a decision owner changing, or a reversal worded without any status word will land in "could not classify" at best. A new way of saying "frozen" or "I own this" needs a new term in the config.
@@ -76,3 +78,5 @@ Checked on temp copies of `data/` (details in the hand-off report and `JUDGMENTS
 - A "thread" is same channel and same day. A reply on a later day is not linked.
 - If the Slack export header with the export date is missing, messages cannot be dated and are listed as undated.
 - It cannot see payments. No invoice, contract or FX rate is in the bundle, so "actually spent" stays LOW until one is added.
+
+- Cost of the confirm-only rule: a real lift announced only in chat is reported as NOT CERTAIN until a decision record exists. That is deliberate: the tool asks a person to read the message.

@@ -47,7 +47,6 @@
     "status_labels": ["LIFTED", "FROZEN", "APPROVED"],
     "label_order": ["LIFTED", "FROZEN", "UNCLEAR", "QUESTION", "DEFERRED", "SCOPE", "APPROVED", "OTHER"],
     "negation_terms": ["not", "no", "never", "n't", "cannot", "without"],
-    "negated_reads_as": {"LIFTED": "FROZEN"},
     "hedge_terms": ["I think", "should", "maybe", "might", "could", "consider", "propose", "hopefully", "if we", "whether"],
     "authority_roles": ["Decision maker", "Enforcer (sign-off on reqs)"],
     "approval_terms": ["approved"],
