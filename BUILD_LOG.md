@@ -26,3 +26,9 @@ Times are Europe/London, 2026-11-10. Clock started 15:39.
 | 16:16 | Dead-end | First version of the similar-label check used substring matching. It flagged "COO" inside "Operations Coordinator" (false positive) and missed "Creator Mgmt" vs "Creator Management". Replaced with word-prefix and abbreviation matching. |
 | 16:18 | Check | Slack message count verified two ways: importer parse (66) and an independent pattern count on the raw file (66). |
 | 16:18 | Output | `pipeline/01_inventory.md` (11 files, 515 addressable units, 25 flags) and `pipeline/index.json`. Awaiting Tony's approval before stage 2. |
+| 16:16 | Decision (Tony) | Inventory approved. Missing year on Slack timestamps accepted as a known trap. Use separate agents per stage and per work stream, Claude consolidates as orchestrator. Tony away about an hour: pipeline runs without per-stage approval, decisions logged for later review. |
+| 16:18 | Action | GitHub access fixed by Tony. Pushed commits 6c3dbbf and edc8799 to `main`. |
+| 16:19 | Prompt | Task-setter agent (separate context): read the brief, CEO note, CEO questions, pipeline and inventory. Define questions, testable requirements with IDs, gold standard, rules, citation format, out of scope. No analysis, no answers. |
+| 16:22 | Output | `pipeline/02_task.md`: 3 questions, 42 requirement IDs, 13 rules, machine-checkable citation format. |
+| 16:22 | Judgment | CEO_QUESTIONS.md holds a third question (workflow) that the brief's list of two omits. Treated as Q3 and mapped to deliverable 3 and the CEO report, not to the ask tool. Reason: brief scopes the ask slice to two questions. |
+| 16:22 | Open | Task-setter flagged P11: bundle footer says confidential under NDA, Tony said the repo may be public. Left for Tony to confirm. |
