@@ -1,6 +1,6 @@
 # Agent pipeline
 
-Used to solve the case. It is not part of the shipped code. Each stage writes one short handoff file here. Tony approves each stage before the next runs.
+Used to solve the case. The stage files here are working documents, not deliverables. One exception: `importer.py` is the shared parser that the shipped scripts import, so every deliverable uses one definition of a citable line. Each stage writes one short handoff file here. Tony approves each stage before the next runs.
 
 | # | Agent | Job | Output |
 |---|---|---|---|
@@ -9,7 +9,7 @@ Used to solve the case. It is not part of the shipped code. Each stage writes on
 | 3 | Scoper | Define work streams, assign workers, set done criteria. | `03_scope.md` |
 | 4 | Orchestrator | Give each worker only the context it needs. Collect results. | `04_runs.md` |
 | 5 | Workers | One per work stream. | deliverable folders |
-| 6 | Tester | Check each work stream against task and scope. | `06_test.md` |
+| 6 | Tester | Check each work stream against task and scope. Owns `tests/`. | `06_test.md` |
 | 7 | Presenter | Report to the CEO plus packaged code. | `answers/` |
 | 8 | Final check | Guard against drift in the final report. | `08_final_check.md` |
 
