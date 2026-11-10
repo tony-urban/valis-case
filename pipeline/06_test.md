@@ -91,3 +91,7 @@ Strongest honest framing, using only figures the run computes:
 ## Round 1 summary (16:48)
 
 35 of 37 checks passed. One BLOCKER (B1), four MAJOR (M1 to M4), nine MINOR (m1 to m9), one open decision (O1). Verdict then: `ask/` and `automation/` back for fixes, `value/` PASS. All default answers already held against the raw sources.
+
+## Orchestrator note after round 2 (not written by the tester)
+
+The tester's cap of 2 rounds was reached with 50 of 54 checks passing. The four failing checks (8f, 8g, 8h, 8m) and minor defects N2, N3, N4 went back to the workers once more. `python3 tests/check.py` now passes 54 of 54. These last fixes were verified by the tester's own checks in the suite, not by a third tester round. The R13 statement on D3.4 above stands unchanged.
