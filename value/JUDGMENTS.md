@@ -1,0 +1,46 @@
+# value/ judgment calls (WS3)
+
+Times are UTC (equal to Europe/London on the day), taken from `date -u +%H:%M`. Work on this stream ran from 16:27 to 16:31. Citations are relative to `data/` unless prefixed `repo:`.
+
+## Questions the scope asked this stream to resolve
+
+| Time | Issue | Decision | Reason | Source |
+|---|---|---|---|---|
+| 16:27 | 1. The duplicate is suspected, not confirmed. How to present an unconfirmed figure as a headline. | Headline is "amount at risk", with the status "suspected duplicate, unconfirmed, closed by one invoice" on the first line. The worksheet states the value is between 0 and the row amount. The script has no path that prints "confirmed". | The analyst says she has not checked the invoice, so any firmer word would overclaim (R5). | `slack_export.md:L146 [#finance | Maya Fortin | Mon Jun 2, 10:38 AM]`, `slack_export.md:L152 [#finance | Maya Fortin | Mon Jun 2, 10:47 AM]` |
+| 16:27 | 2. Cash leak (paid twice) or reporting overstatement (entered twice, paid once). | Both readings are shown, plus a third (two real contracts), each with its P&L effect, cash effect and action. None is chosen. | The bundle has a posted P&L and no invoice, ledger or bank record, so nothing in it separates the readings. | `pnl_q1_2026.csv:L12`, `pnl_q1_2026.csv:L13`, `slack_export.md:L149 [#finance | Priya Raman | Mon Jun 2, 10:45 AM]` |
+| 16:27 | 3. Per quarter or per year. | Headline is one quarter, the period in the amount column name. The annual figure (row amount times four) is printed once, labelled ASSUMPTION A3, outside the headline. | Only one quarter of P&L exists. Recurrence is not evidenced. | column `Q1_2026_USD` of `pnl_q1_2026.csv`, `pnl_q1_2026.csv:L13` |
+| 16:27 | 4. The stated subtotal already includes both rows. | Worksheet shows every category row with its citation, the computed sum, the stated subtotal and whether they match, then as listed minus the repeated row. Both figures are shown (C3). | A reviewer can re-add the rows and see nothing was silently removed. | `pnl_q1_2026.csv:L9-L23`, `pnl_q1_2026.csv:L24` |
+| 16:27 | 5. Who or what closes each unverified item. | Each could-not-verify item names a document (invoice and order form, accounts payable ledger and bank statement, other quarters' extracts, final P&L, contract terms) and, where the bundle names people, the authors of the cited thread. | Names are taken from the parsed messages, not typed in, so a fresh file gives fresh names or "nobody named". | `slack_export.md:L146 [#finance | Maya Fortin | Mon Jun 2, 10:38 AM]`, `slack_export.md:L149 [#finance | Priya Raman | Mon Jun 2, 10:45 AM]` |
+
+## Other calls made while building
+
+| Time | Issue | Decision | Reason | Source |
+|---|---|---|---|---|
+| 16:27 | The analyst writes "90% sure". | Quoted verbatim, not used in arithmetic. No expected value (0.9 times the amount) is computed. | It is one person's estimate. Weighting by it would add an input nobody can check. | `slack_export.md:L146 [#finance | Maya Fortin | Mon Jun 2, 10:38 AM]` |
+| 16:27 | Which of the two rows is "the duplicate". | The later row in file order is flagged as the repeat of the earlier one. | The amounts are equal, so the choice does not change any figure. | `pnl_q1_2026.csv:L12`, `pnl_q1_2026.csv:L13` |
+| 16:27 | The first message of the thread calls the SaaS line "finalized", the next flags the pair. | The whole thread is quoted in order. The worksheet lists "is the extract final" under could not verify. | The later message says the file is left as is until confirmed, so "finalized" cannot be taken as "checked". | `slack_export.md:L143 [#finance | Priya Raman | Mon Jun 2, 10:30 AM]`, `slack_export.md:L152 [#finance | Maya Fortin | Mon Jun 2, 10:47 AM]` |
+| 16:27 | A finance note footer calls its figures illustrative and pre-close. | Cited under could not verify as a caveat on finance figures. Not applied as a discount to the P&L rows. | The footer is on the meeting note, not on the P&L, so it weakens confidence without changing a number. | `meeting_notes/finance_review_2026-05-28.md:L42` |
+| 16:27 | Two meeting-note lines name the same label. One is about renewals, one is about duplicate product events, which has nothing to do with billing. | Both are listed as "other lines that name the label, not used in the arithmetic". Only the renewal line is referenced, under recurrence. The script quotes neither and interprets neither. | A keyword rule cannot judge relevance, and hiding a line that says "duplicate" next to the label would look selective. | `meeting_notes/finance_review_2026-05-28.md:L24`, `meeting_notes/data_review_2026-05-20.md:L36` |
+| 16:27 | Scope lists the Salesforce rows and renewal as context. | Left out of the worksheet. | They do not bear on the duplicate pair, and ruling C5 says no stream adjusts Q1 for the renewal. | `repo:pipeline/03_scope.md` section 5 (C5), `pnl_q1_2026.csv:L9` |
+| 16:27 | SaaS boundary and the euro line. | Baseline is the Software & SaaS category rows only (C2). The euro line sits in another category and is not touched. If a non-numeric amount ever appears inside the category it is left out of every sum and listed, never converted (C4). | No FX rate is in the bundle. | `pnl_q1_2026.csv:L24`, `pnl_q1_2026.csv:L26` |
+| 16:27 | "As of" date for "still open". | The last message in the thread and the export header line are cited. No claim is made about today (C8). | Nothing in the bundle is later than the export. | `slack_export.md:L3`, `slack_export.md:L152 [#finance | Maya Fortin | Mon Jun 2, 10:47 AM]` |
+| 16:30 | The export header is a line in the Slack file but not a message. | Cited as a plain line. Every Slack message is cited in the full message form. | The message form needs channel, author and time, which a header line does not have. The scope cites the same line the same way. | `slack_export.md:L3`, `repo:pipeline/03_scope.md` WS1 sources |
+| 16:30 | Slack citations contain the pipe character, which breaks a markdown table cell. | Slack citations are printed in sentences and lists, never inside a table. | Keeps the citation text exact for the resolver and the table readable. | `repo:pipeline/02_task.md` section 5 |
+| 16:30 | Running with `--data` on a test folder would overwrite the committed worksheet. | With a non-default `--data` the script prints only and leaves `value/VALUE_WORKSHEET.md` alone. `--out <file>` writes a file. This is one option more than the scope lists. | A smoke test must not replace the committed result with a perturbed one. | `repo:pipeline/03_scope.md` WS4 |
+| 16:30 | More than one pair in a fresh file. | The headline is the sum of the repeated rows, each pair shown as its own arithmetic step. | Still one number, and each part stays traceable to its rows. | rule in `repo:value/value.py` |
+| 16:30 | Stated subtotal differs from the sum of rows in a fresh file. | Print "DOES NOT match", use the sum of the cited rows as baseline, add a could-not-verify item. | R5: report that they do not reconcile, do not pick silently. | `pnl_q1_2026.csv:L24` |
+| 16:30 | Importing the shared parser wrote `pipeline/__pycache__`, which is outside this stream's folder. | Bytecode writing is switched off in the script and the cache folder it had created was removed. | Each worker writes only inside its own folder. | `repo:pipeline/03_scope.md` section 0 |
+| 16:30 | Worksheet text backticks. | Only citations are backticked in the worksheet. Commands and column names are plain text there. | The tester extracts every backticked token as a citation. | `repo:pipeline/03_scope.md` WS4 |
+
+## Dead ends
+
+| Time | What was tried | Why dropped |
+|---|---|---|
+| 16:27 | Reading the status (confirmed or not) out of the message text by keyword. | Negation ("haven't confirmed") makes keyword status unsafe. The script quotes the thread and keeps the status fixed at unconfirmed. |
+| 16:30 | Putting the Slack citations for the flag in the inputs table. | The pipe characters split the table cell. Moved to a line under the table. |
+| 16:30 | A "not found" row in the inputs table when no message flags the pair. | It is not an input. The row is omitted and section 6 says the candidate rests on the rule alone. |
+| 16:30 | `Path.write_text(newline=...)` for identical bytes on every OS. | Needs Python 3.10. Replaced by `open(..., newline="\n")` so the stock macOS Python 3.9 works. Not tested on 3.9, only on 3.13. |
+
+## Parser gaps (importer not edited)
+
+None that blocked this stream. Thread boundaries are not in the importer's units, so the script counts the `---` rules above each message itself.
