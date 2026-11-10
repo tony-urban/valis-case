@@ -35,7 +35,9 @@ Citations are computed from the parsed files at run time, in the format of `pipe
 - A different pair, or different amounts: new number, new citations.
 - A message that names the pair and is dated after the last flag: the status on line 1 becomes "suspected, later message found, read it", section 1 opens with the message quoted verbatim, and the worksheet says the number may be out of date. The script does not decide whether the message confirms or clears the duplicate. With no such message the status stays "suspected, unconfirmed".
 - Similar labels with different amounts: listed for a person to check, never counted.
-- An amount that is not a plain number (for example a euro figure): left out of every sum and listed under could not verify. Nothing is converted.
+- An amount written with a $ sign or thousands separators: read as plain USD and listed as "read from currency formatting".
+- Any other amount format (for example a euro figure): left out of every sum, named, and the baseline is marked PARTIAL at the top. Nothing is converted.
+- A row whose field count differs from the header (shifted columns): named, left out of every sum, baseline marked PARTIAL at the top.
 - P&L missing, empty or without the expected columns: one plain line saying what is needed, exit code 0, no traceback.
 
 ## Limits

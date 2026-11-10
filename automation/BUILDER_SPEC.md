@@ -2,7 +2,8 @@
 
 For a remote builder who has never seen the company. The router in this folder (`run.py`,
 `rules.json`) already runs. **Your job is the missing piece behind it: the self-serve replacement
-that the `SELF_SERVE` reply points to. It does not exist yet, so today the router saves 0 minutes.**
+that the `SELF_SERVE` reply points to. It does not exist yet, so today the router saves 0 minutes.
+The measured ceiling is the logged minutes on the self-serve path. No measured after figure exists yet.**
 
 ## 1. Scope
 
@@ -20,8 +21,8 @@ Build: (a) a page or form where a creator replaces the thumbnail on their own pu
 
 ## 2. Data contract
 
-Input: `data/support_tickets_q1_2026.csv`, UTF-8, comma separated, header on line 1, one ticket
-per line. Extra columns are ignored. Column names and the minutes bound are set in `rules.json`.
+Input: `data/support_tickets_q1_2026.csv` (found by the pattern `support_tickets_*.csv` in `rules.json`),
+UTF-8, comma separated, header on line 1, one ticket per line. Extra columns are ignored.
 
 | Column | Type | Rule |
 |---|---|---|
@@ -31,8 +32,7 @@ per line. Extra columns are ignored. Column names and the minutes bound are set 
 | `Handle_Minutes` | number, above 0, at most `max_plausible_minutes` | otherwise `EXCEPTION`, not counted |
 | `Assigned_To`, `Status` | text | optional. Blank assignee or a status other than `Closed` is flagged. `Submitted_By` is not read |
 
-Output: `out/routed_queue.csv`, one row per input row in input order, columns `ticket_id,
-source, category, handle_minutes, action, reason, flags`. `source` is `<file>:L<line>`.
+Output: `out/routed_queue.csv`, one row per input row, columns `ticket_id, source, category, handle_minutes, action, reason, flags`.
 
 ## 3. Acceptance test ("answer-complete")
 
@@ -40,13 +40,13 @@ Each step is a command run from the repo root. Pass means the stated output and 
 
 | # | Command | Pass | Proves |
 |---|---|---|---|
-| 1 | `python3 automation/run.py --check` | `ACCEPTANCE: PASS` | Router is intact: one output row per input row, before number re-summed by separate code, every citation resolves, report says the run alone saves 0 minutes |
+| 1 | `python3 automation/run.py --check` | `ACCEPTANCE: PASS` | Router is intact: one output row per input row, before number re-summed by separate code, every citation resolves, headline gives ceiling and floor of 0 and no assumed share |
 | 2 | `python3 tests/check.py` | no `FAIL` line | Same on a changed copy: a new category and a blank minutes cell become exceptions, totals change, no traceback |
 | 3 | `python3 automation/run.py --data <pilot export dir> --out <tmp> --check --max-target-minutes <N>` | `ACCEPTANCE: PASS` | Your piece works: on a ticket export from a two week pilot, logged minutes on the target category are at or below N |
 
 For step 3, N is agreed with the client before the pilot, from the weekly figure in
-`out/before_after.md` times the pilot weeks, less the saving they expect. "Answer-complete"
-means all three pass, and step 3 turns the scenario in the report into a measured after number.
+`out/before_after.md` times the pilot weeks, less the saving they expect. "Answer-complete" means
+all three pass. Step 3 produces the measured after figure in minutes that the bundle cannot give.
 
 ## 4. In and out
 

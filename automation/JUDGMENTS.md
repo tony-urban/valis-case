@@ -57,6 +57,17 @@ Inside these tables the pipe in a Slack citation is written `\|` so the table re
 | 16:51 | m8. Spec too long, second acceptance step was prose. | Rewritten to 60 lines or fewer. Three steps, each a command with a pass or fail result. Step 3 uses a new `--max-target-minutes N` check so the builder's own piece has a binary test on a pilot export. The spec now says the builder's job is the missing self-serve replacement. | A builder must know when to stop. | `repo:automation/BUILDER_SPEC.md` section 3 |
 | 16:51 | Python version and bytecode. | Audited: no `write_text(newline=)`, `match`, run-time unions, `removeprefix` or `zip(strict=)`. Minimum stated as 3.8 in the README. Both scripts set `sys.dont_write_bytecode`. `__pycache__` removed. | Reviewers use stock macOS python3 3.9. | `repo:pipeline/06_test.md` B1, m9 |
 
+## Final changes after tester round 2 (`repo:pipeline/06_test.md` section 3, N3, N4)
+
+| Time | Issue | Decision | Reason | Source |
+|---|---|---|---|---|
+| 17:04 | D3.4. The bundle does not support a measured after figure in minutes (R13). | Headline order is now: before (all tickets reach a person), after executed (tickets and logged minutes per path), measured ceiling and floor of 0, not measured. The assumed-share table stays lower down as an illustration and no assumed share appears in the headline. | Only figures the run computes may lead. The ceiling is a sum of cited rows, the 50% and 90% are inputs. | `repo:pipeline/06_test.md` section 3 |
+| 17:04 | "Routed to self-serve" could be read as "no longer needs a person". | Headline says the resolution rate of that path is unknown and that exceptions also go to a person. | The path points to a tool that does not exist yet. | `repo:pipeline/06_test.md` section 3 |
+| 17:04 | Headline wording versus existing test patterns. | The target-category sentence "Before (MEASURED): ... of handling logged on ..." moved into the "Before (MEASURED)" section, and the headline keeps one line naming the scenario without figures. | `tests/check.py` 4c, 5d, 8a and 8n pin those strings and tests may not be edited. | `repo:tests/check.py` |
+| 17:04 | N3. Ticket counts included rows whose minutes are not counted. | Counts printed next to a minutes figure (headline, before line, the answer lines in `time_waste.md`) are counted rows only. The action table still shows all rows. | A count and a sum on one line must describe the same rows. | `repo:pipeline/06_test.md` N3 |
+| 17:04 | N4. Exact ticket file name in `rules.json`. | Replaced by `file_pattern` (`support_tickets_*.csv`). Several matches: the last by name is used, and the others are named on stdout and in both reports. | A next-quarter export must run without editing config. Last by name is the newest period under this naming. | `repo:pipeline/06_test.md` N4 |
+| 17:04 | `--check` headline assertion. | Now requires the before, after, ceiling, floor, "not measured" and scenario-label phrases in the headline, and fails if an assumed share appears there. | Pins the adopted framing. | `repo:automation/run.py` |
+
 ## Dead ends and corrections
 
 | Time | What happened | What changed |

@@ -20,9 +20,10 @@ With `--check`, `--max-target-minutes N` adds a ceiling on the target category's
 2. `run.py` gives every ticket row one action and writes `out/routed_queue.csv`:
    `SELF_SERVE` (target category), `HUMAN` (other known category), `EXCEPTION` (unknown
    category, blank or unreadable field).
-3. `run.py` writes `out/before_after.md`: the before number (measured), what the run executed,
-   the statement that the run alone saves 0 minutes, and a scenario (not a result) with a 0%,
-   a low and a high case.
+3. `run.py` writes `out/before_after.md`. Headline, in this order: before (all tickets reach a
+   person, measured), after (tickets and logged minutes routed to each path, executed), the
+   measured ceiling and the floor of 0, and what is not measured. An illustration with assumed
+   shares sits lower down, labelled as a scenario and not a result.
 
 ## Files
 
@@ -47,8 +48,11 @@ the other deliverables.
 ## Limits, stated plainly
 
 - The run routes tickets. It does not swap thumbnails: the CMS is not in the bundle and the
-  self-serve replacement does not exist yet. The run alone saves 0 minutes. The scenario is
-  routed minutes times a deflection share that has no source in the bundle.
+  self-serve replacement does not exist yet. The run alone saves 0 minutes. The most it can
+  save is the logged minutes on the self-serve path. The bundle does not support a measured
+  after figure in minutes: a two week pilot export run through the same command produces it.
+- The ticket file is found by the pattern `file_pattern` in `rules.json`. If several files
+  match, the last by name is used and the others are named in the output.
 - Minutes above `max_plausible_minutes` in `rules.json` (ASSUMPTION) and repeats of a ticket ID
   go to the exception queue and are not counted.
 - The finance reconciliation is the larger claimed time sink. It was not built because the

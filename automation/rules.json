@@ -1,7 +1,8 @@
 {
   "_readme": "Single config for automation/. The only place where file names, column names, category names, evidence keywords and assumptions live. Edit here, never in the .py files.",
   "tickets": {
-    "file": "support_tickets_q1_2026.csv",
+    "file_pattern": "support_tickets_*.csv",
+    "_file_pattern_note": "Glob in the data folder. If several files match, the last by name is used and the others are listed in the output.",
     "columns": {
       "id": "Ticket_ID",
       "date": "Date",
