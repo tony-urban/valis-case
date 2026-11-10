@@ -1,0 +1,35 @@
+Category,Line Item,Q1_2026_USD,Notes
+Revenue,Brand partnerships,4200000,Net of agency commissions
+Revenue,Creator subscriptions,900000,Subscription/membership revenue
+Revenue,Other,150000,Licensing + one-off
+Revenue,Total Revenue,5250000,Sum of revenue lines
+Operating Expenses,,,
+Personnel,Salaries & benefits (all teams),3120000,~300 FTE; loaded cost; see headcount_roster.csv
+Personnel,Contractor / freelance production,410000,Variable production crews
+Software & SaaS,Salesforce,12000,CRM; renewal discussion in #finance — see note
+Software & SaaS,HubSpot,9000,Marketing automation
+Software & SaaS,Looker,11000,BI / dashboards
+Software & SaaS,Amplitude,7500,Product analytics
+Software & SaaS,Amplitude Analytics,7500,Product analytics
+Software & SaaS,Figma,3600,Design
+Software & SaaS,Adobe Creative Cloud,5400,Editing / creative suite
+Software & SaaS,Notion,2400,Docs / wiki
+Software & SaaS,Slack,4200,Internal comms
+Software & SaaS,Google Workspace,6000,Email / docs / storage
+Software & SaaS,Zoom,1800,Video calls
+Software & SaaS,GitHub,3000,Source control
+Software & SaaS,Sentry,1500,Error monitoring
+Software & SaaS,Greenhouse,4000,ATS / recruiting
+Software & SaaS,Airtable,2100,Ops trackers
+Software & SaaS,Software & SaaS subtotal,81000,As-listed sum of SaaS line items
+Infrastructure,AWS,38000,Cloud hosting / compute / storage
+Infrastructure,Cloudflare,€1900,CDN + DNS; billed in EUR — normalize before totaling
+Infrastructure,Infrastructure subtotal,,Subtotal pending FX normalization of EUR line
+Marketing,Paid media,260000,Performance + brand
+Marketing,Events & sponsorships,48000,
+Facilities,Office & utilities,95000,Two locations
+Facilities,Travel & entertainment,52000,
+G&A,Legal & professional fees,64000,
+G&A,Insurance,28000,
+G&A,Bank & payment processing fees,31000,Creator payouts processing
+G&A,Office supplies,,Blank — pending AP coding

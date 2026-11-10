@@ -1,0 +1,57 @@
+Northwind Media — Headcount Roster Snapshot
+Snapshot_Date,2026-05-01
+Currency,USD
+Prepared_by,Elena Novak (Head of People)
+
+SECTION,TEAM_HEADCOUNT_SUMMARY
+Team,Headcount
+Content/Production,95
+Creator Management,60
+Growth/Marketing,45
+Sales,35
+Engineering,25
+Data,10
+Operations,15
+Finance,6
+People/HR,6
+G&A/Exec,3
+TOTAL,300
+
+SECTION,OPEN_REQUISITIONS
+Req_ID,Team,Title,Status,Target_Start,Hiring_Manager
+REQ-114,Sales,Account Executive,APPROVED,2026-07-15,Tomás Reyes
+REQ-118,Engineering,Backend Engineer,OPEN,2026-08-01,Raj Patel
+REQ-121,Content/Production,Senior Video Editor,OPEN,2026-07-01,Yuki Tanaka
+REQ-125,Data,Analytics Engineer,OPEN,,Ben Okoro
+
+SECTION,EMPLOYEE_ROSTER
+Name,Team,Title,Status,Start_Date,Manager
+Dana Whitfield,G&A/Exec,CEO,Active,2019-02-04,Board
+Marcus Lindqvist,G&A/Exec,COO,Active,2019-06-17,Dana Whitfield
+Priya Raman,Finance,CFO,Active,2020-01-13,Dana Whitfield
+Tomás Reyes,Sales,VP Sales (Brand Partnerships),Active,2020-09-21,Marcus Lindqvist
+Hannah Cole,Growth/Marketing,VP Growth / Marketing,Active,2021-03-08,Marcus Lindqvist
+Yuki Tanaka,Content/Production,VP Content / Production,Active,2020-05-11,Marcus Lindqvist
+Sofia Marchetti,Creator Management,Head of Talent / Creator Management,Active,2021-07-26,Marcus Lindqvist
+Raj Patel,Engineering,VP Engineering,Active,2021-01-18,Marcus Lindqvist
+Ben Okoro,Data,Head of Data,Active,2021-11-02,Raj Patel
+Elena Novak,People/HR,Head of People,Active,2020-08-30,Dana Whitfield
+Liam Doyle,Operations,Head of Operations,Active,2021-04-12,Marcus Lindqvist
+Maya Fortin,Finance,Finance Analyst,Active,2022-06-06,Priya Raman
+Aisha Bello,Sales,Account Executive,Active,2022-10-03,Tomás Reyes
+Carlos Mendez,Sales,Account Executive,Active,2023-02-20,Tomás Reyes
+Nina Petrova,Sales,Sales Development Rep,Active,2024-01-15,Tomás Reyes
+Owen Walsh,Content/Production,Video Editor,Active,2022-09-12,Yuki Tanaka
+Grace Kim,Content/Production,Producer,Active,2023-05-29,Yuki Tanaka
+Felix Braun,Content/Production,Motion Designer,Active,2026-13-02,Yuki Tanaka
+Lena Schulz,Creator Mgmt,Talent Manager,Active,2022-11-14,Sofia Marchetti
+Diego Ramos,Creator Mgmt,Talent Manager,Active,2023-08-07,Sofia Marchetti
+Amara Okeke,Creator Management,Creator Success Lead,Active,2023-03-19,Sofia Marchetti
+Jonas Vik,Creator Management,Onboarding Specialist,Active,,Sofia Marchetti
+Ruby Chen,Growth/Marketing,Growth Marketer,Active,2023-06-22,Hannah Cole
+Theo Laurent,Growth/Marketing,Content Marketer,Active,2024-02-05,Hannah Cole
+Priscilla Adeyemi,Data,Data Analyst,Active,2023-09-25,Ben Okoro
+Sam Holloway,Engineering,Software Engineer,Active,2022-07-18,Raj Patel
+Marta Kowalski,Engineering,Software Engineer,Active,2023-10-30,Raj Patel
+Hugo Silva,Operations,Operations Coordinator,Active,2023-04-03,Liam Doyle
+Bianca Rossi,People/HR,Recruiter,Active,2024-03-11,Elena Novak
