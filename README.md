@@ -40,7 +40,7 @@ Every run rewrites the generated outputs byte for byte the same. `tests/check.py
 | `BUILD_LOG.md` | Deliverable 4: timestamped build log (prompts, files, dead ends, judgment calls). |
 | `pipeline/` | The agent pipeline used to solve the case, one handoff file per stage, plus the shared parser `importer.py`. |
 | `tests/` | `check.py`, written by an agent that built none of the work. |
-| `chat_logs/` | LLM chat and review logs. Holds the external audit of 2026-11-10. The main Claude session transcript is added at submission. See `chat_logs/README.md`. |
+| `chat_logs/` | Tony's prompts to Claude, verbatim, and the external audit of 2026-11-10 with its own chat log. See `chat_logs/README.md`. |
 
 ## Runtime rules
 

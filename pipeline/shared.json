@@ -1,0 +1,5 @@
+{
+  "_comment": "Rules that more than one deliverable applies. One definition, one place. ask/ and value/ both read this file through pipeline/shared.py.",
+  "saas_category_terms": ["saas"],
+  "subtotal_terms": ["subtotal", "total"]
+}

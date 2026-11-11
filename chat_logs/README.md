@@ -6,7 +6,7 @@ Everything here is kept verbatim, in the language it was written in.
 |---|---|
 | `external_review_2026-11-10/AUDIT_LOG.md` | Independent audit of commit `934d741`, run by Tony in a second AI assistant (ChatGPT, per the file paths inside the log) on Windows with Python 3.12. In Russian. |
 | `external_review_2026-11-10/CHAT_LOG.md` | The prompts and replies of that audit session. In Russian. |
-| Claude session transcript | Not yet exported. This is the main working session (planning, the agent pipeline, fixes). Tony exports it at submission. |
+| `claude_session_user_prompts.md` | Every prompt Tony sent to Claude in the main working session, verbatim, with timestamps. Claude's prompts to its own agents are not included, by Tony's decision: they are summarised in `BUILD_LOG.md`. |
 
 ## External audit: findings and what Claude found when re-running them
 
