@@ -314,7 +314,15 @@ def render(tickets, text_units, rules, data_label):
     asserted = [r for r in rows if r["tag"] == "ASSERTED" and r["hours"] is not None]
     top_claim = asserted[0] if asserted else None
     umbrella = next((r for r in rows if r.get("umbrella")), None)
-    weekly = allq["minutes"] / 60 / a["weeks_in_period"]
+    # Weeks in the period. The case data is a full quarter: the configured weeks (ASSUMPTION).
+    # A pilot export covers its own dates: weeks come from its first and last date.
+    if rules["tickets"].get("has_outcome") and dates:
+        days = (date.fromisoformat(dates[-1]) - date.fromisoformat(dates[0])).days + 1
+        n_weeks, weeks_basis = days / 7, "from the export's first and last date"
+    else:
+        n_weeks, weeks_basis = a["weeks_in_period"], "ASSUMPTION"
+    weeks_txt = num(round(n_weeks, 1))
+    weekly = allq["minutes"] / 60 / n_weeks
     L = []
     w = L.append
 
@@ -341,7 +349,7 @@ def render(tickets, text_units, rules, data_label):
         w("1. **Largest claimed time sink:** no claim with a stated quantity was found in the text sources.")
     w(f"2. **Largest measured time sink: the creator support queue.** MEASURED {num(allq['minutes'])} minutes "
       f"({hrs(allq['minutes'])} hours) logged on {allq['n_timed']} tickets, {period}. That is {weekly:.1f} hours a week "
-      f"over {a['weeks_in_period']} weeks (ASSUMPTION).")
+      f"over {weeks_txt} weeks ({weeks_basis}).")
     w(f"3. **Automate first: {target} tickets.** MEASURED {num(ps['minutes'])} minutes ({hrs(ps['minutes'])} hours) "
       f"on {ps['n_timed']} tickets. Rank {rank_n} of {len(cats)} categories by ticket count, rank {rank_m} of {len(cats)} "
       "by logged minutes. The router is built and running: see `before_after.md` in this folder. What it delivers today is "
@@ -405,7 +413,7 @@ def render(tickets, text_units, rules, data_label):
     if umbrella and umbrella["claims"]:
         v, u = umbrella["claims"][0]
         w(f"- **Hours a week.** Claimed {num(v)} hours a week: {cite(u)}. Measured {weekly:.1f} hours a week "
-          f"({num(allq['minutes'])} minutes / 60 / {a['weeks_in_period']} weeks), which is {weekly / v:.0%} of the claim. "
+          f"({num(allq['minutes'])} minutes / 60 / {weeks_txt} weeks, {weeks_basis}), which is {weekly / v:.0%} of the claim. "
           "The claim is challenged in its own thread (citations above).")
     pw_t, pw_all = peak_week(pick["tickets"]), peak_week(tickets)
     for v, u in pick["claims"]:

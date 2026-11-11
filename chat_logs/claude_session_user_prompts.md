@@ -77,3 +77,9 @@ Claude then: committed the value fix the earlier agent had finished, launched th
 > Сделать замер пилота работающей частью, что сейчас и делает агент. Код принимает выгрузку пилота с колонкой исхода и считает «после» как измеренную величину. На данных кейса такой выгрузки нет, поэтому на демо покажем это на тестовом файле, явно помеченном как тестовы
 
 Claude then: had the automation agent add a labelled synthetic pilot fixture and demo command, merged all fixes (suite 69 of 69, also on Python 3.8), and updated the report and README.
+
+## Prompt 11. Wed 2026-11-11, 13:22
+
+> Так, исправь ошибку с количеством недель квартала, несложно. И сделай какой-то readme для Python скрипта, как выпускать на Windows отдельный readme, отдельный как на Macintosh, чтобы человек или ии, который будет запускать, могли быстро разобраться.
+
+Claude then: fixed the weeks count on pilot exports, wrote `RUN_ON_MAC.md` and `RUN_ON_WINDOWS.md`, linked them from the README.

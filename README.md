@@ -16,6 +16,8 @@ The CEO's third question (where time is wasted, what to automate first) is answe
 
 ## Quick start
 
+Step-by-step guides with troubleshooting: [RUN_ON_MAC.md](RUN_ON_MAC.md) and [RUN_ON_WINDOWS.md](RUN_ON_WINDOWS.md).
+
 Python 3.8 or later, standard library only. No installs, no API keys, no network. From the repo root:
 
 ```
@@ -31,7 +33,7 @@ Pilot measurement demo, on a synthetic test fixture (not Northwind data, labelle
 python3 automation/run.py --data automation/demo_pilot --out /tmp/pilot_demo --check --max-target-minutes 105
 ```
 
-The same commands work on macOS, Linux and Windows. On Windows, use `python` or `py -3` if `python3` is not on the PATH.
+The same commands work on macOS, Linux and Windows. On Windows, use `py` in place of `python3` (see RUN_ON_WINDOWS.md).
 Every run rewrites the generated outputs byte for byte the same. `tests/check.py` confirms that, and that `data/` still matches `data/CHECKSUMS.txt`.
 
 ## Layout
