@@ -57,3 +57,23 @@ Claude then: re-ran every audit finding on scratch copies of the data (all repro
 > Так, пункт 1.6 исправляем. Дальше в чат-логс добавляем промпты из этой сессии и те, которые... Некоторые ты отправил агентам не надо. Нужны только мои промпты тебе. Да, наше с тобой взаимодействие. Репозиторий оставь публичным. Так, и давай про первую находку. Что запись меняет статус sales только при явной привязке к sales или request 14? Что ты хочешь, чтобы я себе здесь какое решение принял?
 
 Claude then: started fixes 1 to 6, wrote this file, and explained the one decision still open (how to present the automation's before and after).
+
+## Prompt 8. Wed 2026-11-11, 07:00
+
+> Continue
+
+Claude then: found the working tree clean (the agents had stopped on a rate limit around 00:15), resumed the four agents, installed Python 3.8 and 3.9. The agents ran on the Fable model and stopped again on its limit.
+
+## Prompt 9. Wed 2026-11-11, 13:10
+
+Before this prompt Tony switched the session model from Fable to Opus (`/model claude-opus-5-5`).
+
+> Try again
+
+Claude then: committed the value fix the earlier agent had finished, launched three fresh agents on Opus for the remaining fixes and the regression tests, and asked Tony to choose how to present the automation's after figure.
+
+## Prompt 10. Wed 2026-11-11, 13:14
+
+> Сделать замер пилота работающей частью, что сейчас и делает агент. Код принимает выгрузку пилота с колонкой исхода и считает «после» как измеренную величину. На данных кейса такой выгрузки нет, поэтому на демо покажем это на тестовом файле, явно помеченном как тестовы
+
+Claude then: had the automation agent add a labelled synthetic pilot fixture and demo command, merged all fixes (suite 69 of 69, also on Python 3.8), and updated the report and README.
