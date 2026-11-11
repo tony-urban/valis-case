@@ -30,31 +30,31 @@ UTF-8, comma separated, header on line 1, one ticket per line. Extra columns are
 | `Date` | `YYYY-MM-DD` | required, real calendar date. Otherwise `EXCEPTION` |
 | `Category` | text | required, exact match against `rules.json`. Unknown: `EXCEPTION` |
 | `Handle_Minutes` | number, above 0, at most `max_plausible_minutes` | otherwise `EXCEPTION`, not counted |
-| `Assigned_To`, `Status` | text | optional. Blank assignee or a status other than `Closed` is flagged. `Submitted_By` is not read |
+| `Assigned_To`, `Status` | text | optional. Blank assignee or a status other than `Closed` is flagged. If absent, those flags are skipped and both reports say so. `Submitted_By` is not read |
+| `Self_Serve_Outcome` | text | pilot export only (the Q1 file has none). Per target ticket: resolved by self-serve, or came back to a person. Values in `rules.json` `pilot`. A resolved ticket may log 0 or blank minutes |
 
 Output: `out/routed_queue.csv`, one row per input row, columns `ticket_id, source, category, handle_minutes, action, reason, flags`.
 
 ## 3. Acceptance test ("answer-complete")
 
-Each step is a command run from the repo root. Pass means the stated output and exit code 0.
-
 | # | Command | Pass | Proves |
 |---|---|---|---|
 | 1 | `python3 automation/run.py --check` | `ACCEPTANCE: PASS` | Router is intact: one output row per input row, before number re-summed by separate code, every citation resolves, headline gives ceiling and floor of 0 and no assumed share |
 | 2 | `python3 tests/check.py` | no `FAIL` line | Same on a changed copy: a new category and a blank minutes cell become exceptions, totals change, no traceback |
-| 3 | `python3 automation/run.py --data <pilot export dir> --out <tmp> --check --max-target-minutes <N>` | `ACCEPTANCE: PASS` | Your piece works: on a ticket export from a two week pilot, logged minutes on the target category are at or below N |
+| 3 | `python3 automation/run.py --data <pilot export dir> --out <tmp> --check --max-target-minutes <N>` | `ACCEPTANCE: PASS` | Your piece works on the pilot export. All three must hold: (1) coverage, at least one target-category row; (2) window, dates span at least `pilot_days` (14, ASSUMPTION; `--pilot-days`); (3) outcome, `Self_Serve_Outcome` present and readable on every target row, and logged minutes on target tickets that came back to a person (the after figure) at or below N |
 
-For step 3, N is agreed with the client before the pilot, from the weekly figure in
-`out/before_after.md` times the pilot weeks, less the saving they expect. "Answer-complete" means
-all three pass. Step 3 produces the measured after figure in minutes that the bundle cannot give.
+Each step runs from the repo root; pass is the stated output and exit 0; all three is "answer-complete". For step 3,
+N is agreed with the client before the pilot: the weekly figure in `out/before_after.md` times the pilot weeks, less
+the expected saving. Step 3 prints "After (MEASURED on the pilot export)", the after figure in minutes the bundle
+cannot give. Demo on a synthetic fixture, not case data (prints before, after MEASURED: 100 minutes, 5 returned, 9 resolved, PASS):
+`python3 automation/run.py --data automation/demo_pilot --out /tmp/pilot_demo --check --max-target-minutes 105`
 
 ## 4. In and out
 
-In: the self-serve replacement (a). The router as a live step, rules only in `rules.json`. The
-exception queue with reasons. The before and after report on every run. The two week pilot export.
+In: the self-serve replacement (a). The router as a live step, rules only in `rules.json`. The exception
+queue with reasons. The before and after report on every run. The two week pilot export, with `Self_Serve_Outcome`.
 
-Out: reading ticket free text or guessing a category. Machine learning or LLM calls. Automating
-any category other than the target. Dashboards, dollar values for time saved. The finance
-month-end reconciliation: larger claimed time sink, inputs not provided (`out/time_waste.md`).
-Constraints: Python 3.8 or later, standard library only, no network, never edit `data/`, no
-category names or amounts in code. Unknown input goes to `EXCEPTION`, never to a guess.
+Out: reading ticket free text or guessing a category. Machine learning or LLM calls. Automating any category
+other than the target. Dashboards, dollar values for time saved. The finance month-end reconciliation: larger
+claimed time sink, inputs not provided (`out/time_waste.md`). Constraints: Python 3.8 or later, standard library
+only, no network, never edit `data/`, no category names or amounts in code. Unknown input: `EXCEPTION`, never a guess.

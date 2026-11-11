@@ -11,7 +11,12 @@
       "minutes": "Handle_Minutes",
       "status": "Status"
     },
-    "closed_status": "Closed"
+    "closed_status": "Closed",
+    "optional_columns": [
+      "assignee",
+      "status"
+    ],
+    "_optional_columns_note": "Keys from columns. A file without these still runs: the flags that depend on them are skipped and the report says so. All other columns are required."
   },
   "target_category": "Thumbnail re-upload",
   "known_categories": {
@@ -22,6 +27,27 @@
     "Account access": "Human: verify identity, restore access",
     "Content takedown": "Human: review the takedown request"
   },
+  "pilot": {
+    "_note": "Read only when the ticket file has this column, which the Q1 bundle file does not. It is our proposed contract for the pilot export: the ticketing tool must record, per target ticket, whether the self-serve path resolved it or it came back to a person. Values are matched ignoring case.",
+    "outcome_column": "Self_Serve_Outcome",
+    "resolved_values": [
+      "Resolved by self-serve",
+      "self-serve",
+      "resolved"
+    ],
+    "returned_values": [
+      "Returned to person",
+      "returned",
+      "came back"
+    ],
+    "fixture_marker": {
+      "file": "README.md",
+      "first_line_contains": "synthetic TEST FIXTURE",
+      "banner": "The figures below demonstrate the method. They are not a Northwind result.",
+      "_note": "A data folder whose marker file starts with this text is a made-up demo input. Both reports and stdout then carry a banner saying so, and the marker file is not read as evidence."
+    },
+    "demo_command": "python3 automation/run.py --data automation/demo_pilot --out /tmp/pilot_demo --check --max-target-minutes 105"
+  },
   "assumptions": {
     "deflection_low": 0.5,
     "deflection_high": 0.9,
@@ -29,7 +55,9 @@
     "weeks_in_period": 13,
     "months_in_period": 3,
     "max_plausible_minutes": 480,
-    "_max_plausible_minutes_note": "ASSUMPTION: one ticket cannot take more than one 8 hour work day. Rows above this go to EXCEPTION and their minutes are not counted."
+    "_max_plausible_minutes_note": "ASSUMPTION: one ticket cannot take more than one 8 hour work day. Rows above this go to EXCEPTION and their minutes are not counted.",
+    "pilot_days": 14,
+    "_pilot_days_note": "ASSUMPTION: the two week pilot named in BUILDER_SPEC.md. Override with --pilot-days."
   },
   "candidates": [
     {
@@ -48,7 +76,8 @@
         "The written list of manual steps that the finance review assigns as an action item"
       ],
       "why_not": "Strongest claim, but self-reported with no time log, and the CRM export, invoicing sheet and payout tracker are not in the bundle. Building it here would mean inventing the data it reconciles.",
-      "provenance": "All of them trace to one person's self-report (the finance analyst who does the work): her own Slack messages, the finance review she scribed, and the CFO repeating the figure at the leadership sync. Nobody timed it."
+      "provenance": "All of them trace to one person's self-report (the finance analyst who does the work): her own Slack messages, the finance review she scribed, and the CFO repeating the figure at the leadership sync. No time log for it is in the bundle.",
+      "approx": "(?:~|about |around |roughly |basically )(?:\\d+|two|three|four|five) (?:full )?days"
     },
     {
       "id": "support_all",

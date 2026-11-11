@@ -10,7 +10,38 @@ Options: `--data <dir>` (default `data/`), `--out <dir>` (default `automation/ou
 
 Python 3.8 or later (stock macOS `python3` is 3.9), standard library only. No network, no installs.
 `data/` is only read. The scripts switch bytecode off, so no `__pycache__` is left behind.
-With `--check`, `--max-target-minutes N` adds a ceiling on the target category's logged minutes (for a pilot export).
+Every generated file is UTF-8 with LF line endings on every OS, Windows included.
+
+Pilot acceptance: `--check --max-target-minutes N` (optionally `--pilot-days D`, default `pilot_days`
+in `rules.json`, 14, ASSUMPTION). It FAILs, with the reason, unless all three hold: (1) coverage, the
+export has at least one target-category row ("not evaluable: no target tickets in this export"
+otherwise); (2) window, its dates span at least D days; (3) outcome, the export has the column
+`Self_Serve_Outcome` (name and accepted values under `pilot` in `rules.json`) readable on every target
+row, and the logged minutes on target tickets that came back to a person, printed as "After (MEASURED
+on the pilot export)" with the counts resolved and returned, are at or below N. The Q1 bundle file has
+no outcome column, so on it the headline still says the after in minutes is not measured, and adds
+one line pointing to this path and the demo below.
+
+## Demo of the pilot measurement (synthetic fixture, not case data)
+
+`demo_pilot/` holds a made-up pilot export (24 rows, `DEMO-` IDs, July dates, outcome column). Its
+README says in line 1 that it is a synthetic test fixture. The run recognises that line
+(`pilot.fixture_marker` in `rules.json`), puts a banner on both reports and skips the README as evidence.
+
+    python3 automation/run.py --data automation/demo_pilot --out /tmp/pilot_demo --check --max-target-minutes 105
+
+Expected, abridged (figures from the fixture, not a Northwind result):
+
+    **SYNTHETIC TEST FIXTURE. ... They are not a Northwind result.**
+    - **Before (MEASURED): all 15 tickets, 370 logged minutes, reach a person today.** 9 more were resolved by self-serve ...
+    - **After (MEASURED on the pilot export): 100 logged minutes on the 5 Thumbnail re-upload tickets that came back to a person.** 9 ... resolved by self-serve and 5 came back to a person ...
+    PASS  pilot coverage: the export has tickets of the target category (14 Thumbnail re-upload rows)
+    PASS  pilot window: dates span at least 14 days (2026-07-06 to 2026-07-19, 14 days)
+    PASS  pilot outcome: After (MEASURED on the pilot export) is at or below 105 minutes (100 logged minutes on 5 tickets that came back to a person (re-summed 100), 9 resolved by self-serve)
+    ACCEPTANCE: PASS
+
+With `--max-target-minutes 90` the outcome line FAILs and the exit code is 1. The Q3 report on the
+fixture (`time_waste.md`) still uses the 13 week quarter from `rules.json`; read `before_after.md`.
 
 ## What it does
 
@@ -35,6 +66,7 @@ With `--check`, `--max-target-minutes N` adds a ceiling on the target category's
 | `BUILDER_SPEC.md` | One-page spec for a remote builder |
 | `JUDGMENTS.md` | Timestamped judgment calls and dead ends |
 | `out/` | Generated outputs, committed so a reader can see them without running anything |
+| `demo_pilot/` | Synthetic pilot export for the demo above. Test fixture, not case data |
 
 Parsing goes through `pipeline/importer.py`, so a citable line means the same thing here as in
 the other deliverables.
@@ -43,7 +75,9 @@ the other deliverables.
 
 - MEASURED: the figure is a sum of `Handle_Minutes` over rows that are each cited.
 - ASSERTED: the figure is a number found in a Slack message or meeting note by a keyword and
-  a pattern from `rules.json`. The message is cited. Nobody logged the time.
+  a pattern from `rules.json`. The message is cited. No time log behind the figure is in the bundle.
+  Where the sources give the figure as approximate ("~3 days", "basically three full days"), the
+  report says "about" (pattern `approx` per candidate in `rules.json`).
 
 ## Limits, stated plainly
 
@@ -57,8 +91,10 @@ the other deliverables.
   go to the exception queue and are not counted.
 - The finance reconciliation is the larger claimed time sink. It was not built because the
   claim is self-reported and its three input files are not in the bundle.
-- A file that is not UTF-8, has no header or lacks a configured column stops the run with a
-  plain `CANNOT RUN` message naming what is needed. Bad rows never stop the run: they go to
+- A file that is not UTF-8, has no header or lacks a required column stops the run with a
+  plain `CANNOT RUN` message naming what is needed. `Assigned_To` and `Status` are optional
+  (`optional_columns` in `rules.json`): without them the run goes ahead, skips the flags that need
+  them, and both reports and stdout say which column was absent and which flag was skipped. Bad rows never stop the run: they go to
   the exception queue.
 - Evidence is found by keywords in `rules.json`. A new topic in a fresh Slack export is only
   picked up after a keyword is added there.

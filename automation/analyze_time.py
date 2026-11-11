@@ -46,8 +46,11 @@ def load_rules(category=None):
 def load_tickets(data, rules):
     """Every data row of the ticket file becomes one ticket. Nothing is dropped.
     'problems' send a ticket to the exception queue. 'flags' are only reported."""
-    cfg, col = rules["tickets"], rules["tickets"]["columns"]
-    need = f"need a file matching {cfg['file_pattern']} with a header row and columns: {', '.join(col.values())}"
+    cfg, col, pilot = rules["tickets"], rules["tickets"]["columns"], rules["pilot"]
+    optional = [col[k] for k in cfg.get("optional_columns", [])]
+    required = [c for c in col.values() if c not in optional]
+    need = (f"need a file matching {cfg['file_pattern']} with a header row and columns: {', '.join(required)}"
+            + (f" (optional: {', '.join(optional)})" if optional else ""))
     found = sorted(p for p in data.glob(cfg["file_pattern"]) if p.is_file()) if data.is_dir() else []
     if not found:
         raise CannotRun(f"no file matching {cfg['file_pattern']} in {data}; {need}")
@@ -60,9 +63,12 @@ def load_tickets(data, rules):
     if not lines:
         raise CannotRun(f"{path} is empty; {need}")
     header = importer.parse_row(lines[0])
-    missing = [c for c in col.values() if c not in header]
+    missing = [c for c in required if c not in header]
     if missing:
         raise CannotRun(f"{cfg['file']} has no column {', '.join(missing)}; {need}")
+    cfg["absent"] = [c for c in optional if c not in header]  # run anyway, skip the flags that need them
+    cfg["has_outcome"] = pilot["outcome_column"] in header    # only a pilot export has this column
+    resolved, returned = ({v.lower() for v in pilot[k]} for k in ("resolved_values", "returned_values"))
 
     units, flags = [], []
     importer.import_csv(path, cfg["file"], units, flags)
@@ -75,7 +81,10 @@ def load_tickets(data, rules):
         f = u["fields"]
         t = {"line": u["line"], "id": f[col["id"]], "date": f[col["date"]],
              "category": f[col["category"]], "raw_minutes": f[col["minutes"]],
-             "minutes": None, "week": None, "problems": [], "flags": []}
+             "minutes": None, "week": None, "problems": [], "flags": [], "outcome": None}
+        if cfg["has_outcome"] and t["category"] == rules["target_category"]:  # outcome is read for target tickets only
+            v = f.get(pilot["outcome_column"], "").lower()
+            t["outcome"] = "resolved" if v in resolved else "returned" if v in returned else "unknown"
         if u["line"] in wrong_width:
             t["problems"].append("row has a different number of fields than the header")
         repeat = bool(t["id"]) and t["id"] in seen
@@ -93,19 +102,23 @@ def load_tickets(data, rules):
             t["week"] = f"{iso[0]}-W{iso[1]:02d}"
         else:
             t["problems"].append(f"blank or invalid {col['date']}: {t['date']!r}")
-        if importer.NUM.match(t["raw_minutes"]) and float(t["raw_minutes"]) > cap:
+        is_num = bool(importer.NUM.match(t["raw_minutes"]))
+        if t["outcome"] == "resolved" and (not t["raw_minutes"] or (is_num and float(t["raw_minutes"]) == 0)):
+            if not repeat:  # pilot export: resolved by self-serve with no handling, so 0 or blank minutes is correct
+                t["minutes"] = 0.0
+        elif is_num and float(t["raw_minutes"]) > cap:
             t["problems"].append(f"implausible {col['minutes']}: {t['raw_minutes']} is above the upper bound of {cap} "
                                  "(ASSUMPTION in rules.json), not counted")
-        elif importer.NUM.match(t["raw_minutes"]) and float(t["raw_minutes"]) > 0:
+        elif is_num and float(t["raw_minutes"]) > 0:
             if not repeat:
                 t["minutes"] = float(t["raw_minutes"])
         elif not t["raw_minutes"]:
             t["problems"].append(f"blank {col['minutes']}")
         else:
             t["problems"].append(f"{col['minutes']} is not a positive number: {t['raw_minutes']!r}")
-        if not f[col["assignee"]]:
+        if col["assignee"] in f and not f[col["assignee"]]:
             t["flags"].append(f"no {col['assignee']}")
-        if f[col["status"]] != cfg["closed_status"]:
+        if col["status"] in f and f[col["status"]] != cfg["closed_status"]:
             t["flags"].append(f"{col['status']} is {f[col['status']]!r}")
         tickets.append(t)
     if not tickets:
@@ -113,10 +126,29 @@ def load_tickets(data, rules):
     return tickets
 
 
-def load_text(data):
-    """Slack messages and note lines from every .md file, as importer units."""
+def fixture_banner(data, rules):
+    """Banner for a made-up demo input, recognised by the first line of a marker file named in rules.json."""
+    m = rules["pilot"].get("fixture_marker")
+    p = data / m["file"] if m else None
+    try:
+        first = p.read_text(encoding="utf-8").splitlines()[0] if p and p.is_file() else ""
+    except (OSError, UnicodeDecodeError, IndexError):
+        first = ""
+    if not m or m["first_line_contains"] not in first:
+        return None
+    return (f"**SYNTHETIC TEST FIXTURE. The input folder says so in line 1 of `{m['file']}`: it was invented for a demo. "
+            f"{m.get('banner', 'The figures below demonstrate the method, not a result.')}**")
+
+
+def load_text(data, rules=None):
+    """Slack messages and note lines from every .md file, as importer units.
+    A fixture marker file (rules.json pilot.fixture_marker) is not evidence and is skipped."""
     units = []
+    m = rules["pilot"].get("fixture_marker") if rules else None
+    skip = (data / m["file"]).resolve() if m and fixture_banner(data, rules) else None
     for p in sorted(data.rglob("*.md")):
+        if skip and p.resolve() == skip:
+            continue
         try:
             importer.import_md(p, p.relative_to(data).as_posix(), units, [])
         except (OSError, UnicodeDecodeError):
@@ -125,6 +157,20 @@ def load_text(data):
 
 
 # ---------- small helpers ----------
+
+def write_text(path, text):
+    """Same bytes on every OS: UTF-8 with LF line endings (Path.write_text would give CRLF on Windows)."""
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(text)
+
+
+def absent_notes(rules):
+    """One sentence per optional column that this ticket file does not have."""
+    cfg, col = rules["tickets"], rules["tickets"]["columns"]
+    what = {col["assignee"]: "tickets with no assignee", col["status"]: f"tickets whose status is not {cfg['closed_status']!r}"}
+    return [f"Column `{c}` is absent from this ticket file. It is optional, so the run went ahead. Skipped: the flag for {what.get(c, 'that column')}."
+            for c in cfg.get("absent", [])]
+
 
 def num(x):
     """1234.0 -> '1,234', 12.5 -> '12.5'."""
@@ -216,6 +262,10 @@ def analyse(tickets, text_units, rules):
         unit = r["spec"].get("quantity_unit")
         vals = sorted({v for v, _ in r["claims"]})
         r["claim_values"] = vals
+        r["claim_lines"] = list({(u["file"], u["line"]): u for _, u in r["claims"]}.values())
+        hedge = re.compile(r["spec"].get("approx", "$^"), re.I)
+        r["approx_n"] = sum(1 for u in r["claim_lines"] if hedge.search(u["text"]))
+        r["about"] = "about " if r["approx_n"] else ""  # the sources hedge the figure, so we do too
         if vals and unit == "days_per_month":
             r["claim_hours"] = [v * a["months_in_period"] * a["hours_per_work_day"] for v in (vals[0], vals[-1])]
             if r["tag"] == "ASSERTED":
@@ -233,9 +283,10 @@ def row_by(rows, **kv):
 
 def provenance(row):
     """Who said it: distinct source lines carrying the number, split by kind, plus the note from rules.json."""
-    units = {(u["file"], u["line"]): u for _, u in row["claims"]}.values()
+    units = row["claim_lines"]
     msgs = [u for u in units if u["kind"] == "message"]
-    return (f"{len(units)} source lines (cited below): {len(msgs)} Slack messages, distinct authors: "
+    return (f"{len(units)} source lines (cited below), {row['approx_n']} of which give the figure as approximate: "
+            f"{len(msgs)} Slack messages, distinct authors: "
             f"{len({u['author'] for u in msgs})}. Meeting-note lines: {len(units) - len(msgs)}. "
             f"{row['spec'].get('provenance', 'Count the people behind them before trusting the number.')}")
 
@@ -269,6 +320,9 @@ def render(tickets, text_units, rules, data_label):
 
     w("# Q3. Where is the most time wasted, and what to automate first")
     w("")
+    if rules.get("fixture_banner"):
+        w(rules["fixture_banner"])
+        w("")
     w(f"Generated by `python3 automation/run.py` from `{data_label}`. Every figure below is computed at run time.")
     if rules["tickets"].get("others"):
         w(f"Ticket file used: {tfile}. Also matching the pattern and not read: {', '.join(rules['tickets']['others'])}.")
@@ -279,9 +333,9 @@ def render(tickets, text_units, rules, data_label):
     if top_claim:
         s = top_claim["spec"]
         w(f"1. **Largest claimed time sink: {s['area']}, {s['workflow']}.** ASSERTED at "
-          f"{span(top_claim['claim_values'], 'days a month')} in {provenance(top_claim)} "
+          f"{top_claim['about']}{span(top_claim['claim_values'], 'days a month')} in {provenance(top_claim)} "
           f"Converted: {span(top_claim['claim_values'], 'days')} x {a['months_in_period']} months x "
-          f"{a['hours_per_work_day']} hours a day (ASSUMPTION) = {span(top_claim['claim_hours'], 'hours a quarter')}. "
+          f"{a['hours_per_work_day']} hours a day (ASSUMPTION) = {top_claim['about']}{span(top_claim['claim_hours'], 'hours a quarter')}. "
           "There is no time log and its input files are not in the bundle, so it cannot be measured or run here.")
     else:
         w("1. **Largest claimed time sink:** no claim with a stated quantity was found in the text sources.")
@@ -294,8 +348,8 @@ def render(tickets, text_units, rules, data_label):
       f"routing, not saved time: minutes saved by the run alone are 0, the measured ceiling is {num(ps['minutes'])} minutes, "
       "and the bundle does not support a measured after figure in minutes.")
     if top_claim and ps["minutes"]:
-        w(f"4. **Plainly:** the largest claim, {top_claim['spec']['workflow']} ({num(top_claim['hours'])} hours a quarter, ASSERTED), is "
-          f"{top_claim['hours'] / (ps['minutes'] / 60):.1f} times the measured time of the workflow we built "
+        w(f"4. **Plainly:** the largest claim, {top_claim['spec']['workflow']} ({top_claim['about']}{num(top_claim['hours'])} hours a quarter, ASSERTED), is "
+          f"{top_claim['about']}{top_claim['hours'] / (ps['minutes'] / 60):.1f} times the measured time of the workflow we built "
           f"({hrs(ps['minutes'])} hours a quarter). It was not built because the number is a self-report and its "
           "inputs are absent: building it would mean inventing data. What is needed is listed below.")
     w("")
@@ -310,7 +364,7 @@ def render(tickets, text_units, rules, data_label):
             rank, hours = "not rankable", "no figure in the bundle"
         else:
             k += 1
-            rank, hours = str(k), num(round(r["hours"], 1))
+            rank, hours = str(k), r["about"] + num(round(r["hours"], 1))
         if r["tag"] == "MEASURED":
             st = r["stats"]
             basis = f"{num(st['minutes'])} logged minutes on {st['n']} tickets"
@@ -319,7 +373,7 @@ def render(tickets, text_units, rules, data_label):
             runnable = "Yes: ticket log present"
         else:
             basis = "no quantity stated" if r["hours"] is None else (
-                f"claim of {span(r['claim_values'], 'days a month')}, 1 day = {a['hours_per_work_day']} hours (ASSUMPTION)")
+                f"claim of {r['about']}{span(r['claim_values'], 'days a month')}, 1 day = {a['hours_per_work_day']} hours (ASSUMPTION)")
             runnable = "No: no input file in the bundle"
         mark = " **(pick)**" if r.get("category") == target else ""
         w(f"| {rank} | {s['area']} | {s['workflow']}{mark} | {r['tag']} | {hours} | {basis} | {runnable} |")
@@ -409,6 +463,8 @@ def render(tickets, text_units, rules, data_label):
     if flagged:
         w(f"- {len(flagged)} tickets carry a flag (no assignee, or not closed) and are counted because minutes are logged on them: "
           + ", ".join(f"{cite_row(t, rules)} {'; '.join(t['flags'])}" for t in flagged) + ".")
+    for note in absent_notes(rules):
+        w(f"- {note}")
     bad = [t for t in tickets if t["problems"]]
     if bad:
         w(f"- {len(bad)} rows could not be fully read and went to the exception queue (listed in `before_after.md`). "
@@ -438,9 +494,10 @@ def label(path):
 
 def write_report(data, rules, out):
     tickets = load_tickets(data, rules)
-    text_units = load_text(data)
+    rules["fixture_banner"] = fixture_banner(data, rules)
+    text_units = load_text(data, rules)
     out.mkdir(parents=True, exist_ok=True)
-    (out / "time_waste.md").write_text(render(tickets, text_units, rules, label(data)), encoding="utf-8")
+    write_text(out / "time_waste.md", render(tickets, text_units, rules, label(data)))
     return tickets, text_units
 
 

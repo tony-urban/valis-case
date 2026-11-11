@@ -1,0 +1,25 @@
+Ticket_ID,Date,Category,Submitted_By,Assigned_To,Handle_Minutes,Status,Self_Serve_Outcome
+DEMO-001,2026-07-06,Thumbnail re-upload,demo_creator_01,,0,Closed,Resolved by self-serve
+DEMO-002,2026-07-06,Payout question,demo_creator_02,Ops Support,25,Closed,
+DEMO-003,2026-07-07,Thumbnail re-upload,demo_creator_03,Ops Support,20,Closed,Returned to person
+DEMO-004,2026-07-07,Login issue,demo_creator_04,Ops Support,10,Closed,
+DEMO-005,2026-07-08,Thumbnail re-upload,demo_creator_05,,0,Closed,Resolved by self-serve
+DEMO-006,2026-07-08,Tax form (W-9/W-8),demo_creator_06,Ops Support,45,Closed,
+DEMO-007,2026-07-09,Thumbnail re-upload,demo_creator_07,,0,Closed,Resolved by self-serve
+DEMO-008,2026-07-10,Thumbnail re-upload,demo_creator_08,Ops Support,25,Closed,Returned to person
+DEMO-009,2026-07-10,Account access,demo_creator_09,Ops Support,30,Closed,
+DEMO-010,2026-07-11,Thumbnail re-upload,demo_creator_10,,0,Closed,Resolved by self-serve
+DEMO-011,2026-07-12,Payout question,demo_creator_11,Ops Support,20,Closed,
+DEMO-012,2026-07-13,Thumbnail re-upload,demo_creator_12,,0,Closed,Resolved by self-serve
+DEMO-013,2026-07-13,Thumbnail re-upload,demo_creator_13,Ops Support,20,Closed,Returned to person
+DEMO-014,2026-07-14,Content takedown,demo_creator_14,Ops Support,35,Closed,
+DEMO-015,2026-07-14,Thumbnail re-upload,demo_creator_15,,0,Closed,Resolved by self-serve
+DEMO-016,2026-07-15,Login issue,demo_creator_16,Ops Support,15,Closed,
+DEMO-017,2026-07-15,Thumbnail re-upload,demo_creator_17,,0,Closed,Resolved by self-serve
+DEMO-018,2026-07-16,Thumbnail re-upload,demo_creator_18,Ops Support,15,Closed,Returned to person
+DEMO-019,2026-07-16,Tax form (W-9/W-8),demo_creator_19,Ops Support,40,Closed,
+DEMO-020,2026-07-17,Thumbnail re-upload,demo_creator_20,,0,Closed,Resolved by self-serve
+DEMO-021,2026-07-18,Payout question,demo_creator_21,Ops Support,25,Closed,
+DEMO-022,2026-07-18,Thumbnail re-upload,demo_creator_22,,0,Closed,Resolved by self-serve
+DEMO-023,2026-07-19,Thumbnail re-upload,demo_creator_23,Ops Support,20,Closed,Returned to person
+DEMO-024,2026-07-19,Account access,demo_creator_24,Ops Support,25,Closed,
