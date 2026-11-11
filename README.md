@@ -19,10 +19,16 @@ The CEO's third question (where time is wasted, what to automate first) is answe
 Python 3.8 or later, standard library only. No installs, no API keys, no network. From the repo root:
 
 ```
-python3 tests/check.py               # 54 checks, one PASS or FAIL line each, exit 0 only if all pass
+python3 tests/check.py               # 69 checks, one PASS or FAIL line each, exit 0 only if all pass
 python3 ask/ask.py                   # deliverable 1
 python3 value/value.py               # deliverable 2
 python3 automation/run.py --check    # deliverable 3, with its acceptance test
+```
+
+Pilot measurement demo, on a synthetic test fixture (not Northwind data, labelled as such in its output):
+
+```
+python3 automation/run.py --data automation/demo_pilot --out /tmp/pilot_demo --check --max-target-minutes 105
 ```
 
 The same commands work on macOS, Linux and Windows. On Windows, use `python` or `py -3` if `python3` is not on the PATH.
@@ -85,9 +91,9 @@ More fresh-file cases, with the expected result of each, are listed in `ask/READ
 
 - **Keyword rules, not understanding.** Status, role, duplicate and evidence detection are keyword and pattern rules from the config files. A new way of saying "frozen", a new topic, or a duplicate entered under an unrelated name needs a new term in the config or is missed. Where the ask tool cannot classify a later message it prints it and says NOT CERTAIN. The price of that rule: a real lift of the freeze announced only in chat reads as NOT CERTAIN until a meeting note records it.
 - **Two questions only.** `ask/` answers Q1 and Q2. It is not a general question answerer.
-- **Python 3.8 and 3.9 are verified by syntax only.** The code parses under the 3.8 grammar and uses no newer call. It has been run on Linux with newer Python versions only. It still has to be run once on a Mac with the stock `python3`, and it has not been run on Windows.
-- **Deliverable 3 has no measured after figure in minutes.** The router runs and routes all 140 tickets. The before figure is measured. The run alone saves 0 minutes, because the self-serve thumbnail replacement it points to does not exist yet. The report gives a measured ceiling and a floor of 0, and says the bundle does not support a measured after. A two week pilot export run through the same command produces it (`automation/BUILDER_SPEC.md`, acceptance step 3).
+- **Platforms.** Run on Linux with Python 3.8.20 and 3.13 (`tests/check.py` check 9m runs every command on 3.8). Not yet run on a Mac or on Windows. All files are written with LF line endings and `.gitattributes` disables conversion, which fixes the Windows failure found by the external audit (`chat_logs/README.md`).
+- **Deliverable 3 has no measured after figure in minutes.** The router runs and routes all 140 tickets. The before figure is measured. The run alone saves 0 minutes, because the self-serve thumbnail replacement it points to does not exist yet. The report gives a measured ceiling and a floor of 0, and says the bundle does not support a measured after. A pilot export with an outcome column per ticket, run through the same command, produces it (`automation/BUILDER_SPEC.md`, acceptance step 3). The synthetic fixture `automation/demo_pilot/` demonstrates this and is labelled as a test fixture: its figures are not Northwind results. On the fixture, `time_waste.md` still divides by a 13-week quarter, so read the demo from `before_after.md`.
 - **The larger claimed time sink was not built.** The finance month-end reconciliation is self-reported and its three input files are not in the bundle.
-- **The value number is small and Finance had already flagged it.** It is an amount at risk, suspected and unconfirmed, not a saving. It was chosen because every input is a cited row and one invoice settles it.
+- **The value number is small and Finance had already flagged it.** It is an amount at risk, suspected and unconfirmed, not a saving. It was chosen because every input is a cited row and one invoice settles whether it is a duplicate line. Whether it was paid twice needs the payables ledger and the bank statement.
 - **Nothing is checked against an invoice.** The bundle has no invoice, contract, payment record or FX rate, so "actually spent" stays at LOW confidence.
 - **The last fixes were verified by the test suite, not by a third tester round.** `pipeline/06_test.md` records round 2 at 50 of 54. The four failing checks were fixed afterwards and the suite now passes 54 of 54 (`BUILD_LOG.md`, 17:06).

@@ -21,3 +21,17 @@ The audit's verdict: the report is correct on the bundle as given, the solution 
 | 5 | On Windows the suite passes 53 of 54: two generated Markdown files are written with CRLF line endings. | Yes, by code inspection | `automation/` writes with the platform default. `ask/` and `value/` already force LF. `pipeline/importer.py` has the same pattern. Not runnable here (Linux). |
 | 6 | The builder spec calls `Assigned_To` and `Status` optional, the code refuses a file without them. The generated Q3 text says "Nobody timed it", which no source states. The CFO wording "closed by one invoice" is too broad: an invoice shows the charge, the ledger and bank statement show payment. | Yes | The report was already corrected on the last two points. The generated outputs and the worksheet were not. |
 | 7 | `chat_logs/` was empty, some early build log times are estimates, some prompts are summarised, the repo is public while the brief says NDA. | Yes | This folder now holds the audit. The rest is open. |
+
+## Status of the audit findings after the fix round (2026-11-11)
+
+| # | Status | Where |
+|---|---|---|
+| 1 | Addressed by Tony's decision: the after figure is measured from a pilot export with an outcome column. Case data still has none, and the report says so. Demo on a labelled synthetic fixture. | `automation/`, `automation/demo_pilot/`, report Q3 |
+| 2 | Fixed. Pilot acceptance requires target rows, a 14 day window and an outcome column. | `automation/run.py`, check 9g, 9h |
+| 3 | Fixed. Only a decision tied to Sales changes the Sales state. Another team's decision is listed, a decision naming no team reads NOT CERTAIN. | `ask/ask.py`, checks 9a to 9c |
+| 4 | Fixed at the root: one shared definition of SaaS rows and repeats, `pipeline/shared.py`, used by both tools. | checks 9d to 9f |
+| 5 | Fixed. Every file written with LF, `.gitattributes` disables conversion. Not yet rerun on Windows. | check 9i, 9l |
+| 6 | Fixed: optional columns honoured, wording corrected in outputs and worksheet. | checks 9j, 9k |
+| 7 | Chat logs added (this folder). Repo stays public by Tony's decision. | `chat_logs/` |
+
+Suite: 69 of 69, including a run of every command on Python 3.8.20.
