@@ -15,6 +15,7 @@ Checks:
   6  fresh-file smoke test on a perturbed copy of data/
   7  hygiene: em dashes, imports, Python 3.8 and 3.9 compatibility, hardcoded names and amounts
   8  regression cases for the round 1 defects, plus new adversarial cases (round 2)
+  9  regression cases for the external audit of 2026-11-10 (chat_logs/external_review_2026-11-10/)
 """
 import ast
 import csv
@@ -822,11 +823,378 @@ def check_hygiene():
     check("7c no person, vendor, category or amount from the bundle is typed into deliverable code", not bad, short(bad))
 
 
+# ---------- 9. regression cases from the external audit of 2026-11-10 ----------
+#
+# Each scenario below reproduces a finding of chat_logs/external_review_2026-11-10/AUDIT_LOG.md.
+# Every check fails on the behaviour of commit 934d741 and passes only on the corrected behaviour.
+# Assertions are on figures and labels, not on sentences, because the wording of the outputs moves.
+
+WORD = r"(?<![A-Za-z0-9])(%s)(?![A-Za-z0-9])"
+
+
+def _abbrev(a, b):
+    """Own implementation of the abbreviation rule in the deliverable READMEs: word for word
+    equal except that one word is a subsequence of the other, same first letter, 3+ letters."""
+    wa, wb = a.lower().split(), b.lower().split()
+    if len(wa) != len(wb) or wa == wb:
+        return False
+    for x, y in zip(wa, wb):
+        x, y = x.rstrip("."), y.rstrip(".")
+        if x == y:
+            continue
+        s, l = sorted((x, y), key=len)
+        it = iter(l)
+        if len(s) < 3 or s[0] != l[0] or not all(c in it for c in s):
+            return False
+    return True
+
+
+def _similar(a, b):
+    return a.lower().split() == b.lower().split() or words_prefix(a, b) or words_prefix(b, a) or _abbrev(a, b)
+
+
+def saas_expected(data_dir):
+    """Expected Q1 and worksheet figures, recomputed here from the raw rows (pipeline/shared.py is not used).
+    SaaS row: category label contains the word SaaS. Subtotal or total rows are left out.
+    Repeat: a later row with a near-identical label and an equal amount to some earlier row, counted once."""
+    path = next(Path(data_dir).glob("pnl_*.csv"))
+    rows = []
+    with open(path, encoding="utf-8-sig", newline="") as f:
+        r = csv.reader(f)
+        header = next(r)
+        ci, li = header.index("Category"), header.index("Line Item")
+        ai = next(i for i, h in enumerate(header) if h.endswith("_USD"))
+        for row in r:
+            if len(row) <= ai or not re.search(WORD % "saas", row[ci], re.I):
+                continue
+            if re.search(WORD % "subtotal|total", row[li], re.I) or not row[ai].strip().isdigit():
+                continue
+            rows.append((row[li].strip(), int(row[ai].strip())))
+    dup = 0
+    for j, (lb, xb) in enumerate(rows):
+        if any(xa == xb and _similar(la, lb) for la, xa in rows[:j]):
+            dup += xb
+    total = sum(x for _, x in rows)
+    return {"total": total, "dup": dup, "net": total - dup}
+
+
+def _num(s):
+    return int(s.replace(",", "")) if s else None
+
+
+def ask_q1_figures(text):
+    """As-listed figure from the answer block (bullet, or the bold headline when the bullet is replaced by a
+    reconciliation note). Repeats: the sum of the amounts subtracted in '(total - a - b ...)'."""
+    a = re.search(r"(?im)^- As listed: ([\d,]+) USD", text) or re.search(r"\*\*(?:PARTIAL\. )?As listed, ([\d,]+) USD", text)
+    b = re.search(r"(?im)^- Without the suspected [^:\n]*: ([\d,]+) USD(?: \(([\d,]+)((?: - [\d,]+)+)\))?", text)
+    dup = sum(_num(x) for x in re.findall(r"[\d,]+", b.group(3))) if b and b.group(3) else None
+    return {"total": _num(a and a.group(1)), "net": _num(b and b.group(1)), "dup": dup}
+
+
+def value_figures(text):
+    """The shared-figures table of the worksheet: two-column rows whose label says as listed, suspected, without."""
+    got = {"total": None, "dup": None, "net": None}
+    for label, val in re.findall(r"(?m)^\| ([^|`]+?) \| ([\d,]+) \|$", text):
+        low = label.lower()
+        key = "net" if "without" in low else "total" if "as listed" in low else "dup" if "suspected" in low else None
+        if key and got[key] is None:
+            got[key] = _num(val)
+    return got
+
+
+def pnl_edit(d, insert_before_subtotal=(), append=(), subtotal=None):
+    p = next(d.glob("pnl_*.csv"))
+    out = []
+    for line in read(p).splitlines():
+        cells = line.split(",")
+        if len(cells) > 2 and cells[0] == SAAS and "subtotal" in cells[1].lower():
+            out += list(insert_before_subtotal)
+            if subtotal is not None:
+                cells[2] = str(subtotal)
+                line = ",".join(cells)
+        out.append(line)
+    write(p, "\n".join(out + list(append)) + "\n")
+
+
+def tickets_write(d, header, rows):
+    t = next(d.glob("support_tickets_*.csv"))
+    with open(t, "w", encoding="utf-8", newline="") as f:
+        w = csv.writer(f, lineterminator="\n")
+        w.writerow(header)
+        w.writerows(rows)
+
+
+def tickets_read(d):
+    with open(next(d.glob("support_tickets_*.csv")), encoding="utf-8-sig", newline="") as f:
+        rows = list(csv.reader(f))
+    return rows[0], rows[1:]
+
+
+def state_value(line):
+    """The value after 'Current state:' up to the end of the bold span."""
+    m = re.search(r"Current state:\s*(.*?)(\*\*|$)", line)
+    return m.group(1) if m else ""
+
+
+def state_confidence(out):
+    m = re.search(r"Current state[^\n:]*: \**(HIGH|MEDIUM|LOW)\b", out)
+    return m.group(1) if m else None
+
+
+def text_writers(path):
+    """Calls in a .py file that write text without an explicit newline argument (platform line endings)."""
+    bad = []
+    for node in ast.walk(ast.parse(read(path))):
+        if not isinstance(node, ast.Call):
+            continue
+        kw = {k.arg for k in node.keywords}
+        f = node.func
+        # Path.write_text(data): one positional argument. A module helper write_text(path, text) takes two.
+        if isinstance(f, ast.Attribute) and f.attr == "write_text" and "newline" not in kw \
+                and (len(node.args) == 1 or (not node.args and "data" in kw)):
+            bad.append(f"{node.lineno} .write_text() without newline=")
+            continue
+        is_open = (isinstance(f, ast.Name) and f.id == "open") or (isinstance(f, ast.Attribute) and f.attr == "open")
+        if not is_open or "newline" in kw:
+            continue
+        pos = 1 if isinstance(f, ast.Name) or (isinstance(f.value, ast.Name) and f.value.id in ("io", "codecs")) else 0
+        mode = next((k.value for k in node.keywords if k.arg == "mode"), node.args[pos] if len(node.args) > pos else None)
+        m = mode.value if isinstance(mode, ast.Constant) and isinstance(mode.value, str) else ""
+        if any(c in m for c in "wax") and "b" not in m:
+            bad.append(f"{node.lineno} open(..., {m!r}) without newline=")
+    return bad
+
+
+def find_py38():
+    try:
+        p = subprocess.run(["uv", "python", "find", "3.8"], capture_output=True, timeout=60)
+        cand = p.stdout.decode("utf-8", "replace").strip().splitlines()
+        if p.returncode == 0 and cand and Path(cand[-1]).is_file():
+            return cand[-1]
+    except (OSError, subprocess.SubprocessError):
+        pass
+    return shutil.which("python3.8")
+
+
+def check_audit():
+    committed = snapshot(ASK_OUT + VALUE_OUT + AUTO_OUT)
+    tmp = Path(tempfile.mkdtemp(prefix="valis_check_"))
+
+    def copy(name):
+        d = tmp / name
+        shutil.copytree(DATA, d)
+        return d
+
+    def q2(d):
+        code, out, err = run(["ask/ask.py", "--q", "q2", "--data", d])
+        return no_trace(code, out, err), state_line(out), out
+
+    def note(d, heading, decision):
+        write(d / "meeting_notes" / "leadership_sync_2026-06-17.md",
+              "# Leadership Sync 2026-06-17\n\n**Date:** 2026-06-17\n**Attendees:** Dana Whitfield (CEO), Priya Raman (CFO)\n\n"
+              f"{heading}\n\n- **DECISION:** {decision}\n")
+
+    try:
+        # --- 9a to 9c: Q2 decision records must be tied to Sales (audit finding 3)
+        d = copy("eng_note")
+        note(d, "## 1. Engineering staffing", "Engineering hiring freeze is lifted. Engineering hiring may resume.")
+        ok, l, out = q2(d)
+        v = state_value(l).lower()
+        check("9a Q2 decision record lifting the Engineering freeze: Sales state not lifted, still frozen (audit 3)",
+              ok and l and "lifted" not in v and "frozen" in v, l[:140] or "no current state line")
+
+        d = copy("teamless_note")
+        note(d, "## 1. Headcount", "The hiring freeze is lifted.")
+        ok, l, out = q2(d)
+        v, conf = state_value(l), state_confidence(out)
+        unsure_ = bool(re.search(r"(?i)not certain|cannot (tell|say|determine)|unclear|ambiguous", v))
+        check("9b Q2 decision record with no team named: not lifted, NOT CERTAIN, current-state confidence LOW (audit 3)",
+              ok and "lifted" not in re.sub(r"(?i)not certain.*", "", v).lower() and unsure_ and conf == "LOW",
+              f"state {l[:110]!r}; confidence {conf}")
+
+        d = copy("sales_note")
+        note(d, "## 1. Sales hiring", "Sales hiring freeze is lifted. Sales hiring may resume.")
+        ok, l, out = q2(d)
+        v = state_value(l)
+        check("9c Q2 decision record lifting the Sales freeze: still reported lifted (guard against over-correction)",
+              ok and "lifted" in v.lower() and "NOT CERTAIN" not in v and "leadership_sync_2026-06-17.md" in out, l[:140])
+
+        # --- 9d to 9f: ask Q1 and the value worksheet share one definition (audit finding 4)
+        def both(d):
+            r1 = run(["ask/ask.py", "--q", "q1", "--data", d])
+            r2 = run(["value/value.py", "--data", d])
+            return no_trace(*r1) and no_trace(*r2), ask_q1_figures(r1[1]), value_figures(r2[1])
+
+        d = copy("boundary")
+        pnl_edit(d, append=["Software implementation services,Migration contractor,1000,One-off professional services"])
+        ok, a, w = both(d)
+        exp = saas_expected(d)
+        check("9d row in 'Software implementation services' is not SaaS: ask Q1 and worksheet both 81,000 (audit 4)",
+              ok and exp["total"] == 81000 and a["total"] == w["total"] == 81000,
+              f"expected {n(exp['total'])}, ask {a['total']}, worksheet {w['total']}")
+
+        d = copy("three")
+        pnl_edit(d, insert_before_subtotal=[f"{SAAS},Amplitude Analytics Pro,7500,Product analytics"], subtotal=88500)
+        ok, a, w = both(d)
+        exp = saas_expected(d)
+        want = {"total": 88500, "dup": 15000, "net": 73500}
+        check("9e three Amplitude lookalikes: as listed 88,500, repeats 15,000, without 73,500, same in both tools (audit 4)",
+              ok and exp == want and a == want and w == want, f"expected {want}, own recompute {exp}, ask {a}, worksheet {w}")
+
+        cases = [
+            ("exact duplicate label", dict(insert_before_subtotal=[f"{SAAS},Figma,3600,Design"])),
+            ("abbreviation pair", dict(insert_before_subtotal=[f"{SAAS},Google Wrkspc,6000,Email"])),
+            ("lookalike with a different amount", dict(insert_before_subtotal=[f"{SAAS},Zoom Webinars,900,Webinars"])),
+            ("second category label containing SaaS", dict(append=["SaaS tools,Canva,1200,Design templates"])),
+            ("lowercase saas in another category label", dict(append=["Marketing saas,Mailchimp,700,Email campaigns"])),
+        ]
+        bad, seen = [], []
+        for i, (label, kw) in enumerate(cases):
+            d = copy(f"perturb{i}")
+            pnl_edit(d, **kw)
+            ok, a, w = both(d)
+            exp = saas_expected(d)
+            seen.append(f"{label}: {n(exp['total'])}/{n(exp['net'])}")
+            if not ok:
+                bad.append(f"{label}: a command failed")
+            elif not (a["total"] == w["total"] == exp["total"] and a["net"] == w["net"] == exp["net"]):
+                bad.append(f"{label}: expected as listed {exp['total']} without {exp['net']}, ask {a['total']}/{a['net']}, worksheet {w['total']}/{w['net']}")
+        check("9f SaaS perturbations: ask Q1 and worksheet print the same as-listed and without-repeat totals, equal to a raw recompute (audit 4)",
+              not bad, short(bad, 5) or "; ".join(seen))
+
+        # --- 9g, 9h: pilot acceptance must look at the target category and the pilot window (audit finding 2)
+        header, rows = tickets_read(DATA)
+        ci = header.index("Category")
+        d = copy("irrelevant")
+        tickets_write(d, header, [r for r in rows if r[ci] == "Login issue"][:2])
+        code, out, err = run(["automation/run.py", "--data", d, "--out", tmp / "irrelevant_out", "--check", "--max-target-minutes", "0"])
+        check("9g pilot acceptance on two non-target rows with --max-target-minutes 0: no ACCEPTANCE: PASS, exit non-zero (audit 2)",
+              "ACCEPTANCE: PASS" not in out and code != 0 and "Traceback" not in err, f"exit {code}")
+
+        pilot = json_rules().get("pilot") or {}
+        oc, res, ret = pilot.get("outcome_column"), pilot.get("resolved_values"), pilot.get("returned_values")
+        if not (oc and res and ret):
+            check("9h pilot acceptance with an outcome column: ceiling below returned minutes FAILs, above PASSes", False,
+                  "outcome column not implemented (automation/rules.json has no pilot.outcome_column with resolved and returned values)")
+        else:
+            idx = {h: i for i, h in enumerate(header)}
+            prow = []
+            returned_min = 0
+            for k in range(15):  # 2026-07-01 to 2026-07-15: 15 days, one target ticket a day
+                r = [""] * len(header)
+                back = k % 5 == 0
+                r[idx["Ticket_ID"]], r[idx["Date"]], r[ci] = f"TCK-7{k:03d}", f"2026-07-{k + 1:02d}", TARGET
+                r[idx["Submitted_By"]], r[idx["Assigned_To"]], r[idx["Status"]] = f"creator_pilot{k}", "Ops Support", "Closed"
+                r[idx["Handle_Minutes"]] = "10" if back else "0"
+                returned_min += 10 if back else 0
+                prow.append(r + [ret[0] if back else res[0]])
+            for k in range(3):
+                r = [""] * len(header)
+                r[idx["Ticket_ID"]], r[idx["Date"]], r[ci] = f"TCK-7{100 + k}", f"2026-07-{2 * k + 2:02d}", "Login issue"
+                r[idx["Submitted_By"]], r[idx["Assigned_To"]], r[idx["Status"]], r[idx["Handle_Minutes"]] = f"creator_other{k}", "Ops Support", "Closed", "20"
+                prow.append(r + [""])
+            d = copy("pilot")
+            tickets_write(d, header + [oc], prow)
+            lo = run(["automation/run.py", "--data", d, "--out", tmp / "pilot_lo", "--check", "--max-target-minutes", str(returned_min - 1)])
+            hi = run(["automation/run.py", "--data", d, "--out", tmp / "pilot_hi", "--check", "--max-target-minutes", str(returned_min + 1)])
+            ok = ("ACCEPTANCE: PASS" not in lo[1] and lo[0] != 0 and "ACCEPTANCE: PASS" in hi[1] and hi[0] == 0
+                  and "Traceback" not in lo[2] + hi[2])
+            fails = [l for l in hi[1].splitlines() if l.startswith("FAIL")]
+            check("9h pilot export (15 days, outcome column, 3 returned tickets): ceiling below returned minutes FAILs, above PASSes",
+                  ok, f"returned minutes {returned_min}; below: exit {lo[0]}; above: exit {hi[0]}" + (f"; above failed on: {short(fails, 3)}" if fails else ""))
+
+        # --- 9j: optional columns are optional (audit finding 6)
+        d = copy("optional")
+        keep = [i for i, h in enumerate(header) if h not in ("Assigned_To", "Status")]
+        tickets_write(d, [header[i] for i in keep], [[r[i] for i in keep] for r in rows])
+        o = tmp / "optional_out"
+        code, out, err = run(["automation/run.py", "--data", d, "--out", o])
+        said = out + "".join(read(p) for p in sorted(o.glob("*.md"))) if o.is_dir() else out
+        named = [c for c in ("Assigned_To", "Status")
+                 if re.search(r"(?im)^[^\n]*%s[^\n]*\b(absent|missing|not present|not in|does not have|no column|without)\b" % c, said)
+                 or re.search(r"(?im)^[^\n]*\b(absent|missing|not present|no column|without)\b[^\n]*%s" % c, said)]
+        check("9j ticket file without Assigned_To and Status: runs (no CANNOT RUN) and names the absent columns (audit 6)",
+              no_trace(code, out, err) and "CANNOT RUN" not in out + err and (o / "routed_queue.csv").exists() and len(named) == 2,
+              f"exit {code}, named {named}" + (", CANNOT RUN printed" if "CANNOT RUN" in out + err else ""))
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+    # --- 9i: LF only in every file the default commands write (audit finding 5)
+    for _, cmd, _ in COMMANDS:
+        run(cmd)
+    inv = [ROOT / "pipeline" / "01_inventory.md", ROOT / "pipeline" / "index.json"]
+    inv_before = snapshot(inv)
+    code_imp = run(["pipeline/importer.py"])[0]
+    inv_moved = [Path(k).name for k, v in snapshot(inv).items() if v != inv_before[k]]
+    files = sorted(set((ROOT / "ask" / "out").glob("*.md")) | set(VALUE_OUT) | set(p for p in (ROOT / "automation" / "out").iterdir() if p.is_file())) + inv
+    cr = b"\r"
+    crlf = ["%s (%d CR)" % (p.relative_to(ROOT).as_posix(), p.read_bytes().count(cr)) for p in files if p.exists() and cr in p.read_bytes()]
+    missing = [p.name for p in files if not p.exists()]
+    check("9i every file written by the default commands (incl. routed_queue.csv and the importer outputs) has no carriage return",
+          not crlf and not missing and code_imp == 0,
+          short(crlf + [f"missing {m}" for m in missing], 6) or f"{len(files)} files LF only"
+          + (f"; note: importer rewrote {inv_moved}, committed copies were stale" if inv_moved else ""))
+    bad = []
+    for folder in ("ask", "value", "automation", "pipeline"):
+        for p in sorted((ROOT / folder).glob("*.py")):
+            bad += [f"{folder}/{p.name}:{x}" for x in text_writers(p)]
+    check("9i no shipped .py writes text with Path.write_text or open(..., 'w') without an explicit newline argument",
+          not bad, short(bad, 6))
+
+    # --- 9k: no claim that nobody timed the work (audit finding 6)
+    bad = []
+    for p in ASK_OUT + VALUE_OUT + AUTO_OUT + [ROOT / "answers" / "REPORT.md"]:
+        if p.exists():
+            for i, line in enumerate(read(p).splitlines(), 1):
+                if re.search(r"(?i)nobody timed|never timed", line):
+                    bad.append(f"{p.relative_to(ROOT).as_posix()}:{i}")
+    check('9k no generated output and not answers/REPORT.md says "Nobody timed" or "never timed" (audit 6)', not bad, short(bad))
+
+    # --- 9l: line endings pinned for checkouts (audit finding 5)
+    ga = ROOT / ".gitattributes"
+    rules = [l.split("#")[0].split() for l in read(ga).splitlines()] if ga.exists() else []
+    check('9l .gitattributes exists and disables line-ending conversion ("* -text")', ["*", "-text"] in rules,
+          "missing" if not ga.exists() else "")
+
+    # --- 9m: a real run under Python 3.8 (audit finding 5: 3.8 and 3.9 were never run)
+    py38 = find_py38()
+    if not py38:
+        check("9m default commands and the citation check run under Python 3.8", False,
+              "NOT FOUND: neither `uv python find 3.8` nor python3.8 on PATH gave an interpreter, nothing was run on 3.8")
+    else:
+        env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", PYTHONIOENCODING="utf-8")
+        ref = snapshot(ASK_OUT + VALUE_OUT + AUTO_OUT)
+        bad = []
+        for cmd in (["ask/ask.py"], ["value/value.py"], ["automation/run.py", "--check"], ["tests/check.py", "--citations-only"]):
+            pr = subprocess.run([py38] + cmd, cwd=str(ROOT), env=env, capture_output=True, timeout=300)
+            if pr.returncode != 0 or b"Traceback" in pr.stderr:
+                bad.append(f"{' '.join(cmd)} exit {pr.returncode}: {pr.stderr.decode('utf-8', 'replace').strip()[-120:]}")
+        differ = [Path(k).name for k, v in snapshot(ASK_OUT + VALUE_OUT + AUTO_OUT).items() if v != ref[k]]
+        bad += [f"{x} differs from the python3 output" for x in differ]
+        ver = subprocess.run([py38, "--version"], capture_output=True).stdout.decode().strip()
+        check("9m default commands and the citation check run under Python 3.8, exit 0, same bytes as python3", not bad,
+              short(bad) or f"{ver} at {py38}")
+
+    # leave committed outputs exactly as the default commands produce them
+    for _, cmd, _ in COMMANDS:
+        run(cmd)
+    check("9z committed outputs are back to what the default commands produce after section 9",
+          snapshot(ASK_OUT + VALUE_OUT + AUTO_OUT) == committed)
+
+
+def json_rules():
+    import json
+    return json.loads(read(ROOT / "automation" / "rules.json"))
+
+
 # ---------- main ----------
 
 def main():
     if hasattr(sys.stdout, "reconfigure"):
         sys.stdout.reconfigure(encoding="utf-8")
+    if "--citations-only" in sys.argv:      # used by check 9m to run the resolver under another interpreter
+        check_citations()
+        return 0 if all(RESULTS) else 1
     check_checksums()
 
     all_out = ASK_OUT + VALUE_OUT + AUTO_OUT
@@ -856,6 +1224,7 @@ def main():
     check_fresh(P, T)
     check_regressions(P, T)
     check_hygiene()
+    check_audit()
     check("1 data/ still matches data/CHECKSUMS.txt after all runs",
           all(hashlib.sha256((DATA / l.split(None, 1)[1].strip()).read_bytes()).hexdigest() == l.split()[0]
               for l in read(DATA / "CHECKSUMS.txt").splitlines() if l.strip()))

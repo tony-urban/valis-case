@@ -1,5 +1,5 @@
 {
-  "_comment": "All matching vocabulary for ask.py lives here. Terms match whole words or phrases, case-insensitive. No amounts, people, vendors or line numbers belong in this file.",
+  "_comment": "All matching vocabulary for ask.py lives here, except the SaaS category and subtotal rules, which ask/ and value/ share in pipeline/shared.json. Terms match whole words or phrases, case-insensitive. No amounts, people, vendors or line numbers belong in this file.",
 
   "files": {
     "pnl": "pnl_*.csv",
@@ -14,9 +14,7 @@
   "q1": {
     "question_heading": "Q1",
     "columns": {"category": "Category", "item": "Line Item", "notes": "Notes", "amount_contains": "USD"},
-    "saas_category_terms": ["saas", "software"],
     "adjacent_category_terms": ["infrastructure"],
-    "subtotal_terms": ["subtotal", "total"],
     "final_terms": ["finalized", "finalised", "final"],
     "unconfirmed_terms": ["haven't confirmed", "not confirmed", "unconfirmed", "until I can confirm", "haven't gotten the invoice"],
     "renewal_terms": ["renewal", "renewed", "contract"],
@@ -34,7 +32,7 @@
     "columns": {"req_id": "Req_ID", "team": "Team", "title": "Title", "status": "Status",
                 "manager": "Hiring_Manager", "person": "Name", "headcount": "Headcount"},
     "snapshot_key": "Snapshot_Date",
-    "hiring_terms": ["hiring", "hire", "headcount", "req", "reqs", "freeze", "frozen"],
+    "hiring_terms": ["hiring", "hire", "headcount", "req", "reqs", "freeze", "freezes", "frozen"],
     "followup_terms": ["hiring", "hire", "headcount", "req", "reqs", "freeze", "bodies", "revisit", "re-evaluate", "objection", "backfill"],
     "labels": [
       ["LIFTED", ["lifted", "unfrozen", "unfreeze", "lifting the freeze", "resume hiring", "reopened"]],
