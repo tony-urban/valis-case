@@ -21,7 +21,15 @@ git clone https://github.com/tony-urban/valis-case.git
 cd valis-case
 ```
 
-No git? Download the ZIP from the GitHub page (Code > Download ZIP), right-click > Extract All, then `cd` into the extracted folder.
+**No git** (PowerShell says `git : The term 'git' is not recognized`)? Download the repo as a ZIP instead, in PowerShell:
+
+```
+Invoke-WebRequest https://github.com/tony-urban/valis-case/archive/refs/heads/main.zip -OutFile valis-case.zip
+Expand-Archive valis-case.zip -DestinationPath .
+cd valis-case-main
+```
+
+The folder is then called `valis-case-main`. The ZIP keeps the files byte for byte, so all checks pass the same way.
 
 Every command below runs **from this folder** (the one with `README.md` in it). Paths use forward slashes: Python accepts them on Windows.
 
@@ -78,6 +86,7 @@ git clone -c core.autocrlf=false https://github.com/tony-urban/valis-case.git
 
 | Symptom | Fix |
 |---|---|
+| `git` not recognized | Use the ZIP download in step 2. |
 | `py` or `python` not recognized | Step 1, and reopen PowerShell after installing. |
 | `python3` opens the Microsoft Store | Use `py` instead. |
 | `can't open file 'ask\ask.py'` | You are not in the repo folder. `cd` into the folder that holds `README.md`. |

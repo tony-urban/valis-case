@@ -83,3 +83,17 @@ Claude then: had the automation agent add a labelled synthetic pilot fixture and
 > Так, исправь ошибку с количеством недель квартала, несложно. И сделай какой-то readme для Python скрипта, как выпускать на Windows отдельный readme, отдельный как на Macintosh, чтобы человек или ии, который будет запускать, могли быстро разобраться.
 
 Claude then: fixed the weeks count on pilot exports, wrote `RUN_ON_MAC.md` and `RUN_ON_WINDOWS.md`, linked them from the README.
+
+## Prompt 12. Wed 2026-11-11, 13:26
+
+> Если ты сейчас находишься на Windows машине, ты можешь сделать прогон. Если есть компьютер use.
+
+Claude then: found the linked laptop is Windows, but terminals are click-only for computer use and the device shell is a Linux VM, so it could not run the check natively. Gave Tony three PowerShell commands.
+
+## Prompt 13. Wed 2026-11-11, 13:27
+
+Attached: a screenshot of PowerShell where `git clone` fails with "git is not recognized".
+
+> Синтаксис проверь, мне кажется, что-то неправильно написал.
+
+Claude then: confirmed the syntax was right and Git is not installed, gave a ZIP download path in PowerShell, and added it to `RUN_ON_WINDOWS.md`.
