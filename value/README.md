@@ -49,3 +49,9 @@ Citations are computed from the parsed files at run time, in the format of `pipe
 - Evidence search depends on the terms in `config.json`. A thread that discusses the pair in other words is not found, and the worksheet then says the candidate rests on the rule alone.
 - A quoted message that contains a backtick has it replaced by an apostrophe, so that only citations are backticked in the worksheet.
 - Minimum Python 3.8, standard library only. The source parses under the 3.8 grammar and uses no call newer than 3.8. Run on Linux with Python 3.13 only, so 3.8 and 3.9 are checked by syntax and audit, not by a run.
+
+## Shared rules (since 2026-11-11)
+
+Which P&L rows count as SaaS, which are subtotals, and what counts as a suspected repeat are defined once in `pipeline/shared.py` (vocabulary in `pipeline/shared.json`) and used by both this script and `ask/ask.py`, so the two always print the same figures. A category counts as SaaS only if its label contains the word SaaS. Three lookalike rows with equal amounts are two repeats, not three pairs.
+
+An invoice or contract settles whether a line is a duplicate. Whether anything was paid twice needs the accounts payable ledger and the bank or card statement.

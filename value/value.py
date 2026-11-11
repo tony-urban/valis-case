@@ -23,6 +23,7 @@ ROOT = HERE.parent
 sys.path.insert(0, str(ROOT / "pipeline"))
 sys.dont_write_bytecode = True  # this script writes only inside value/
 import importer  # noqa: E402  shared parser: one definition of a citable line
+import shared  # noqa: E402  rules this script and ask/ask.py must agree on: SaaS rows, subtotal rows, repeats
 
 CFG = json.loads((HERE / "config.json").read_text(encoding="utf-8"))
 STATUS = "suspected, unconfirmed"
@@ -55,7 +56,7 @@ def has_any(text, terms):
 # ---------- parse ----------
 
 def load_pnl(data):
-    """Return the configured category of the P&L: line items, subtotal row, period, currency."""
+    """Return the SaaS rows of the P&L (shared rule): line items, subtotal rows, category labels, period, currency."""
     found = sorted(data.glob(CFG["pnl_file_glob"]))
     if len(found) != 1:
         raise Stop(f"need exactly one file matching {CFG['pnl_file_glob']} in the data folder, found {len(found)}")
@@ -73,12 +74,13 @@ def load_pnl(data):
     else:
         raise Stop(f"{rel} has no table with columns {cat_col}, {label_col} and an amount column "
                    f"shaped like {CFG['amount_column_pattern']}")
-    total_re = re.compile(r"\b(" + "|".join(map(re.escape, CFG["subtotal_terms"])) + r")\b", re.I)
-    items, subtotal = [], None
+    items, subs, cats = [], [], []
     for n, r in rows:
         rec = {h: (r[k].strip() if k < len(r) else "") for k, h in enumerate(header)}
-        if rec[cat_col] != CFG["category"]:
+        if not shared.is_saas_category(rec[cat_col]):
             continue
+        if rec[cat_col] not in cats:
+            cats.append(rec[cat_col])
         raw = rec[amount.group(0)]
         # A row with the wrong number of fields has shifted columns: its amount cannot be trusted.
         shifted = len(r) != len(header)
@@ -87,42 +89,15 @@ def load_pnl(data):
                "reread": not shifted and amount_of(raw) is not None and not importer.NUM.match(raw),
                "shifted": f"{len(r)} fields, header has {len(header)}" if shifted else "",
                "notes": rec.get(CFG["notes_column"], "")}
-        if total_re.search(row["label"]):
-            subtotal = row
+        if shared.is_subtotal(row["label"]):
+            subs.append(row)
         else:
             items.append(row)
     if not items:
-        raise Stop(f"{rel} has no rows where {cat_col} is {CFG['category']}")
-    return {"rel": rel, "items": items, "subtotal": subtotal, "amount_col": amount.group(0),
+        raise Stop(f"{rel} has no rows whose {cat_col} contains a SaaS term as a whole word "
+                   f"({', '.join(shared.RULES['saas_category_terms'])}, set in pipeline/shared.json)")
+    return {"rel": rel, "items": items, "subs": subs, "cats": cats, "amount_col": amount.group(0),
             "period": amount["period"].replace("_", " "), "cur": amount["currency"]}
-
-
-def similar(a, b):
-    """Why two labels count as near-identical, or None. Uses the importer's own tests."""
-    if a.lower().split() == b.lower().split():
-        return "the labels are identical"
-    if importer.word_prefix(a, b) or importer.word_prefix(b, a):
-        return "one label is the other with extra words added"
-    if importer.abbrev(a, b):
-        return "the labels differ only by an abbreviation"
-    return None
-
-
-def find_repeats(items):
-    """A row is a suspected repeat when an earlier row in the category has a
-    near-identical label and an equal amount. Similar label with a different
-    amount is a near miss: listed, never counted."""
-    repeats, near = [], []
-    for j, later in enumerate(items):
-        for earlier in items[:j]:
-            why = similar(earlier["label"], later["label"])
-            if not why or earlier["amount"] is None or later["amount"] is None:
-                continue
-            if earlier["amount"] == later["amount"]:
-                repeats.append((earlier, later, why))
-                break
-            near.append((earlier, later))
-    return repeats, near
 
 
 def load_notes(data):
@@ -186,12 +161,12 @@ def cites(us):
 
 def render(data):
     pnl = load_pnl(data)
-    cur, period, cat, unit = pnl["cur"], pnl["period"], CFG["category"], CFG["period_unit"]
-    items, sub = pnl["items"], pnl["subtotal"]
+    cur, period, cat, unit = pnl["cur"], pnl["period"], " and ".join(pnl["cats"]), CFG["period_unit"]
+    items, subs = pnl["items"], pnl["subs"]
     counted = [r for r in items if r["amount"] is not None]
     unparsed = [r for r in items if r["amount"] is None]
     base = sum((r["amount"] for r in counted), Decimal(0))
-    repeats, near = find_repeats(items)
+    repeats, near = shared.find_repeats(items, lambda r: r["label"], lambda r: r["amount"])
     at_risk = sum((later["amount"] for _, later, _ in repeats), Decimal(0))
     net = base - at_risk
     units = load_notes(data)
@@ -205,14 +180,19 @@ def render(data):
     out = []
     w = out.append
 
-    if sub is None:
+    sub_cites = ", ".join(cite_row(pnl, r) for r in subs)
+    stated = sum((r["amount"] for r in subs), Decimal(0)) if subs and all(r["amount"] is not None for r in subs) else None
+    sub_name = "The stated subtotal" if len(subs) == 1 else f"The {len(subs)} stated subtotals"
+    sub_is = "is" if len(subs) == 1 else "add up to"
+    if not subs:
         sub_state = "The category has no subtotal row, so the computed sum is the baseline."
-    elif sub["amount"] is None:
-        sub_state = f"The stated subtotal {cite_row(pnl, sub)} has no numeric value ({sub['raw']!r}), so the computed sum is the baseline."
-    elif sub["amount"] == base:
-        sub_state = f"The stated subtotal {cite_row(pnl, sub)} is {money(sub['amount'])} {cur} and matches the computed sum."
+    elif stated is None:
+        sub_state = (f"{sub_name} {sub_cites}: no numeric value on at least one of them "
+                     f"({', '.join(repr(r['raw']) for r in subs if r['amount'] is None)}), so the computed sum is the baseline.")
+    elif stated == base:
+        sub_state = f"{sub_name} {sub_cites} {sub_is} {money(stated)} {cur} and {'matches' if len(subs) == 1 else 'match'} the computed sum."
     else:
-        sub_state = (f"The stated subtotal {cite_row(pnl, sub)} is {money(sub['amount'])} {cur} and DOES NOT match the computed sum "
+        sub_state = (f"{sub_name} {sub_cites} {sub_is} {money(stated)} {cur} and DOES NOT match the computed sum "
                      f"of {money(base)} {cur}. These do not reconcile. The computed sum of the cited rows is used as the baseline.")
 
     def baseline_table():
@@ -239,6 +219,10 @@ def render(data):
 
     def banner():
         w("Generated by python3 value/value.py. Do not edit by hand. Citations are relative to the data folder.")
+        if len(pnl["cats"]) > 1:
+            w("")
+            w(f"SaaS rows are taken from {len(pnl['cats'])} category labels, each containing a SaaS term as a whole word: "
+              + ", ".join(repr(c) for c in pnl["cats"]) + ". They are treated as one set of rows.")
         if unparsed:
             w("")
             w(f"**Baseline PARTIAL.** {len(unparsed)} row(s) of the category could not be read and are in no sum: "
@@ -273,6 +257,8 @@ def render(data):
     one = n == 1
     thing = "line item" if one else "line items"
     invoice = "one invoice" if one else "one invoice per pair"
+    settles = (f"{invoice.capitalize()} settles whether it is a duplicate line. "
+               "Whether it was paid twice needs the accounts payable ledger and the bank or card statement.")
     year = at_risk * CFG["periods_per_year"]
     share = (at_risk / base * 100).quantize(Decimal("0.1")) if base else None
 
@@ -281,7 +267,7 @@ def render(data):
           f"Status: {STATUS_LATER}. The number may be out of date.")
     else:
         w(f"# Value number: {money(at_risk)} {cur} at risk in {period} (one {unit}). "
-          f"Status: suspected duplicate {cat} {thing}, unconfirmed, closed by {invoice}.")
+          f"Status: suspected duplicate {cat} {thing}, unconfirmed. {settles}")
     w("")
     banner()
     w("")
@@ -295,9 +281,12 @@ def render(data):
     w(f"- {'One row' if one else str(n) + ' rows'} in the {cat} category of the {period} P&L "
       f"{'looks like a repeat of another row' if one else 'look like repeats of other rows'}: near-identical label, equal amount. "
       f"The amount on {'that row' if one else 'those rows'} is {money(at_risk)} {cur}.")
-    w(f"- It is an amount at risk, not a confirmed saving. Depending on what the invoice shows it is worth between 0 and "
-      f"{money(at_risk)} {cur} for the {unit} (section 5).")
-    w(f"- The action is to pull {invoice}. The script detects the pair by rule and never upgrades the status to confirmed.")
+    w(f"- It is an amount at risk, not a confirmed saving. Depending on what the invoice and the payment records show it is worth "
+      f"between 0 and {money(at_risk)} {cur} for the {unit} (section 5).")
+    w(f"- The first action is to pull {invoice}. An invoice or contract shows what was charged: it settles whether this is one product "
+      "or two, and whether one charge was entered twice. It does not show what was paid. Whether anything was paid twice is shown only by "
+      "the accounts payable ledger and the bank or card statement.")
+    w("- The script detects the pair by rule and never upgrades the status to confirmed.")
     w("")
     w("## 2. Baseline")
     w("")
@@ -337,8 +326,8 @@ def render(data):
         k += 2
     w(f"| I{k} | Other rows of the category | sum to {money(base)} {cur} with the rows above | SOURCED | each row cited in section 2 |")
     k += 1
-    if sub is not None and sub["amount"] is not None:
-        w(f"| I{k} | Stated subtotal | {money(sub['amount'])} {cur} | SOURCED | {cite_row(pnl, sub)} |")
+    if stated is not None:
+        w(f"| I{k} | Stated subtotal | {money(stated)} {cur} | SOURCED | {sub_cites} |")
         k += 1
     w(f"| I{k} | Period and currency | {period}, {cur} | SOURCED | name of the amount column, {pnl['amount_col']}, in the header of {pnl['rel']} (a header is not a citable line) |")
     k += 1
@@ -353,7 +342,8 @@ def render(data):
     w("")
     w("## 5. What it is worth under each reading")
     w("")
-    w("The bundle cannot tell these apart.")
+    w("The bundle cannot tell these apart. The invoice or contract separates R3 from the other two and shows whether one charge was entered twice. "
+      "Only the accounts payable ledger and the bank or card statement show whether anything was paid twice.")
     w("")
     w(f"| Reading | What happened | Effect on the {period} P&L | Cash effect | Action |")
     w("|---|---|---|---|---|")
@@ -399,10 +389,11 @@ def render(data):
         w(f"{k}. {what} Closed by: {closes}")
         k += 1
 
-    item("Whether the two rows are one contract or two.",
-         f"the vendor invoice or invoices and the order form for {names} covering {period}. Ask: {ask}.")
-    item("Whether the charge was entered twice or paid twice.",
-         f"the accounts payable ledger for the vendor and the bank or card statement for {period}. Ask: {ask}.")
+    item("Whether the rows are one product or two, and whether one charge was entered twice.",
+         f"the vendor invoice or invoices and the contract or order form for {names} covering {period}. "
+         f"These show what was charged, not what was paid. Ask: {ask}.")
+    item("Whether anything was paid twice.",
+         f"the accounts payable ledger for the vendor and the bank or card statement for {period}. An invoice does not show payment. Ask: {ask}.")
     item("Whether the posted amount equals the invoiced amount.", "the same invoice.")
     renewal = f" Lines that mention renewal for this label: {cites(ev['renewal'])}. They describe the subscription, not whether the repeat recurs." if ev["renewal"] else ""
     item(f"Whether the same repeat exists in any other {unit}.{renewal}",
@@ -422,8 +413,8 @@ def render(data):
              + ", ".join(f"{cite(u)} \"{u['text'].strip('*')}\"" for u in caveats) + ".",
              f"the published final P&L for {period} from the finance team.")
     item("Whether anything is recoverable under reading R2.", "the contract terms and the vendor account manager.")
-    if sub is not None and sub["amount"] != base:
-        item(f"Why the stated subtotal {cite_row(pnl, sub)} does not equal the sum of the rows.",
+    if subs and stated != base:
+        item(f"Why the stated subtotal {sub_cites} does not equal the sum of the rows.",
              "the finance team's working for the subtotal.")
     for r in unparsed:
         if r["shifted"]:
@@ -438,7 +429,7 @@ def render(data):
     w("")
     w("## 8. Objections a CFO would raise")
     w("")
-    w(f"- **Is this a double entry or a double payment?** The bundle cannot say. The P&L is a posted extract and there is no payment record. Section 5 gives the value under each reading. That is why the headline says at risk, not saved.")
+    w(f"- **Is this a double entry or a double payment?** The bundle cannot say. The P&L is a posted extract and there is no payment record. An invoice settles the entry question (one charge entered twice or not). The payment question needs the accounts payable ledger and the bank or card statement. Section 5 gives the value under each reading. That is why the headline says at risk, not saved.")
     w(f"- **Could the two rows be two real contracts?** Yes. In favour of one contract: equal amounts, near-identical labels"
       + (", identical Notes text" if all(e["notes"] and e["notes"] == l["notes"] for e, l, _ in repeats) else "")
       + (", and the flag raised in section 6" if ev["flagged"] else "")
@@ -451,11 +442,11 @@ def render(data):
     if later:
         w(f"- **Finance already knows this.** Yes, see section 6. Later messages name the pair ({cites(later)}), so it may already be settled. Read them before acting on the number.")
     elif ev["thread"]:
-        w(f"- **Finance already knows this.** Yes, see section 6. The value here is not the discovery. It is that the item is still open at the last message in the bundle ({cite(ev['thread'][-1])}), has an exact amount, and closes with {invoice}. The same rule can be rerun on every close.")
+        w(f"- **Finance already knows this.** Yes, see section 6. The value here is not the discovery. It is that the item is still open at the last message in the bundle ({cite(ev['thread'][-1])}), has an exact amount, and {invoice} settles whether it is a duplicate line (payment needs the ledger and the statement). The same rule can be rerun on every close.")
     else:
         w("- **Does finance know about this?** No message in the bundle mentions it.")
     if share is not None:
-        w(f"- **It is small.** Yes: {share}% of the category. It was chosen because every input is a cited row and one document settles it, not because of its size.")
+        w(f"- **It is small.** Yes: {share}% of the category. It was chosen because every input is a cited row and {invoice} settles whether it is a duplicate line, not because of its size.")
     w(f"- **Is the baseline right?** {sub_state} The baseline is the {cat} category only"
       + (f", and {len(unparsed)} row(s) without a plain number are excluded and listed in section 7." if unparsed else ", and every row in it is a plain number."))
     w("- **Why is there no probability weighting?** Any confidence stated in the messages is a personal estimate. Multiplying by it would add an input nobody can check.")

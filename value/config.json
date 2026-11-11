@@ -1,15 +1,10 @@
 {
-  "_comment": "All vocabulary used by value.py. Change this file, not the code, when the shape of the bundle changes.",
+  "_comment": "Vocabulary used only by value.py. Which rows are SaaS, which are subtotals and what counts as a repeat live in pipeline/shared.json, shared with ask/.",
   "pnl_file_glob": "pnl_*.csv",
   "category_column": "Category",
   "label_column": "Line Item",
   "notes_column": "Notes",
   "amount_column_pattern": "^(?P<period>Q[1-4]_[0-9]{4})_(?P<currency>[A-Z]{3})$",
-  "category": "Software & SaaS",
-  "subtotal_terms": [
-    "subtotal",
-    "total"
-  ],
   "suspicion_terms": [
     "twice",
     "double",

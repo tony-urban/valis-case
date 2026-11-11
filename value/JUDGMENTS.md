@@ -49,3 +49,11 @@ Times are UTC (equal to Europe/London on the day), taken from `date -u +%H:%M`. 
 ## Parser gaps (importer not edited)
 
 None that blocked this stream. Thread boundaries are not in the importer's units, so the script counts the `---` rules above each message itself.
+
+## Fix round after the external audit (2026-11-11)
+
+| Time | Issue | Decision | Reason | Source |
+|---|---|---|---|---|
+| 07:01 | Audit finding 4: value/ and ask/ used two private definitions of SaaS rows and of a repeat, so they disagreed on changed input. | value.py now imports pipeline/shared.py: whole-word SaaS category match, shared subtotal rule, shared repeat counting. Private copies deleted, "category" removed from config.json. | One definition, one place. The repeat rule kept is the one this script already used: each repeated row counted once, so three lookalike rows are two repeats. | external audit, chat_logs/README.md |
+| 13:11 | Audit finding 6: "closed by one invoice" was too broad. | Line 1 and sections 1, 5, 7 now say: an invoice or contract settles whether it is a duplicate line; whether it was paid twice needs the accounts payable ledger and the bank or card statement. | An invoice shows what was charged, not what was paid. | external audit, chat_logs/README.md |
+| 13:11 | Worker stopped by a model rate limit after the code change, before the docs. | Orchestrator verified the change on the audit's two inputs (81,000 baseline with a non-SaaS software row; 15,000 at risk and 73,500 without on three lookalikes) and wrote these two rows. | Rate limit on the worker's model until Nov 15. | BUILD_LOG.md |
