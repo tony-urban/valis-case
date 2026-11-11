@@ -1216,7 +1216,10 @@ def check_audit2():
     try:
         # --- 10a: one decision line naming two teams with different states (round 2, Q2)
         for i, line in enumerate(("Engineering hiring freeze is lifted. Sales hiring remains frozen.",
-                                  "Sales hiring remains frozen. Engineering hiring freeze is lifted.")):
+                                  "Sales hiring remains frozen. Engineering hiring freeze is lifted.",
+                                  # third external audit: the same two facts in one sentence
+                                  "Engineering hiring freeze is lifted, but Sales hiring remains frozen.",
+                                  "Engineering hiring freeze is lifted; Sales hiring remains frozen.")):
             d = tmp / f"mixed_{i}"
             shutil.copytree(DATA, d)
             write(d / "meeting_notes" / "leadership_sync_2026-06-17.md",
@@ -1224,7 +1227,7 @@ def check_audit2():
             code, out, err = run(["ask/ask.py", "--q", "q2", "--data", d])
             l = state_line(out)
             v = state_value(l).lower()
-            check(f"10a Q2 one decision line, Engineering lifted and Sales kept frozen (order {i + 1}): Sales still frozen (round 2)",
+            check(f"10a Q2 one decision line, Engineering lifted and Sales kept frozen (variant {i + 1}: {line[:40]}...): Sales still frozen (rounds 2, 3)",
                   no_trace(code, out, err) and l and "lifted" not in v and "frozen" in v, l[:140] or "no current state line")
 
         def pilot(name, edit, ceiling):

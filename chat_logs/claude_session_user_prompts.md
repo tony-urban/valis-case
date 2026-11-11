@@ -111,3 +111,11 @@ Attached: `AUDIT_LOG_round2.md` and `CHAT_LOG_round2.md`, the second independent
 > новой
 
 Claude then: saved the round 2 audit, reproduced every finding, fixed them (test runner line endings and Python 3.8 lookup, Q2 sentence-level team binding, pilot acceptance on incomplete rows, demo provenance, report wording), and added section 10 to `tests/check.py`.
+
+## Prompt 16. Wed 2026-11-11, 16:40
+
+Attached: `AUDIT_LOG_round3.md` and `CHAT_LOG_round3.md`, the third and last independent audit (saved in `external_review_2026-11-11_round3/`).
+
+> Так, это был последний ревью стороны аудитора. Теперь со стороны аудитора. Теперь запакую финальный ответ для Валис. То есть нам нужен отчет, да, который мы даем в MD-файлом. Нам нужен автоматизация и сделаем сразу сопроводительный e-mail, где все будет написано, как запускать, как читать и так далее. Какие были ограничения
+
+Claude then: saved the round 3 audit, fixed its one remaining Q2 finding with a regression check, wrote `SUBMISSION.md`, tagged the final commit `submission`, built the final ZIP and drafted the cover email.

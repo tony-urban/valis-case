@@ -1,5 +1,7 @@
 # Valis build exercise: Northwind Media
 
+**Reviewers: start with [SUBMISSION.md](SUBMISSION.md)** (what is where, how to run it, the answers in short, limitations).
+
 A first slice for the CEO of Northwind Media: two cited answers, one value number, one running automation and a build log, all computed from the raw bundle in `data/`.
 Start with `answers/REPORT.md` (the report to the CEO), then run the commands below to regenerate everything it says.
 
@@ -21,7 +23,7 @@ Step-by-step guides with troubleshooting: [RUN_ON_MAC.md](RUN_ON_MAC.md) and [RU
 Python 3.8 or later, standard library only. No installs, no API keys, no network. From the repo root:
 
 ```
-python3 tests/check.py               # 82 checks (one optional, needs Python 3.8), exit 0 only if none fails
+python3 tests/check.py               # 84 checks (one optional, needs Python 3.8), exit 0 only if none fails
 python3 ask/ask.py                   # deliverable 1
 python3 value/value.py               # deliverable 2
 python3 automation/run.py --check    # deliverable 3, with its acceptance test

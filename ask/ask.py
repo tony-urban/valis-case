@@ -54,6 +54,9 @@ def text(u):
     return re.sub(r"^- (\[ \] )?", "", t).strip()
 
 
+CLAUSE_SPLIT = r";\s*|,\s*(?=(?:but|while|whereas|although|though|however|yet|and|whilst)\b)"
+
+
 def sentences(t):
     return re.split(r'(?<=[.?!])\s+|(?<=[.?!]["”])\s+', t)
 
@@ -515,7 +518,11 @@ def q2(B):
         ctx = u.get("section", "") if u["kind"] == "line" else " ".join(
             text(x) for x in B.pick("slack", "message") if x["channel"] == u["channel"] and B.day(x) == B.day(u) and x["line"] < u["line"])
         owner, mine, named = None, [], set()
-        for s_ in sentences(text(u)):
+        # clauses, not only sentences (third external audit: "Engineering ... is lifted, but Sales ... remains frozen"
+        # and the same with a semicolon). A comma splits only before a conjunction, so "Sales and Engineering
+        # freezes are lifted" stays one clause about both teams.
+        parts = [p for s_ in sentences(text(u)) for p in re.split(CLAUSE_SPLIT, s_, flags=re.I) if p and p.strip()]
+        for s_ in parts:
             owner = about(s_) or owner
             named.add(owner)
             if owner == team:

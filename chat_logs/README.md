@@ -7,6 +7,7 @@ Everything here is kept verbatim, in the language it was written in.
 | `external_review_2026-11-10/AUDIT_LOG.md` | Independent audit of commit `934d741`, run by Tony in a second AI assistant (ChatGPT, per the file paths inside the log) on Windows with Python 3.12. In Russian. |
 | `external_review_2026-11-10/CHAT_LOG.md` | The prompts and replies of that audit session. In Russian. |
 | `external_review_2026-11-11_round2/AUDIT_LOG_round2.md` and `CHAT_LOG_round2.md` | Second independent audit, same AI assistant, of the export `b91d8a3` on Windows with Python 3.12. In Russian. |
+| `external_review_2026-11-11_round3/AUDIT_LOG_round3.md` and `CHAT_LOG_round3.md` | Third and last independent audit, of export `ae1aebb`, Windows, Python 3.12. In Russian. |
 | `claude_session_user_prompts.md` | Every prompt Tony sent to Claude in the main working session, verbatim, with timestamps. Claude's prompts to its own agents are not included, by Tony's decision: they are summarised in `BUILD_LOG.md`. |
 
 ## External audit: findings and what Claude found when re-running them
@@ -53,3 +54,11 @@ Verdict of the audit: the earlier finance and line-ending findings are fixed; th
 | REPORT.md mixed billing and payment in two places. | Billed twice and paid twice are separate readings; cash paid closes with the AP ledger and the bank or card statement. | 10h |
 
 Not changed, by design: on the case data the after figure in minutes is still not measured, and the report says so (Tony's decision of 2026-11-11 13:14, see `claude_session_user_prompts.md`).
+
+## Third external audit (2026-11-11, round 3)
+
+Verdict: all earlier findings fixed in the scenarios replayed (pilot, demo labelling, SaaS figures, Windows tests: 81 of 81 with one optional Python 3.8 check skipped). One defect left: a single decision sentence joining two teams with "but" or a semicolon ("Engineering hiring freeze is lifted, but Sales hiring remains frozen") still read as the Sales freeze lifted.
+
+Fix: decisions are now read clause by clause: a semicolon, or a comma before a conjunction (but, while, whereas, although, and...), starts a new clause, and each clause belongs to the team it names. "Sales and Engineering freezes are lifted" stays one clause about both teams. Both of the auditor's sentences are in check 10a; on the `ae1aebb` code they fail, on the fix they pass. Suite: 84 of 84.
+
+The auditor's remaining notes are disclosed limitations, not defects: no thumbnail swap in a CMS and no measured after on Northwind data; Claude's replies not reproduced verbatim in the logs.
