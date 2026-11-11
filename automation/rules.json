@@ -44,7 +44,10 @@
       "file": "README.md",
       "first_line_contains": "synthetic TEST FIXTURE",
       "banner": "The figures below demonstrate the method. They are not a Northwind result.",
-      "_note": "A data folder whose marker file starts with this text is a made-up demo input. Both reports and stdout then carry a banner saying so, and the marker file is not read as evidence."
+      "_note": "A demo input is recognised by any of three signals, so the label survives if one is lost: line 1 of the marker file, the provenance column on each row, or the ticket ID prefix. Both reports, stdout and the routed queue then say so. A file that mixes synthetic and real rows fails pilot acceptance.",
+      "source_column": "Data_Source",
+      "source_value_contains": "SYNTHETIC TEST FIXTURE",
+      "id_prefix": "DEMO-"
     },
     "demo_command": "python3 automation/run.py --data automation/demo_pilot --out /tmp/pilot_demo --check --max-target-minutes 105"
   },

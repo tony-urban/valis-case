@@ -39,7 +39,7 @@ Every command below runs **from this folder** (the one with `README.md` in it). 
 py tests/check.py
 ```
 
-Expected last line: `69 of 69 checks passed, 0 failed`. It takes under a minute. It runs every deliverable, resolves every citation against the raw data, recomputes every figure independently, and confirms `data/` is untouched.
+Expected last line: `81 of 81 checks passed, 0 failed, 1 skipped (see SKIP lines)`, or `82 of 82 checks passed, 0 failed` if Python 3.8 is also installed. The one optional check runs every command a second time under Python 3.8; without 3.8 it prints a SKIP line and is not counted as a pass or a fail. It takes under a minute. It runs every deliverable, resolves every citation against the raw data, recomputes every figure independently, and confirms `data/` is untouched.
 
 If one check fails on byte comparison or checksums, see "Line endings" below.
 

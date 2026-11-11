@@ -21,7 +21,7 @@ Step-by-step guides with troubleshooting: [RUN_ON_MAC.md](RUN_ON_MAC.md) and [RU
 Python 3.8 or later, standard library only. No installs, no API keys, no network. From the repo root:
 
 ```
-python3 tests/check.py               # 69 checks, one PASS or FAIL line each, exit 0 only if all pass
+python3 tests/check.py               # 82 checks (one optional, needs Python 3.8), exit 0 only if none fails
 python3 ask/ask.py                   # deliverable 1
 python3 value/value.py               # deliverable 2
 python3 automation/run.py --check    # deliverable 3, with its acceptance test

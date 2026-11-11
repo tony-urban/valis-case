@@ -22,3 +22,5 @@ Run it from the repo root (writes to a scratch folder, never to `automation/out/
 That 50% is an illustration, not an agreed number. The run prints a banner saying the input is
 a synthetic test fixture. It is recognised by the first line of this file (`fixture_marker` in
 `../rules.json`), so this README must keep that first line.
+
+Every row also carries `Data_Source = SYNTHETIC TEST FIXTURE, not Northwind data`, and every ticket ID starts with `DEMO-`, so the file stays labelled if it is copied without this README.

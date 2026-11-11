@@ -39,12 +39,15 @@ def route(tickets, rules):
 
 
 def write_queue(tickets, rules, out):
+    m = rules["pilot"].get("fixture_marker")
+    synthetic = bool(rules.get("fixture_banner"))  # provenance travels with the queue when the input is a demo
     with open(out / "routed_queue.csv", "w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, lineterminator="\n")  # LF on every OS
-        w.writerow(QUEUE_COLUMNS)
+        w.writerow(QUEUE_COLUMNS + (["data_source"] if synthetic else []))
         for t in tickets:
             w.writerow([t["id"], f"{rules['tickets']['file']}:L{t['line']}", t["category"],
-                        t["raw_minutes"], t["action"], t["reason"], "; ".join(t["flags"])])
+                        t["raw_minutes"], t["action"], t["reason"], "; ".join(t["flags"])]
+                       + (["SYNTHETIC TEST FIXTURE" if at.is_synthetic(t, m) else "not flagged synthetic"] if synthetic else []))
 
 
 def minutes(tickets):
@@ -65,7 +68,13 @@ def render(tickets, rules, data_label):
              "n_target": len(in_target), "first": dates[0] if dates else None, "last": dates[-1] if dates else None}
     for k in ("resolved", "returned", "unknown"):
         pilot[k] = [t for t in in_target if t["outcome"] == k]
-    pilot["after"] = minutes(pilot["returned"])
+    # After = all person time logged on target tickets in the pilot: tickets that came back, plus any minutes
+    # logged on tickets marked resolved by self-serve (second external audit: 200 minutes on "resolved" rows were ignored).
+    pilot["after_returned"], pilot["after_resolved"] = minutes(pilot["returned"]), minutes(pilot["resolved"])
+    pilot["after"] = pilot["after_returned"] + pilot["after_resolved"]
+    # Target rows the run could not read (blank or bad minutes, bad date, repeated ID...). A pilot measurement with
+    # such rows is incomplete: it must fail, never report the missing minutes as 0 (second external audit).
+    pilot["bad"] = [t for t in in_target if t["problems"]]
     L = []
     w = L.append
 
@@ -85,7 +94,7 @@ def render(tickets, rules, data_label):
     w("## Headline")
     w("")
     total, n_counted = minutes(tickets), sum(1 for t in tickets if t["minutes"] is not None)
-    n_self = len([t for t in pilot["resolved"] if t["minutes"] is not None])  # pilot export only: resolved with no handling
+    n_self = len([t for t in pilot["resolved"] if t["minutes"] == 0])  # pilot export only: resolved with no handling logged
     w(f"- **Before (MEASURED): all {n_counted - n_self} tickets, {num(total)} logged minutes, reach a person today.**"
       + (f" {n_self} more were resolved by self-serve with no logged minutes (pilot outcome column)." if n_self else "")
       + (f" {len(tickets) - n_counted} more rows have no countable minutes and are listed as exceptions." if n_counted != len(tickets) else ""))
@@ -100,8 +109,12 @@ def render(tickets, rules, data_label):
          if pilot["has_outcome"] else
          "because the self-serve replacement does not exist yet (it is the builder's job, see `BUILDER_SPEC.md`)."))
     if pilot["has_outcome"]:
-        w(f"- **After (MEASURED on the pilot export): {num(pilot['after'])} logged minutes on the {len(pilot['returned'])} {target} tickets "
-          f"that came back to a person.** {len(pilot['resolved'])} {target} tickets were resolved by self-serve and "
+        w(f"- **After (MEASURED on the pilot export): {num(pilot['after'])} logged minutes on {target} tickets: "
+          f"{num(pilot['after_returned'])} on the {len(pilot['returned'])} that came back to a person, "
+          f"{num(pilot['after_resolved'])} on the {len(pilot['resolved'])} resolved by self-serve.** "
+          + (f"**Incomplete: {len(pilot['bad'])} {target} rows could not be read and are not in the figure** (see exceptions). "
+             if pilot["bad"] else "")
+          + f"{len(pilot['resolved'])} {target} tickets were resolved by self-serve and "
           f"{len(pilot['returned'])} came back to a person, per the column `{pilot['column']}`"
           + (f". {len(pilot['unknown'])} have no readable outcome and are not in either count." if pilot["unknown"] else ".")
           + " Rows are listed under \"After, measured on the pilot export\".")
@@ -263,11 +276,19 @@ def pilot_results(raw, rules, facts, ceiling, pilot_days):
     if not p["n_target"]:
         res.append((name, False, "not evaluable: no target tickets in this export"))
         return res
+    if rules.get("mixed_rows"):
+        res.append((name, False, f"the export mixes {rules['synthetic_rows']} synthetic test rows with other rows: no measurement"))
+        return res
+    if p["bad"]:
+        res.append((name, False, f"incomplete: {len(p['bad'])} {target} rows could not be read "
+                    f"({'; '.join(sorted({x for t in p['bad'] for x in t['problems']}))[:200]}). "
+                    "Missing minutes are not counted as 0"))
+        return res
     if p["unknown"]:
         res.append((name, False, f"{len(p['unknown'])} {target} tickets have no readable value in {p['column']}, so the after figure "
                     "would leave them out"))
         return res
-    back = {v.lower() for v in cfg["returned_values"]}  # independent re-sum of the after figure from the raw rows
+    back = {v.lower() for v in cfg["returned_values"] + cfg["resolved_values"]}  # independent re-sum of the after figure
     resum, ids = 0.0, set()
     for _, row in sorted(raw.items()):
         v, tid = (row.get(col["minutes"]) or "").strip(), (row.get(col["id"]) or "").strip()
@@ -276,8 +297,9 @@ def pilot_results(raw, rules, facts, ceiling, pilot_days):
                 and re.fullmatch(r"\d+(\.\d+)?", v) and 0 < float(v) <= rules["assumptions"]["max_plausible_minutes"]):
             resum += float(v)
     res.append((name, p["after"] <= ceiling and abs(resum - p["after"]) < 1e-9,
-                f"{num(p['after'])} logged minutes on {len(p['returned'])} tickets that came back to a person "
-                f"(re-summed {num(resum)}), {len(p['resolved'])} resolved by self-serve"))
+                f"{num(p['after'])} logged minutes on {target} tickets (re-summed {num(resum)}): "
+                f"{num(p['after_returned'])} on {len(p['returned'])} that came back to a person, "
+                f"{num(p['after_resolved'])} on {len(p['resolved'])} resolved by self-serve"))
     return res
 
 

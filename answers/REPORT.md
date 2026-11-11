@@ -83,7 +83,7 @@ Ranks 3 and 4 are parts of rank 2 and do not add to it. Every ticket row behind 
 - The pair: `pnl_q1_2026.csv:L12` (Line Item: Amplitude) is 7,500 USD and `pnl_q1_2026.csv:L13` (Line Item: Amplitude Analytics) is 7,500 USD. Equal amounts, near-identical labels, identical Notes text.
 - Baseline: Software & SaaS as listed, 81,000 USD `pnl_q1_2026.csv:L24`. Without the suspected duplicate: 81,000 - 7,500 = 73,500 USD. Share of the category: 7,500 / 81,000 = 9.3%.
 - Finance already knows: "I'm 90% sure that's the same product entered twice but I haven't confirmed against the invoice." `slack_export.md:L146 [#finance | Maya Fortin | Mon Jun 2, 10:38 AM]`. The value is not the discovery. It is that the item is still open at the last message in the thread: "Haven't gotten the invoice back yet so I'm leaving the CSV as-is until I can confirm." `slack_export.md:L152 [#finance | Maya Fortin | Mon Jun 2, 10:47 AM]`. The 90% is one person's estimate and is not used in any arithmetic. The number is small, and it was chosen because every input is a cited row and one document settles it.
-- Three readings the bundle cannot tell apart. Entered twice, paid once: the category is overstated by 7,500 USD, no cash effect, a reporting correction. Billed or paid twice: up to 7,500 USD left the business, recovery depends on the vendor. Two real contracts: the value is 0.
+- Three readings the bundle cannot tell apart. Entered twice, paid once: the category is overstated by 7,500 USD, no cash effect, a reporting correction. Billed twice: the invoices show two charges for one product, and the cash effect depends on whether both were paid. Paid twice: up to 7,500 USD left the business, recovery depends on the vendor. Two real contracts: the value is 0.
 - Labelled assumption, not part of the number: if, and only if, the same repeat sits in every quarter of a year, the figure is 7,500 x 4 = 30,000 USD a year. The bundle holds one quarter only.
 - Confidence: the worksheet computes no level. Its status is fixed at suspected, unconfirmed, and the script never upgrades it. Full worksheet: `repo:value/VALUE_WORKSHEET.md`.
 
@@ -105,7 +105,7 @@ Sources that contradict each other, each with what settles it.
 
 Gaps the bundle cannot close.
 
-1. Cash actually paid for any of the 15 SaaS rows. Closes with: invoices or the AP ledger.
+1. Cash actually paid for any of the 15 SaaS rows. Closes with: the AP ledger and the bank or card statement. Invoices show what was charged, not what was paid.
 2. The USD value of Cloudflare ('€1900') `pnl_q1_2026.csv:L26`, which leaves the Infrastructure subtotal blank `pnl_q1_2026.csv:L27`. Closes with: the month-end FX rate Finance uses, or the invoice.
 3. Whether any Software & SaaS row was billed in another currency and converted before posting `meeting_notes/finance_review_2026-05-28.md:L25`. Closes with: Finance's FX working for the quarter.
 4. Whether the duplicate recurs in other quarters, and whether anything is recoverable. Closes with: the P&L extracts or general ledger vendor detail for the other quarters, the contract terms, the vendor account manager.

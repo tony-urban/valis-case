@@ -103,3 +103,11 @@ Claude then: confirmed the syntax was right and Git is not installed, gave a ZIP
 > Так, хорошо, давай мне финальный экспорт, я сейчас прогоню его в кодексе. Пусть чат GPT проверит тоже.
 
 Claude then: committed, built a ZIP of the repo at the final commit with `git archive`, and wrote a re-audit prompt for the second AI tool.
+
+## Prompt 15. Wed 2026-11-11, 14:49
+
+Attached: `AUDIT_LOG_round2.md` and `CHAT_LOG_round2.md`, the second independent audit (saved in `external_review_2026-11-11_round2/`).
+
+> новой
+
+Claude then: saved the round 2 audit, reproduced every finding, fixed them (test runner line endings and Python 3.8 lookup, Q2 sentence-level team binding, pilot acceptance on incomplete rows, demo provenance, report wording), and added section 10 to `tests/check.py`.

@@ -81,7 +81,8 @@ def load_tickets(data, rules):
         f = u["fields"]
         t = {"line": u["line"], "id": f[col["id"]], "date": f[col["date"]],
              "category": f[col["category"]], "raw_minutes": f[col["minutes"]],
-             "minutes": None, "week": None, "problems": [], "flags": [], "outcome": None}
+             "minutes": None, "week": None, "problems": [], "flags": [], "outcome": None,
+             "source": f.get((pilot.get("fixture_marker") or {}).get("source_column", ""), "")}
         if cfg["has_outcome"] and t["category"] == rules["target_category"]:  # outcome is read for target tickets only
             v = f.get(pilot["outcome_column"], "").lower()
             t["outcome"] = "resolved" if v in resolved else "returned" if v in returned else "unknown"
@@ -126,18 +127,35 @@ def load_tickets(data, rules):
     return tickets
 
 
-def fixture_banner(data, rules):
-    """Banner for a made-up demo input, recognised by the first line of a marker file named in rules.json."""
+def is_synthetic(t, m):
+    """A row is synthetic if its provenance column or its ticket ID says so (rules.json pilot.fixture_marker)."""
+    return bool(m) and ((m.get("source_value_contains") and m["source_value_contains"].lower() in (t.get("source") or "").lower())
+                        or (m.get("id_prefix") and (t.get("id") or "").startswith(m["id_prefix"])))
+
+
+def fixture_banner(data, rules, tickets=()):
+    """Banner for a made-up demo input. Three independent signals, so the label survives if one is lost
+    (second external audit: copying the CSV without its README dropped the banner):
+    line 1 of the marker file, a provenance column on the rows, or the ticket ID prefix."""
     m = rules["pilot"].get("fixture_marker")
-    p = data / m["file"] if m else None
+    if not m:
+        return None
+    p = data / m["file"]
     try:
-        first = p.read_text(encoding="utf-8").splitlines()[0] if p and p.is_file() else ""
+        first = p.read_text(encoding="utf-8").splitlines()[0] if p.is_file() else ""
     except (OSError, UnicodeDecodeError, IndexError):
         first = ""
-    if not m or m["first_line_contains"] not in first:
+    synth = [t for t in tickets if is_synthetic(t, m)]
+    if tickets:  # load_text calls this without rows only to know whether to skip the marker file
+        rules["synthetic_rows"], rules["mixed_rows"] = len(synth), bool(synth) and len(synth) < len(tickets)
+    signals = ([f"line 1 of `{m['file']}`"] if m["first_line_contains"] in first else []) + (
+        [f"{len(synth)} of {len(tickets)} ticket rows (column `{m['source_column']}` or ID prefix `{m['id_prefix']}`)"] if synth else [])
+    if not signals:
         return None
-    return (f"**SYNTHETIC TEST FIXTURE. The input folder says so in line 1 of `{m['file']}`: it was invented for a demo. "
-            f"{m.get('banner', 'The figures below demonstrate the method, not a result.')}**")
+    mixed = (f" **WARNING: only {len(synth)} of {len(tickets)} rows are synthetic: this input mixes test rows with other rows. "
+             "Its figures are not a result of anything.**") if tickets and rules.get("mixed_rows") else ""
+    return (f"**SYNTHETIC TEST FIXTURE, flagged by {' and '.join(signals)}: it was invented for a demo. "
+            f"{m.get('banner', 'The figures below demonstrate the method, not a result.')}**" + mixed)
 
 
 def load_text(data, rules=None):
@@ -502,7 +520,7 @@ def label(path):
 
 def write_report(data, rules, out):
     tickets = load_tickets(data, rules)
-    rules["fixture_banner"] = fixture_banner(data, rules)
+    rules["fixture_banner"] = fixture_banner(data, rules, tickets)
     text_units = load_text(data, rules)
     out.mkdir(parents=True, exist_ok=True)
     write_text(out / "time_waste.md", render(tickets, text_units, rules, label(data)))

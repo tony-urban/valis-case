@@ -508,9 +508,25 @@ def q2(B):
         return names_team(t, others) or next((i for i in other_ids if i in t), None)
 
     def tie(u):
+        """(team, label, term) for a statement, read sentence by sentence (second external audit: one decision line
+        that lifted Engineering and kept Sales frozen was read as lifting Sales). Each sentence belongs to the team
+        it names; a sentence naming no team belongs to the last team named before it in the same line; if the line
+        names no team at all, its notes heading or chat thread decides. Only the team's own sentences set its label."""
         ctx = u.get("section", "") if u["kind"] == "line" else " ".join(
             text(x) for x in B.pick("slack", "message") if x["channel"] == u["channel"] and B.day(x) == B.day(u) and x["line"] < u["line"])
-        return about(text(u)) or about(ctx)
+        owner, mine, named = None, [], set()
+        for s_ in sentences(text(u)):
+            owner = about(s_) or owner
+            named.add(owner)
+            if owner == team:
+                mine.append(s_)
+        named.discard(None)
+        if not named:  # the line names no team: the heading or thread decides for the whole line
+            t = about(ctx)
+            return (t, None, None) if t != team else (team,) + classify(u, c)
+        if not mine:
+            return (sorted(named, key=str)[0], None, None)
+        return (team,) + classify({"kind": "line", "text": " ".join(mine)}, c)
 
     # who may change the state: a decision owner's message or a decision record in the notes. The roster is
     # the baseline. Everyone else is recorded and listed, never applied.
@@ -520,9 +536,11 @@ def q2(B):
                    ("record" if has(text(u), c["decision_terms"]) else "other") if u["kind"] == "line" else
                    "owner" if u["author"] in authority else "other")
         if e["by"] in ("record", "owner") and e["label"] in c["status_labels"]:
-            t = tie(u)  # tied to the team, about another team only, or no team named anywhere
+            t, label, term = tie(u)  # tied to the team, about another team only, or no team named anywhere
             e["by"] = e["by"] if t == team else "elsewhere" if t else "unteamed"
             e["about"] = t
+            if t == team and label:  # the team's own sentences decide its label, not the whole line
+                e["label"], e["term"] = label, term
     clean = [e for e in ev if e["label"] in c["status_labels"]]
     records, chat = [e for e in clean if e["by"] == "record"], [e for e in clean if e["by"] == "owner"]
     base = [e for e in ev if e["by"] == "roster"]

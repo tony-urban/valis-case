@@ -6,6 +6,7 @@ Everything here is kept verbatim, in the language it was written in.
 |---|---|
 | `external_review_2026-11-10/AUDIT_LOG.md` | Independent audit of commit `934d741`, run by Tony in a second AI assistant (ChatGPT, per the file paths inside the log) on Windows with Python 3.12. In Russian. |
 | `external_review_2026-11-10/CHAT_LOG.md` | The prompts and replies of that audit session. In Russian. |
+| `external_review_2026-11-11_round2/AUDIT_LOG_round2.md` and `CHAT_LOG_round2.md` | Second independent audit, same AI assistant, of the export `b91d8a3` on Windows with Python 3.12. In Russian. |
 | `claude_session_user_prompts.md` | Every prompt Tony sent to Claude in the main working session, verbatim, with timestamps. Claude's prompts to its own agents are not included, by Tony's decision: they are summarised in `BUILD_LOG.md`. |
 
 ## External audit: findings and what Claude found when re-running them
@@ -35,3 +36,20 @@ The audit's verdict: the report is correct on the bundle as given, the solution 
 | 7 | Chat logs added (this folder). Repo stays public by Tony's decision. | `chat_logs/` |
 
 Suite: 69 of 69, including a run of every command on Python 3.8.20.
+
+## Second external audit (2026-11-11, round 2): findings and fixes
+
+Verdict of the audit: the earlier finance and line-ending findings are fixed; three new defects and a Windows test problem. Claude reproduced every one on commit `b91d8a3` before fixing. Section 10 of `tests/check.py` holds a regression check for each; run against `b91d8a3` code, 11 of them fail, on the fix all pass.
+
+| Finding | Fix | Check |
+|---|---|---|
+| Checks 9d to 9f fail on Windows: the test parser did not expect CRLF in program output. The figures themselves agreed. | The test runner normalises line endings of program output. | 10g |
+| Check 9m fails when no Python 3.8 is installed, and could not find it through the Windows launcher. | Finds 3.8 via the current interpreter, uv, `python3.8` or `py -3.8`. If none, prints SKIP: never counted as a pass or a fail. Run guides say so. | 9m |
+| Q2: one decision line "Engineering hiring freeze is lifted. Sales hiring remains frozen." reported the Sales freeze as lifted. | Each sentence belongs to the team it names (a sentence naming no team follows the last team named). Only the team's own sentences set its state. | 10a |
+| Pilot: blank, non-numeric, negative or implausible minutes on tickets that came back to a person became a measured 0 and PASS. | A target row that cannot be read fails pilot acceptance; missing minutes are never counted as 0 (blank or 0 is allowed only on rows marked resolved by self-serve). | 10b |
+| Pilot: minutes logged on tickets marked resolved by self-serve were ignored. | The after figure is all person time on target tickets: returned plus any logged on resolved rows. | 10c |
+| Pilot: an invalid date on target rows still passed. | Same rule as above: an unreadable target row fails. | 10d |
+| The demo CSV copied without its README lost the synthetic label, also when mixed into the case data. | Three independent signals: README line 1, a `Data_Source` column on every row, the `DEMO-` ticket ID prefix. The routed queue carries a `data_source` column. A file mixing synthetic and other rows fails pilot acceptance. | 10e, 10f |
+| REPORT.md mixed billing and payment in two places. | Billed twice and paid twice are separate readings; cash paid closes with the AP ledger and the bank or card statement. | 10h |
+
+Not changed, by design: on the case data the after figure in minutes is still not measured, and the report says so (Tony's decision of 2026-11-11 13:14, see `claude_session_user_prompts.md`).

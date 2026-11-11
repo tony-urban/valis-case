@@ -64,7 +64,11 @@ def run(args, timeout=180):
     env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", PYTHONIOENCODING="utf-8")
     p = subprocess.run([sys.executable] + [str(a) for a in args], cwd=str(ROOT), env=env,
                        capture_output=True, timeout=timeout)
-    return p.returncode, p.stdout.decode("utf-8", "replace"), p.stderr.decode("utf-8", "replace")
+    # Text mode stdout on Windows ends lines with CRLF. Normalise so every parser sees LF on every OS.
+    # (Found by the second external audit: checks 9d to 9f failed on Windows on parsing alone.)
+    out = p.stdout.decode("utf-8", "replace").replace("\r\n", "\n")
+    err = p.stderr.decode("utf-8", "replace").replace("\r\n", "\n")
+    return p.returncode, out, err
 
 
 def read(p):
@@ -965,7 +969,19 @@ def text_writers(path):
     return bad
 
 
+SKIPPED = []
+
+
+def skip(name, why):
+    """A check that cannot run on this machine. Printed, counted separately, never counted as a pass."""
+    SKIPPED.append(name)
+    print(f"SKIP  {name}  [{why}]", flush=True)
+
+
 def find_py38():
+    """A Python 3.8 interpreter: this one if it is 3.8, else uv, else python3.8 on PATH, else the Windows launcher."""
+    if sys.version_info[:2] == (3, 8):
+        return sys.executable
     try:
         p = subprocess.run(["uv", "python", "find", "3.8"], capture_output=True, timeout=60)
         cand = p.stdout.decode("utf-8", "replace").strip().splitlines()
@@ -973,7 +989,17 @@ def find_py38():
             return cand[-1]
     except (OSError, subprocess.SubprocessError):
         pass
-    return shutil.which("python3.8")
+    if shutil.which("python3.8"):
+        return shutil.which("python3.8")
+    if shutil.which("py"):
+        try:
+            p = subprocess.run(["py", "-3.8", "-c", "import sys; print(sys.executable)"], capture_output=True, timeout=60)
+            cand = p.stdout.decode("utf-8", "replace").strip()
+            if p.returncode == 0 and cand and Path(cand).is_file():
+                return cand
+        except (OSError, subprocess.SubprocessError):
+            pass
+    return None
 
 
 def check_audit():
@@ -1159,8 +1185,8 @@ def check_audit():
     # --- 9m: a real run under Python 3.8 (audit finding 5: 3.8 and 3.9 were never run)
     py38 = find_py38()
     if not py38:
-        check("9m default commands and the citation check run under Python 3.8", False,
-              "NOT FOUND: neither `uv python find 3.8` nor python3.8 on PATH gave an interpreter, nothing was run on 3.8")
+        skip("9m default commands and the citation check run under Python 3.8",
+             "no Python 3.8 found (this interpreter, uv, python3.8, py -3.8). Optional: install Python 3.8 to run it")
     else:
         env = dict(os.environ, PYTHONDONTWRITEBYTECODE="1", PYTHONIOENCODING="utf-8")
         ref = snapshot(ASK_OUT + VALUE_OUT + AUTO_OUT)
@@ -1179,6 +1205,95 @@ def check_audit():
     for _, cmd, _ in COMMANDS:
         run(cmd)
     check("9z committed outputs are back to what the default commands produce after section 9",
+          snapshot(ASK_OUT + VALUE_OUT + AUTO_OUT) == committed)
+
+
+def check_audit2():
+    """Section 10: regression checks for the second external audit (chat_logs/external_review_2026-11-11_round2/)."""
+    committed = snapshot(ASK_OUT + VALUE_OUT + AUTO_OUT)
+    tmp = Path(tempfile.mkdtemp(prefix="valis_check2_"))
+    demo = ROOT / "automation" / "demo_pilot"
+    try:
+        # --- 10a: one decision line naming two teams with different states (round 2, Q2)
+        for i, line in enumerate(("Engineering hiring freeze is lifted. Sales hiring remains frozen.",
+                                  "Sales hiring remains frozen. Engineering hiring freeze is lifted.")):
+            d = tmp / f"mixed_{i}"
+            shutil.copytree(DATA, d)
+            write(d / "meeting_notes" / "leadership_sync_2026-06-17.md",
+                  "# Leadership Sync 2026-06-17\n\n**Date:** 2026-06-17\n\n## 1. Staffing decisions\n\n- **DECISION:** " + line + "\n")
+            code, out, err = run(["ask/ask.py", "--q", "q2", "--data", d])
+            l = state_line(out)
+            v = state_value(l).lower()
+            check(f"10a Q2 one decision line, Engineering lifted and Sales kept frozen (order {i + 1}): Sales still frozen (round 2)",
+                  no_trace(code, out, err) and l and "lifted" not in v and "frozen" in v, l[:140] or "no current state line")
+
+        def pilot(name, edit, ceiling):
+            d = tmp / name
+            shutil.copytree(demo, d)
+            h, rows = tickets_read(d)
+            edit(h, rows)
+            tickets_write(d, h, rows)
+            return run(["automation/run.py", "--data", d, "--out", tmp / (name + "_out"), "--check", "--max-target-minutes", str(ceiling)])
+
+        def where(h, rows, outcome_prefix):
+            o = h.index("Self_Serve_Outcome")
+            return [r for r in rows if r[o].lower().startswith(outcome_prefix)]
+
+        # --- 10b to 10d: incomplete pilot rows must never become a measured 0 (round 2, pilot acceptance)
+        for tag, bad in (("blank", ""), ("not a number", "not recorded"), ("above the bound", "999"), ("negative", "-20")):
+            def edit(h, rows, bad=bad):
+                for r in where(h, rows, "returned"):
+                    r[h.index("Handle_Minutes")] = bad
+            code, out, err = pilot("bad_" + tag.replace(" ", "_"), edit, 0)
+            check(f"10b pilot: minutes {tag} on tickets that came back to a person: ACCEPTANCE FAIL, not a measured 0 (round 2)",
+                  code != 0 and "ACCEPTANCE: FAIL" in out and "Traceback" not in err, out.strip().splitlines()[-2][:140] if out.strip() else err[-140:])
+
+        def heavy(h, rows):
+            for r in where(h, rows, "resolved"):
+                r[h.index("Handle_Minutes")] = "200"
+        code, out, err = pilot("resolved_heavy", heavy, 105)
+        check("10c pilot: 200 minutes logged on each ticket marked resolved count in the after figure, so a 105 ceiling FAILs (round 2)",
+              code != 0 and "ACCEPTANCE: FAIL" in out and "1,900" in out, out.strip().splitlines()[-2][:140] if out.strip() else "")
+
+        def bad_date(h, rows):
+            for r in where(h, rows, "returned"):
+                r[h.index("Date")] = "2026-13-01"
+        code, out, err = pilot("bad_date", bad_date, 105)
+        check("10d pilot: an invalid date on target rows FAILs acceptance (round 2)",
+              code != 0 and "ACCEPTANCE: FAIL" in out, out.strip().splitlines()[-2][:140] if out.strip() else "")
+
+        # --- 10e, 10f: the demo stays labelled without its README, and cannot pass mixed into real rows (round 2)
+        lone = tmp / "lone_csv"
+        lone.mkdir()
+        shutil.copy(next(demo.glob("*.csv")), lone / "support_tickets_q2_2026.csv")
+        code, out, err = run(["automation/run.py", "--data", lone, "--out", tmp / "lone_out", "--check", "--max-target-minutes", "105"])
+        ba = (tmp / "lone_out" / "before_after.md").read_text(encoding="utf-8") if (tmp / "lone_out" / "before_after.md").is_file() else ""
+        q = (tmp / "lone_out" / "routed_queue.csv").read_text(encoding="utf-8") if (tmp / "lone_out" / "routed_queue.csv").is_file() else ""
+        check("10e demo CSV copied alone and renamed: the synthetic banner is still in stdout, before_after.md and the routed queue (round 2)",
+              "SYNTHETIC TEST FIXTURE" in ba and "synthetic" in out.lower() and "SYNTHETIC TEST FIXTURE" in q, "")
+        d = tmp / "mixed_rows"
+        shutil.copytree(DATA, d)
+        h_demo, demo_rows = tickets_read(demo)
+        h_real, real_rows = tickets_read(d)
+        rows = [[dict(zip(h_real, r)).get(c, "") for c in h_demo] for r in real_rows] + demo_rows
+        tickets_write(d, h_demo, rows)
+        code, out, err = run(["automation/run.py", "--data", d, "--out", tmp / "mixed_out", "--check", "--max-target-minutes", "999999"])
+        check("10f demo rows mixed into the case tickets: synthetic warning shown and ACCEPTANCE FAIL (round 2)",
+              code != 0 and "ACCEPTANCE: FAIL" in out and "synthetic" in out.lower(), out.strip().splitlines()[-2][:140] if out.strip() else "")
+
+        # --- 10g: program output with CRLF line ends is parsed like LF (round 2: 9d to 9f failed on Windows only)
+        code, out, err = run(["-c", "import sys; sys.stdout.buffer.write(b'| a |\\r\\n| b |\\r\\n')"])
+        check("10g the test runner normalises CRLF in program output, as Windows produces", "\r" not in out and out.count("\n") == 2, repr(out))
+
+        # --- 10h: the report separates what was charged from what was paid (round 2, finding 6)
+        rep = read(ROOT / "answers" / "REPORT.md")
+        check("10h REPORT.md: payment closes with the ledger and the bank or card statement, not with invoices (round 2)",
+              "bank or card statement" in rep and "invoices or the AP ledger" not in rep and "Billed or paid twice" not in rep, "")
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+        for _, cmd, _ in COMMANDS:
+            run(cmd)
+    check("10z committed outputs are back to what the default commands produce after section 10",
           snapshot(ASK_OUT + VALUE_OUT + AUTO_OUT) == committed)
 
 
@@ -1225,11 +1340,13 @@ def main():
     check_regressions(P, T)
     check_hygiene()
     check_audit()
+    check_audit2()
     check("1 data/ still matches data/CHECKSUMS.txt after all runs",
           all(hashlib.sha256((DATA / l.split(None, 1)[1].strip()).read_bytes()).hexdigest() == l.split()[0]
               for l in read(DATA / "CHECKSUMS.txt").splitlines() if l.strip()))
     passed = sum(RESULTS)
-    print(f"\n{passed} of {len(RESULTS)} checks passed, {len(RESULTS) - passed} failed")
+    extra = f", {len(SKIPPED)} skipped (see SKIP lines)" if SKIPPED else ""
+    print(f"\n{passed} of {len(RESULTS)} checks passed, {len(RESULTS) - passed} failed{extra}")
     return 0 if passed == len(RESULTS) else 1
 
 

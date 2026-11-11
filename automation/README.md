@@ -37,11 +37,21 @@ Expected, abridged (figures from the fixture, not a Northwind result):
     - **After (MEASURED on the pilot export): 100 logged minutes on the 5 Thumbnail re-upload tickets that came back to a person.** 9 ... resolved by self-serve and 5 came back to a person ...
     PASS  pilot coverage: the export has tickets of the target category (14 Thumbnail re-upload rows)
     PASS  pilot window: dates span at least 14 days (2026-07-06 to 2026-07-19, 14 days)
-    PASS  pilot outcome: After (MEASURED on the pilot export) is at or below 105 minutes (100 logged minutes on 5 tickets that came back to a person (re-summed 100), 9 resolved by self-serve)
+    PASS  pilot outcome: After (MEASURED on the pilot export) is at or below 105 minutes (100 logged minutes on Thumbnail re-upload tickets (re-summed 100): 100 on 5 that came back to a person, 0 on 9 resolved by self-serve)
     ACCEPTANCE: PASS
 
-With `--max-target-minutes 90` the outcome line FAILs and the exit code is 1. The Q3 report on the
-fixture (`time_waste.md`) still uses the 13 week quarter from `rules.json`; read `before_after.md`.
+With `--max-target-minutes 90` the outcome line FAILs and the exit code is 1.
+
+Pilot acceptance also fails when the export cannot support a measurement (second external audit):
+a target row with blank, invalid or implausible minutes or a bad date (missing minutes are never
+counted as 0, except blank or 0 on a row marked resolved by self-serve), an unreadable outcome, or a
+file that mixes synthetic test rows with other rows. The after figure is all minutes logged on target
+tickets: those that came back to a person plus any logged on tickets marked resolved.
+
+The demo is recognised as synthetic by any of three signals, so the label survives if one is lost:
+line 1 of `demo_pilot/README.md`, the `Data_Source` column on every row, or the `DEMO-` ticket ID
+prefix. The banner then appears in stdout and both reports, and `routed_queue.csv` gains a
+`data_source` column.
 
 ## What it does
 
