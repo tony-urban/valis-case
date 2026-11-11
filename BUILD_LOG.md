@@ -132,3 +132,4 @@ Times are Europe/London, 2026-11-10. Clock started 15:39.
 | 16:42 | Prompt | Tony: third and last external audit received. Package the final answer for Valis: report, automation, cover email with how to run, how to read, limitations. |
 | 16:42 | Fix | Ask Q2 (third audit): decisions read clause by clause (semicolon, or comma before a conjunction). 'Engineering hiring freeze is lifted, but Sales hiring remains frozen' now keeps Sales frozen. Nine phrasings checked, default answer byte-identical. Both audit sentences added to check 10a (fail on ae1aebb, pass on the fix). Suite 84 of 84. |
 | 16:42 | Output | `SUBMISSION.md`: reviewer entry point (what is where, commands, answers in short, limitations, how it was built, time). README links to it. Final commit tagged `submission`. |
+| 16:42 | Correction | The `submission` tag could not be pushed (the session's git proxy refuses tag pushes). Tag removed; the cover email names the final commit instead. |

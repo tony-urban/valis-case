@@ -1,6 +1,6 @@
 # Submission: Valis build exercise, Northwind Media
 
-Tony Urban. Repo: https://github.com/tony-urban/valis-case (branch `main`, tag `submission`).
+Tony Urban. Repo: https://github.com/tony-urban/valis-case (branch `main`; the commit sent with this submission is named in the cover email).
 
 ## Start here
 
