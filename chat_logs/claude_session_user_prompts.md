@@ -97,3 +97,9 @@ Attached: a screenshot of PowerShell where `git clone` fails with "git is not re
 > Синтаксис проверь, мне кажется, что-то неправильно написал.
 
 Claude then: confirmed the syntax was right and Git is not installed, gave a ZIP download path in PowerShell, and added it to `RUN_ON_WINDOWS.md`.
+
+## Prompt 14. Wed 2026-11-11, 13:28
+
+> Так, хорошо, давай мне финальный экспорт, я сейчас прогоню его в кодексе. Пусть чат GPT проверит тоже.
+
+Claude then: committed, built a ZIP of the repo at the final commit with `git archive`, and wrote a re-audit prompt for the second AI tool.
